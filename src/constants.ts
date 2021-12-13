@@ -131,8 +131,8 @@ interface IKeys {
   [key: string]: number | string
 }
 export const keys: IKeys = {
-  token: "art",
-  stoken: "sart",
+  token: "rome",
+  stoken: "srome",
   mainnetName: "eth",
   testnetName: "",
   mainnetChainID: 1,

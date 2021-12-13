@@ -1,0 +1,49 @@
+/* purgecss start ignore */
+@tailwind base;
+
+@tailwind components;
+/* purgecss end ignore */
+@tailwind utilities;
+
+/* purgecss start ignore */
+html {
+  @apply antialiased;
+}
+
+@layer components {
+  .button {
+    @apply font-medium rounded-full px-8 py-3 text-base tracking-2%;
+  }
+
+  .button-sm {
+    @apply font-medium rounded-full px-6 py-2.5 text-sm tracking-2%;
+  }
+
+  .button-primary {
+    @apply text-white bg-orange-600;
+  }
+
+  .button-gray {
+    @apply bg-[#818181] text-white;
+  }
+}
+
+@layer utilities {
+  .button-hover {
+    @apply hover:scale-103 transition-all ease-in-out hover:shadow-2xl duration-300 disabled:scale-100 disabled:shadow-none disabled:cursor-not-allowed;
+  }
+
+  .banner-hover {
+    @apply hover:scale-103 transition-all ease-in-out hover:shadow-2xl duration-300;
+  }
+
+  .reset-number-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .reset-number-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

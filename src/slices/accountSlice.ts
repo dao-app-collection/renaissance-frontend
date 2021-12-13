@@ -88,7 +88,7 @@ export const loadAccountDetails = createAsyncThunk(
       artBalance = await artContract.balanceOf(address)
       stakeAllowance = await artContract.allowance(
         address,
-        addresses[chainId].STAKING_HELPER_ADDRESS
+        addresses[chainId].STAKING_ADDRESS
       )
     }
 

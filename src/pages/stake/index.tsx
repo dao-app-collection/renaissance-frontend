@@ -1,67 +1,57 @@
 import { useState } from "react"
 
-import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
 import { ethers } from "ethers"
-import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
+import { useDispatch, useSelector } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
-import FraxIcon from "@components/customicons/FraxIcon"
 import Layout from "@components/layouts/Layout"
 import ArtSwitch from "@components/ui/ArtSwitch"
+import Button from "@components/ui/Button"
 import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"
-import Spinner from "@components/ui/Spinner"
-import { prettify } from "@helper"
-import {
-  useStaking,
-  useStakingData,
-  useStakingHelper,
-} from "@hooks/contracts/useStaking"
-import { parseSecondsToReadable, parseToFixed } from "@utils/parseUtils"
+import { keys } from "@constants"
+import { getProvider, prettify } from "@helper"
+import { error } from "@slices/messagesSlice"
+import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
+import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function Stake() {
-  const staking = useStaking()
-
-  const { active } = useWeb3React()
-
-  const { stakingAPY, currentIndex, secondsUntilNextEpoch, contractBalance } =
-    useStakingData(staking)
-
   // for the switch, we cannot really use another datatype other than boolean
   const [mode, setMode] = useState(false)
 
-  // therefore this is to simplify reading code
-  const isStaking = !mode
-  const isUnstaking = mode
+  const currentIndex = useSelector((state: any) => {
+    return state.app.currentIndex
+  })
 
-  const trimmedStakingAPY =
-    stakingAPY > 500000 ? ">500,000" : prettify(stakingAPY)
+  const stakingAPY = useSelector((state: any) => {
+    return state.app.stakingAPY
+  })
+  const stakingTVL = useSelector((state: any) => {
+    return state.app.stakingTVL
+  })
 
-  const { days, hours, minutes } = parseSecondsToReadable(secondsUntilNextEpoch)
-  const timeText = `${days}d ${hours}h ${minutes}m`
+  const trimmedStakingAPY = prettify(stakingAPY * 100)
+
+  if (process.env.IS_PRESALE == "true") return null
 
   return (
     <Layout>
-      <div
-        className="container relative min-h-screen py-10"
-        data-cy="stake-page"
-      >
+      <div className="container relative min-h-screen py-10">
         <PageHeading>
           <div className="flex-grow">
             <PageHeading.Title>Stake</PageHeading.Title>
-            {active && (
-              <PageHeading.Subtitle>
-                {secondsUntilNextEpoch > 0 ? (
-                  `Next Rebase: ~${timeText}`
-                ) : (
-                  <Skeleton height={15} width={80} />
-                )}
-              </PageHeading.Subtitle>
-            )}
+            {/* {active && (
+                <PageHeading.Subtitle>
+                  {secondsUntilNextEpoch > 0 ? (
+                    `Next Rebase: ~${timeText}`
+                  ) : (
+                    <Skeleton height={15} width={80} />
+                  )}
+                </PageHeading.Subtitle>
+              )} */}
           </div>
 
           <PageHeading.Content>
@@ -82,8 +72,8 @@ function Stake() {
               title="ART STAKED"
               subtitle={
                 <>
-                  {contractBalance ? (
-                    `${prettify(contractBalance)}`
+                  {stakingTVL ? (
+                    `${prettify(stakingTVL)}`
                   ) : (
                     <Skeleton height={40} width={200} />
                   )}
@@ -113,7 +103,7 @@ function Stake() {
                 className={clsx(
                   "tracking-2% transition-colors font-medium text-dark-300",
                   {
-                    "font-semibold !text-orange-600": !mode,
+                    "font-semibold !text-wine-600": !mode,
                   }
                 )}
               >
@@ -124,7 +114,7 @@ function Stake() {
                 className={clsx(
                   "tracking-2% transition-colors font-medium text-dark-300",
                   {
-                    "font-semibold !text-orange-600": mode,
+                    "font-semibold !text-wine-600": mode,
                   }
                 )}
               >
@@ -134,8 +124,7 @@ function Stake() {
           </div>
 
           <div className="mt-8">
-            {isStaking && <StakeContent />}
-            {isUnstaking && <UnstakeContent />}
+            <StakeContent mode={mode} />
           </div>
         </div>
       </div>
@@ -143,340 +132,233 @@ function Stake() {
   )
 }
 
-function StakeContent() {
-  const staking = useStaking()
-  const stakingHelper = useStakingHelper()
+function StakeContent({ mode }) {
+  const dispatch = useDispatch()
+  const { chainId, account, library } = useWeb3React()
+  const rpcProvider = getProvider()
+  const walletProvider = library
 
-  const { art, artBalance, sArtBalance, stakeAllowance } =
-    useStakingData(staking)
+  // therefore this is to simplify reading code
+  const isStaking = !mode
+  const isUnstaking = mode
+  const [quantity, setQuantity] = useState(0)
 
-  const { active, account } = useWeb3React()
+  const isAppLoading = useSelector((state: any) => state.app.loading)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { isValid, isSubmitting },
-  } = useForm<{ amount: number }>({
-    mode: "all",
-    reValidateMode: "onChange",
+  const fiveDayRate = useSelector((state: any) => {
+    return state.app.fiveDayRate
+  })
+  const artBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.art
+  })
+  const sartBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.sart
+  })
+  const stakeAllowance = useSelector((state: any) => {
+    return state.account.staking && state.account.staking.artStake
+  })
+  const unstakeAllowance = useSelector((state: any) => {
+    return state.account.staking && state.account.staking.artUnstake
+  })
+  const stakingRebase = useSelector((state: any) => {
+    return state.app.stakingRebase
   })
 
-  const isAllowanceSufficient = stakeAllowance.allowance >= watch("amount")
+  const pendingTransactions = useSelector((state: any) => {
+    return state.pendingTransactions
+  })
 
-  const onSubmit = async ({ amount }: { amount: number }) => {
-    const amountInArt = parseUnits(amount.toString(), 9)
-
-    if (isAllowanceSufficient) {
-      try {
-        await stakingHelper.stake(amountInArt, account)
-        artBalance.mutate()
-        sArtBalance.mutate()
-        reset({ amount: 0 })
-        toast.success(`Staked ${amount} ART successfully`)
-      } catch (error) {
-        toast.error("Something went wrong")
-      }
+  const setMax = () => {
+    if (isStaking) {
+      setQuantity(artBalance)
     } else {
-      await art.approve(stakingHelper.address, ethers.constants.MaxUint256)
-      stakeAllowance.mutate()
+      setQuantity(sartBalance)
     }
   }
 
-  const maxArtTrimmed = parseToFixed(artBalance.balance, 9)
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} data-cy="stake-content">
-      <div className="space-y-6">
-        <CTABox className="flex items-center justify-between max-w-lg mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-          <div className="flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <FraxIcon className="w-8 h-8" />
-              <p className="text-2xl font-medium text-white 2xl:text-[32px] tracking-2%">
-                ART
-              </p>
-            </div>
-
-            {/* <button
-              onClick={async () => {
-                const contractBalance2 = await staking.contractBalance()
-                console.log({ stakingAPY })
-                console.log({ stakingRebase })
-                console.log({ fiveDayRate })
-                console.log({ stakingTVL })
-                console.log({ contractBalance })
-                console.log({ contractBalance2 })
-              }}
-            >
-              Herer
-            </button> */}
-
-            <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
-              Balance{" "}
-              {artBalance.balance >= 0 ? (
-                <>{maxArtTrimmed} ART</>
-              ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
-              )}{" "}
-              (
-              <button
-                className="font-medium text-orange-600"
-                type="button"
-                onClick={() => {
-                  setValue("amount", artBalance.balance, {
-                    shouldValidate: true,
-                  })
-                }}
-              >
-                Max
-              </button>
-              )
-            </p>
-          </div>
-
-          <input
-            className="w-full text-3xl font-semibold text-right text-white bg-transparent border-transparent outline-none reset-number-spinner 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
-            type="number"
-            placeholder="0.0"
-            step="0.000000001"
-            {...register("amount", {
-              required: true,
-              max: artBalance.balance,
-              min: 0,
-            })}
-          />
-        </CTABox>
-        <StakingInfo />
-      </div>
-
-      <div className="flex justify-center mt-8">
-        {active && (
-          <button
-            disabled={!isValid || isSubmitting}
-            type="submit"
-            className="flex items-center gap-3 button button-primary button-hover disabled:opacity-75"
-          >
-            {isSubmitting && <Spinner />}
-
-            <span>
-              {isAllowanceSufficient || !watch("amount") ? "Stake" : "Approve"}
-            </span>
-          </button>
-        )}
-
-        {!active && (
-          <div className="flex justify-center">
-            <ConnectButton />
-          </div>
-        )}
-      </div>
-    </form>
-  )
-}
-
-function UnstakeContent() {
-  const staking = useStaking()
-
-  const { sArt, unstakeAllowance, sArtBalance, artBalance } =
-    useStakingData(staking)
-
-  const { active } = useWeb3React()
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { isValid, isSubmitting },
-  } = useForm<{ amount: number }>({
-    mode: "all",
-    reValidateMode: "onChange",
-  })
-
-  const isAllowanceSufficient = unstakeAllowance.allowance >= watch("amount")
-
-  const onSubmit = async ({ amount }: { amount: number }) => {
-    const amountInArt = parseUnits(amount.toString(), 9)
-
-    if (isAllowanceSufficient) {
-      try {
-        await staking.unstake(amountInArt)
-        artBalance.mutate()
-        sArtBalance.mutate()
-        reset({ amount: 0 })
-        toast.success(`Unstaked ${amount} sART successfully`)
-      } catch (error) {
-        toast.error("Something went wrong")
-        console.error(error)
-      }
-    } else {
-      await sArt.approve(staking.address, ethers.constants.MaxUint256)
-      unstakeAllowance.mutate()
-    }
+  const onSeekApproval = async (token) => {
+    await dispatch(
+      changeApproval({
+        address: account,
+        token,
+        walletProvider,
+        chainId,
+      })
+    )
   }
 
-  const maxsArtTrimmed = parseToFixed(sArtBalance.balance, 9)
+  const onChangeStake = async (action: string) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(quantity) || quantity === 0) {
+      // eslint-disable-next-line no-alert
+      return dispatch(error("Please enter a value!"))
+    }
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} data-cy="unstake-content">
-      <div className="space-y-6">
-        <CTABox className="flex items-center justify-between max-w-lg mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-          <div className="flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <FraxIcon className="w-8 h-8" />
-              <p className="text-2xl font-medium text-white 2xl:text-[32px] tracking-2%">
-                sART
-              </p>
-            </div>
+    // 1st catch if quantity > balance
+    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "gwei")
+    if (
+      action === "stake" &&
+      gweiValue.gt(ethers.utils.parseUnits(artBalance, "gwei"))
+    ) {
+      return dispatch(error("You cannot stake more than your ART balance."))
+    }
 
-            <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
-              Balance{" "}
-              {sArtBalance.balance >= 0 ? (
-                <>{maxsArtTrimmed} sART</>
-              ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
-              )}{" "}
-              (
-              <button
-                className="font-medium text-orange-600"
-                type="button"
-                onClick={() => {
-                  setValue("amount", sArtBalance.balance, {
-                    shouldValidate: true,
-                  })
-                }}
-              >
-                Max
-              </button>
-              )
-            </p>
-          </div>
+    if (
+      action === "unstake" &&
+      gweiValue.gt(ethers.utils.parseUnits(sartBalance, "gwei"))
+    ) {
+      return dispatch(error("You cannot unstake more than your sART balance."))
+    }
 
-          <input
-            className="w-full text-3xl font-semibold text-right text-white bg-transparent border-transparent outline-none reset-number-spinner 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
-            type="number"
-            placeholder="0.0"
-            step="0.000000001"
-            {...register("amount", {
-              required: true,
-              max: sArtBalance.balance,
-              min: 0,
-            })}
-          />
-        </CTABox>
+    await dispatch(
+      changeStake({
+        address: account,
+        action,
+        value: quantity.toString(),
+        walletProvider,
+        rpcProvider,
+        chainId,
+      })
+    )
+  }
 
-        <StakingInfo />
-      </div>
+  const isAllowanceDataLoading =
+    (stakeAllowance == null && isStaking) ||
+    (unstakeAllowance == null && isUnstaking)
 
-      <div className="flex justify-center mt-8">
-        {active && (
-          <button
-            disabled={!isValid || isSubmitting}
-            type="submit"
-            className="flex items-center gap-3 button button-primary button-hover disabled:opacity-75"
-          >
-            {isSubmitting && <Spinner />}
-
-            <span>
-              {isAllowanceSufficient || !watch("amount")
-                ? "Unstake"
-                : "Approve"}
-            </span>
-          </button>
-        )}
-
-        {!active && (
-          <div className="flex justify-center">
-            <ConnectButton />
-          </div>
-        )}
-      </div>
-    </form>
-  )
-}
-
-function StakingInfo() {
-  const staking = useStaking()
-  const { artBalance, sArtBalance, fiveDayRate, stakingRebase } =
-    useStakingData(staking)
-
+  const trimmedBalance = sartBalance
   const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
-
-  const sArtTrimmed = parseToFixed(sArtBalance.balance, 9)
-
   const nextRewardValue = prettify(
-    (stakingRebasePercentage / 100) * sArtTrimmed,
-    9
+    (stakingRebasePercentage / 100) * trimmedBalance,
+    4
   )
 
   return (
-    <CTABox className="max-w-lg py-4 mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-      <div className="py-2">
-        <h2 className="font-medium uppercase tracking-2% text-dark-300">
-          Staking Information
-        </h2>
+    <div className="space-y-6">
+      <CTABox className="flex items-center justify-between max-w-lg mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
+        <div className="">
+          <p className="font-medium text-white uppercase text-[32px] tracking-2%">
+            Art
+          </p>
+          <p className="font-medium tracking-2% text-dark-300">
+            (
+            <span onClick={setMax} className="cursor-pointer text-wine-600">
+              Max
+            </span>
+            )
+          </p>
+        </div>
 
-        <div className="mt-3 text-sm space-y-3 sm:text-base">
-          <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-            <p>Your Balance</p>
-            <p className="text-right">
-              {artBalance.balance >= 0 ? (
-                <>{prettify(artBalance.balance, 4)} ART</>
-              ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
-              )}
-            </p>
-          </div>
+        <div className="">
+          <input
+            onChange={(e: any) => setQuantity(e.target.value)}
+            className="w-full text-lg font-semibold text-right bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+            size={6}
+            placeholder="0.0"
+          />
+        </div>
+      </CTABox>
 
-          <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-            <p>Your Staked Balance</p>
-            <p className="text-right">
-              {sArtBalance.balance >= 0 ? (
-                <>{sArtTrimmed} sART</>
+      <CTABox className="max-w-lg py-4 mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
+        <div className="space-y-2">
+          <h2 className="font-medium uppercase tracking-2% text-dark-300">
+            Staking Information
+          </h2>
+          <div className="space-y-4">
+            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
+              <p>Your Balance</p>
+              {isAppLoading ? (
+                <Skeleton height={20} />
               ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
+                <p className="text-right">{prettify(artBalance, 4)} ART</p>
               )}
-            </p>
-          </div>
-
-          <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-            <p>Next Reward</p>
-            <p className="text-right">
-              {sArtBalance.balance >= 0 ? (
-                <>{nextRewardValue} sART</>
+            </div>
+            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
+              <p>Your Staked Balance</p>
+              {isAppLoading ? (
+                <Skeleton height={20} />
               ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
+                <p className="text-right">{trimmedBalance} sART</p>
               )}
-            </p>
-          </div>
-
-          <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-            <p>Staking Rebase</p>
-            <p className="text-right">
-              {stakingRebasePercentage ? (
-                <>{stakingRebasePercentage} %</>
+            </div>
+            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
+              <p>Next Reward Amount</p>
+              {isAppLoading ? (
+                <Skeleton height={20} />
               ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
+                <p className="text-right">{nextRewardValue} sART</p>
               )}
-            </p>
-          </div>
-
-          <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-            <p>ROI (5-Day Rate)</p>
-            <p className="text-right">
-              {fiveDayRate ? (
-                <>{prettify(fiveDayRate * 100, 4)} %</>
+            </div>
+            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
+              <p>Next Reward Yield</p>
+              {isAppLoading ? (
+                <Skeleton height={20} />
               ) : (
-                <Skeleton className="inline-block" height={15} width={80} />
+                <p className="text-right">{stakingRebasePercentage} %</p>
               )}
-            </p>
+            </div>
+            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
+              <p>ROI (5-Day Rate)</p>
+              {isAppLoading ? (
+                <Skeleton height={20} />
+              ) : (
+                <p className="text-right">{prettify(fiveDayRate * 100, 4)}</p>
+              )}
+            </div>
           </div>
         </div>
+      </CTABox>
+
+      <div className="flex justify-center">
+        {isStaking ? (
+          !account ? (
+            <ConnectButton />
+          ) : isAllowanceDataLoading ? (
+            <Button loading={true}>Loading...</Button>
+          ) : account && stakeAllowance > 0 ? (
+            <Button
+              loading={isPendingTxn(pendingTransactions, "staking")}
+              onClick={() => {
+                onChangeStake("stake")
+              }}
+            >
+              {txnButtonText(pendingTransactions, "staking", "Stake ART")}
+            </Button>
+          ) : (
+            <Button
+              loading={isPendingTxn(pendingTransactions, "approve_staking")}
+              onClick={() => {
+                onSeekApproval(keys.token)
+              }}
+            >
+              {txnButtonText(pendingTransactions, "approve_staking", "Approve")}
+            </Button>
+          )
+        ) : !account ? (
+          <ConnectButton />
+        ) : isAllowanceDataLoading ? (
+          <Button loading={true}>Loading...</Button>
+        ) : account && unstakeAllowance > 0 ? (
+          <Button
+            loading={isPendingTxn(pendingTransactions, "unstaking")}
+            onClick={() => {
+              onChangeStake("unstake")
+            }}
+          >
+            {txnButtonText(pendingTransactions, "unstaking", "Unstake ART")}
+          </Button>
+        ) : (
+          <Button
+            loading={isPendingTxn(pendingTransactions, "approve_unstaking")}
+            onClick={() => {
+              onSeekApproval(keys.stoken)
+            }}
+          >
+            {txnButtonText(pendingTransactions, "approve_unstaking", "Approve")}
+          </Button>
+        )}
       </div>
-    </CTABox>
+    </div>
   )
 }
 

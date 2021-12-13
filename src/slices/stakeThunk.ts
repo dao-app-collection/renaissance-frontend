@@ -1,11 +1,10 @@
-import { StaticJsonRpcProvider } from "@ethersproject/providers"
+import { StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { ethers, BigNumber } from "ethers"
 
 import ArtStakingABI from "../abi/ArtStaking.json"
 import ierc20ABI from "../abi/IERC20.json"
-import StakingHelperABI from "../abi/StakingHelper.json"
-import { addresses, keys } from "../constants"
+import { currentAddresses, keys } from "../constants"
 import { fetchAccountSuccess, getBalances } from "./accountSlice"
 import { IJsonRPCError } from "./interfaces"
 import { error, info } from "./messagesSlice"
@@ -47,7 +46,7 @@ function alreadyApprovedToken(
 
 interface IChangeApproval {
   readonly token: string
-  readonly walletProvider: ethers.Signer
+  readonly walletProvider: Web3Provider
   readonly address: string
   readonly chainId: number
 }
@@ -63,25 +62,25 @@ export const changeApproval = createAsyncThunk(
     }
 
     const artContract = new ethers.Contract(
-      addresses[chainId].ART_ADDRESS as string,
+      currentAddresses.ART_ADDRESS as string,
       ierc20ABI.abi,
-      walletProvider
+      walletProvider.getSigner()
     )
 
     const sartContract = new ethers.Contract(
-      addresses[chainId].SART_ADDRESS as string,
+      currentAddresses.SART_ADDRESS as string,
       ierc20ABI.abi,
-      walletProvider
+      walletProvider.getSigner()
     )
 
     let approveTx
     let stakeAllowance = await artContract.allowance(
       address,
-      addresses[chainId].STAKING_HELPER_ADDRESS
+      currentAddresses.STAKING_ADDRESS
     )
     let unstakeAllowance = await sartContract.allowance(
       address,
-      addresses[chainId].STAKING_ADDRESS
+      currentAddresses.STAKING_ADDRESS
     )
 
     // return early if approval has already happened
@@ -101,12 +100,12 @@ export const changeApproval = createAsyncThunk(
       if (token === keys.token) {
         // won't run if stakeAllowance > 0
         approveTx = await artContract.approve(
-          addresses[chainId].STAKING_HELPER_ADDRESS,
+          currentAddresses.STAKING_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString()
         )
       } else if (token === keys.stoken) {
         approveTx = await sartContract.approve(
-          addresses[chainId].STAKING_ADDRESS,
+          currentAddresses.STAKING_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString()
         )
       }
@@ -137,11 +136,11 @@ export const changeApproval = createAsyncThunk(
     // go get fresh allowances
     stakeAllowance = await artContract.allowance(
       address,
-      addresses[chainId].STAKING_HELPER_ADDRESS
+      currentAddresses.STAKING_ADDRESS
     )
     unstakeAllowance = await sartContract.allowance(
       address,
-      addresses[chainId].STAKING_ADDRESS
+      currentAddresses.STAKING_ADDRESS
     )
 
     return dispatch(
@@ -159,7 +158,7 @@ interface IChangeStake {
   readonly action: string
   readonly value: string
   readonly rpcProvider: StaticJsonRpcProvider
-  readonly walletProvider: ethers.Signer
+  readonly walletProvider: Web3Provider
   readonly address: string
   readonly chainId: number
 }
@@ -182,17 +181,10 @@ export const changeStake = createAsyncThunk(
     }
 
     const staking = new ethers.Contract(
-      addresses[chainId].STAKING_ADDRESS as string,
+      currentAddresses.STAKING_ADDRESS as string,
       ArtStakingABI.abi,
-      walletProvider
+      walletProvider.getSigner()
     )
-
-    const stakingHelper = new ethers.Contract(
-      addresses[chainId].STAKING_HELPER_ADDRESS as string,
-      StakingHelperABI.abi,
-      walletProvider
-    )
-
     let stakeTx
     let uaData: IUAData = {
       address: address,
@@ -204,8 +196,9 @@ export const changeStake = createAsyncThunk(
     try {
       if (action === "stake") {
         uaData.type = "stake"
-        stakeTx = await stakingHelper.stake(
-          ethers.utils.parseUnits(value, "gwei")
+        stakeTx = await staking.stake(
+          ethers.utils.parseUnits(value, "gwei"),
+          address
         )
       } else {
         uaData.type = "unstake"

@@ -1,6 +1,5 @@
 import React, { useRef } from "react"
 
-import ArtIcon from "@components/customicons/ArtIcon"
 import { ArrowRightIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
@@ -170,7 +169,7 @@ export default function Whitelist() {
               <CTABox className="flex items-center justify-between">
                 <div className="flex-shrink-0">
                   <div className="flex items-center gap-2">
-                    <ArtIcon className="w-8 h-8" />
+                    {/* <ArtIcon className="w-8 h-8" /> */}
                     <p className="text-2xl font-medium 2xl:text-[32px] text-dark-1000 tracking-2%">
                       aART
                     </p>

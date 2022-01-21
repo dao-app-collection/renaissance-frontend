@@ -1,6 +1,7 @@
 import React from "react"
 
 import { useSelector } from "react-redux"
+import ConnectButton from "@components/ConnectButton"
 
 import BondTable from "@components/bonds/BondTable"
 import Layout from "@components/layouts/Layout"
@@ -33,20 +34,20 @@ function Bond() {
   return (
     <Layout>
       <div
-        className="container relative h-full min-h-screen py-10 bg-dark-1000"
+        className="container relative h-full min-h-screen bg-black py-6"
         data-cy="bond-page"
       >
         <PageHeading>
-          <div className="flex-grow">
-            <PageHeading.Title>Bond</PageHeading.Title>
+          <div className="flex-grow py-10">
+            <PageHeading.Title>Bond (1,1)</PageHeading.Title>
             <PageHeading.Subtitle>
-              Purchase ART at a discount
+              Receivce ART at a discount.
             </PageHeading.Subtitle>
           </div>
-
+          <div className="rounded-md bg-opacity-30 px-20 py-10">
           <PageHeading.Content>
             <PageHeading.Stat
-              title="TOTAL BONDED"
+              title="Treasury Balance"
               subtitle={
                 <>
                   {isBondLoading ? (
@@ -58,7 +59,7 @@ function Bond() {
               }
             />
             <PageHeading.Stat
-              title="ART PRICE"
+              title="ART Market Price"
               subtitle={
                 <>
                   {isBondLoading ? (
@@ -70,10 +71,39 @@ function Bond() {
               }
             />
           </PageHeading.Content>
+        </div>
+        <div className="px-4 bg-black">
+          <ConnectButton/>
+      </div>
         </PageHeading>
 
-        <div className="mt-16">
-          <BondTable />
+
+
+        <div className="my-20 ml-5 py-7 px-3 rounded-md bg-dark-1000 bg-opacity-20">
+          <PageHeading>
+            <PageHeading.Content>
+            <PageHeading.Stat
+                title=""
+                subtitle={
+                  <>
+                    {isBondLoading ? (
+                      <Skeleton height={40} width={200} />
+                    ) : (
+                      "Your Claimable Rewards: " + "$" + prettify(treasuryBalance)
+                    )}
+                  </>
+                }
+              />
+            </PageHeading.Content>
+
+            
+          </PageHeading>
+        </div>
+        <div className="mt-12">
+          <div className="items-center text-2xl font-semibold text-white gap-2 sm:text-2xl tracking-2%">Choose a bond</div>
+          <div className="hover:text-gray-600 pr-">
+            <BondTable/>
+          </div>
         </div>
       </div>
     </Layout>

@@ -11,13 +11,10 @@ export default function BondTable() {
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden">
+          <div className="">
             <table className="min-w-full">
               <thead className="">
                 <tr className="text-sm uppercase text-dark-300 tracking-2%">
-                  <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Pair Image</span>
-                  </th>
 
                   <th
                     scope="col"
@@ -28,14 +25,14 @@ export default function BondTable() {
 
                   <th
                     scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-dark-100"
+                    className="px-6 py-3 text-xs font-medium tracking-wider text-center text-dark-100"
                   >
                     Price
                   </th>
 
                   <th
                     scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-dark-100"
+                    className="px-6 py-3 text-xs font-medium tracking-wider text-center text-dark-100"
                   >
                     Roi
                   </th>
@@ -56,9 +53,11 @@ export default function BondTable() {
                 {bonds.map((bond: any) => {
                   const BondIcon = bond.bondIconSvg
                   const isBondLoading = !bond.bondPrice ?? true
+                  const href = `/bond/${bond.name}`
+
                   if (isBondLoading)
                     return (
-                      <tr key={bond.name} className="bg-dark-1000">
+                      <tr key={bond.name} className="bg-black">
                         <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
                           <Skeleton height={20} />
                         </td>
@@ -85,37 +84,28 @@ export default function BondTable() {
                       </tr>
                     )
                   return (
-                    <tr key={bond.name} className="bg-dark-1000">
-                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
-                        {/* {bond.image}  */}
-                        <BondIcon className="w-20 h-8" />
-                      </td>
 
-                      <td className="px-6 py-4 font-medium text-white uppercase whitespace-nowrap">
+                    <Link key={bond.name} href={href} passHref={true}>
+                    <tr key={bond.name} className="bg-black">
+                      <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
+                      <BondIcon className="w-20 h-8" />
+
                         {bond.name.split("_").join(" ")}
                       </td>
 
-                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
                         ${prettify(bond.bondPrice)}
                       </td>
 
-                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
                         {prettify(bond.bondDiscount * 100)}%
                       </td>
 
                       <td className="px-6 py-4 font-medium text-right text-white whitespace-nowrap">
                         ${prettify(bond.purchased)}
                       </td>
-
-                      <td className="px-6 py-4 text-right whitespace-nowrap">
-                        <Link href={`/bond/${bond.bond}`}>
-                          <a className="inline-flex items-center text-sm font-medium text-orange-600 gap-2 group">
-                            <span>Bond</span>
-                            <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition transform" />
-                          </a>
-                        </Link>
-                      </td>
                     </tr>
+                    </Link>
                   )
                 })}
               </tbody>

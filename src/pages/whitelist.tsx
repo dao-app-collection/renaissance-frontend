@@ -23,6 +23,7 @@ interface Fields {
 }
 
 export default function Whitelist() {
+  
   const { account } = useWeb3React()
   const [mode, setMode] = useState(false)
 
@@ -46,18 +47,17 @@ export default function Whitelist() {
 
   return (
     <Layout>
-      <div className="container relative min-h-screen py-10 bg-black">
-      <div className="z-20 flex flex-col px-4 mb-10"></div>
+      <div className="container relative min-h-screen bg-black py-6">
 
         <PageHeading>
-          <div className="flex-grow">
+          <div className="flex-grow py-10">
             <PageHeading.Title> Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
             <div className="mt-8 bg-dark-1000 bg-opacity-30 px-12">
             <div className="text-white text-2xl py-3">Deposit FRAX</div>
-            <StakeContent mode={mode} />
+            <DepositContent mode={mode} />
             <div className="text-right text-white text-md py-4">Max You Can Buy: {} FRAX Balance {} FRAX</div>
               <div className="flex items-stretch py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl m">
                 <PageHeading>
@@ -69,10 +69,11 @@ export default function Whitelist() {
                   </PageHeading.Content>
                 </PageHeading>
               </div>
-            </div>
-            <div className="flex items-center justify-center py-5">
+              <div className="flex items-center justify-center py-5">
               <button className="bg-blue-600 px-12 py-2 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
             </div>  
+            </div>
+
           </div>
         </PageHeading>
       </div>
@@ -81,7 +82,7 @@ export default function Whitelist() {
 }
 
 
-function StakeContent(mode) {
+function DepositContent(mode) {
 
   const [quantity, setQuantity] = useState(0)
   const isStaking = !mode

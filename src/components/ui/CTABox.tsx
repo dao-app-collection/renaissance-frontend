@@ -7,7 +7,7 @@ function CTABox({
 }) {
   return (
     <div
-      className={`px-6 py-5 md:py-5 bg-dark-1500 sm:py-6 sm:px-10 rounded-xl ${className}`}
+      className={`py-5 md:py-5 bg-black bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ${className}`}
     >
       {children}
     </div>

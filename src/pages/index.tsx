@@ -51,6 +51,7 @@ export default function Home() {
       </div>
     </nav>
     <LandingFront/>
+    {/*
     <div className="">
 
         </div>
@@ -81,11 +82,12 @@ export default function Home() {
       </div>
       <div className="w-1/3 px-20">NFT Pre-sale Price</div>
     </div>
-    <div className="flex justify-center py-2 text-gray-500 bg-dark-1200"> 
+                */}
+
+    <div className="flex justify-center py-2 text-gray-500 bg-black"> 
         <p>PARTNERSHIPS</p>
         <div className="py-10"></div>
     </div>
-
   </div>
   )
 }
@@ -96,7 +98,7 @@ function LandingFront() {
     <div className="relative overflow-hidden rounded-lg shadow-lg cursor-pointer">
       <img className="object-cover w-full h-42" src="/images/connectors/renassance.jpg" alt="RenaissanceDao"/>
 
-      <div className="absolute top-0 left-0 px-20 py-16">
+      <div className="absolute top-0 left-0 px-20 py-20">
         <h4 className="mb-3 text-3xl font-bold tracking-tight text-white">The Dencentralized</h4>
         <h4 className="mb-10 text-3xl font-bold tracking-tight text-white">NFT Reserve Currency</h4>
 

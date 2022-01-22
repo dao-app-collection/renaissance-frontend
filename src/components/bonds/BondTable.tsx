@@ -83,7 +83,7 @@ export default function BondTable() {
                     )
                   return (
                     <Link key={bond.name} href={href} passHref={true}>
-                    <tr key={bond.name} className="transition duration-300 ease-in-out hover:bg-gray-100">
+                    <tr key={bond.name} className="transition duration-300 ease-in-out hover:bg-dark-1000">
                       <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
                       <BondIcon className="w-20 h-8" />
                         {bond.name.split("_").join(" ")}

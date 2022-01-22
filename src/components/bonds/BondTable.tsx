@@ -10,19 +10,17 @@ export default function BondTable() {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div className="inline-block min-w-full py-3 align-middle sm:px-6 lg:px-8">
           <div className="">
-            <table className="min-w-full">
+            <table className="min-w-full divide-y divide-dark-1000">
               <thead className="">
                 <tr className="text-sm uppercase text-dark-300 tracking-2%">
-
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-medium tracking-wider text-left text-dark-100"
                   >
                     Bond
                   </th>
-
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-medium tracking-wider text-center text-dark-100"
@@ -49,7 +47,7 @@ export default function BondTable() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white">
+              <tbody>
                 {bonds.map((bond: any) => {
                   const BondIcon = bond.bondIconSvg
                   const isBondLoading = !bond.bondPrice ?? true
@@ -57,12 +55,12 @@ export default function BondTable() {
 
                   if (isBondLoading)
                     return (
-                      <tr key={bond.name} className="bg-black">
+                      <tr key={bond.name}>
                         <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
                           <Skeleton height={20} />
                         </td>
 
-                        <td className="px-6 py-4 font-medium text-white uppercase whitespace-nowrap">
+                        <td className="px-6 py-4 font-medium text-white uppercase whitespace-nowrap ">
                           <Skeleton height={20} />
                         </td>
 
@@ -84,15 +82,12 @@ export default function BondTable() {
                       </tr>
                     )
                   return (
-
                     <Link key={bond.name} href={href} passHref={true}>
-                    <tr key={bond.name} className="bg-black">
+                    <tr key={bond.name} className="transition duration-300 ease-in-out hover:bg-gray-100">
                       <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
                       <BondIcon className="w-20 h-8" />
-
                         {bond.name.split("_").join(" ")}
                       </td>
-
                       <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
                         ${prettify(bond.bondPrice)}
                       </td>

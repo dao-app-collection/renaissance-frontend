@@ -125,7 +125,7 @@ function Redeem({ bond }) {
     </div>
 
 
-    <div className="text-right text-white text-md py-4">Pending Rewards: 1000 ART     Claimable Rewards: 100 FRAX</div>
+    <div className="text-right text-white text-md py-4">Pending Rewards: {prettify(bond.interestDue)} ART Claimable Rewards: {prettify(bond.pendingPayout)} ART</div>
           <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
             <div className="text-sm  grid grid-cols-2">
                 <div className="py-1.5 text-left text-white">You Will Get</div>
@@ -172,22 +172,6 @@ function Redeem({ bond }) {
           ) : (
             <>
               <Button
-                loading={isRedeemLoading}
-                disabled={
-                  bond.pendingPayout == 0.0 ||
-                  isRedeemLoading ||
-                  isRedeemAutostakeLoading
-                }
-                onClick={() => onRedeem({ autostake: false })}
-              >
-                {txnButtonText(
-                  pendingTransactions,
-                  "redeem_bond_" + bond.name,
-                  "Claim"
-                )}
-              </Button>
-              <div className="px-3"></div>
-              <Button
                 loading={isRedeemAutostakeLoading}
                 disabled={
                   bond.pendingPayout == 0.0 ||
@@ -202,6 +186,23 @@ function Redeem({ bond }) {
                   "Claim and Autostake"
                 )}
               </Button>
+              <div className="px-3"></div>
+              <Button
+                loading={isRedeemLoading}
+                disabled={
+                  bond.pendingPayout == 0.0 ||
+                  isRedeemLoading ||
+                  isRedeemAutostakeLoading
+                }
+                onClick={() => onRedeem({ autostake: false })}
+              >
+                {txnButtonText(
+                  pendingTransactions,
+                  "redeem_bond_" + bond.name,
+                  "Claim Only"
+                )}
+              </Button>
+
             </>
           )}
       </div>

@@ -15,6 +15,7 @@ import Presale from "@contracts/Presale"
 import { useContract } from "@hooks/contracts/useContract"
 import { useToken } from "@hooks/contracts/useToken"
 import { useTokenBalance } from "@hooks/contracts/useTokenBalance"
+import ConnectButton from "@components/ConnectButton"
 
 const MAX_ALLOCATION = 1500
 
@@ -47,7 +48,7 @@ export default function Whitelist() {
 
   return (
     <Layout>
-      <div className="container relative min-h-screen bg-black py-6">
+      <div className="container relative h-full min-h-screen bg-black py-6">
 
         <PageHeading>
           <div className="flex-grow py-10">
@@ -55,10 +56,17 @@ export default function Whitelist() {
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
-            <div className="mt-8 bg-dark-1000 bg-opacity-30 px-12">
+            </div>
+
+        <div className="px-4 bg-black">
+          <ConnectButton/>
+      </div>
+        </PageHeading>
+            <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
+              
             <div className="text-white text-2xl py-3">Deposit FRAX</div>
             <DepositContent mode={mode} />
-            <div className="text-right text-white text-md py-4">Max You Can Buy: {} FRAX Balance {} FRAX</div>
+            <div className="text-right text-white text-md py-6">Max You Can Buy: {} FRAX Balance {} FRAX</div>
               <div className="flex items-stretch py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl m">
                 <PageHeading>
                   <PageHeading.Content>
@@ -67,16 +75,14 @@ export default function Whitelist() {
                       subtitle="aART"
                     />
                   </PageHeading.Content>
+                  
                 </PageHeading>
               </div>
-              <div className="flex items-center justify-center py-5">
-              <button className="bg-blue-600 px-12 py-2 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
+              <div className="flex items-center justify-center py-10">
+              <button className="bg-blue-600 px-12 py-3 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
             </div>  
             </div>
-
           </div>
-        </PageHeading>
-      </div>
     </Layout>
   )
 }

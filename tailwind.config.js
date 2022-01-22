@@ -74,7 +74,10 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      textColor: ['responsive', 'hover', 'focus', 'group-hover'],
+
+    },
   },
   // eslint-disable-next-line global-require
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],

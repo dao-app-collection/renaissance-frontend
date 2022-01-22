@@ -51,7 +51,7 @@ function Bond() {
               subtitle={
                 <>
                   {isBondLoading ? (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={150} />
                   ) : (
                     "$" + prettify(treasuryBalance)
                   )}
@@ -63,7 +63,7 @@ function Bond() {
               subtitle={
                 <>
                   {isBondLoading ? (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   ) : (
                     "$" + prettify(marketPrice)
                   )}
@@ -78,8 +78,7 @@ function Bond() {
         </PageHeading>
 
 
-
-        <div className="my-20 ml-5 py-7 px-3 rounded-md bg-dark-1000 bg-opacity-20">
+        <div className="my-20 ml-5 py-7 px-3 rounded-md bg-dark-1000 bg-opacity-20 ">
           <PageHeading>
             <PageHeading.Content>
             <PageHeading.Stat
@@ -101,9 +100,7 @@ function Bond() {
         </div>
         <div className="mt-12">
           <div className="items-center text-2xl font-semibold text-white gap-2 sm:text-2xl tracking-2%">Choose a bond</div>
-          <div className="hover:text-gray-600 pr-">
             <BondTable/>
-          </div>
         </div>
       </div>
     </Layout>

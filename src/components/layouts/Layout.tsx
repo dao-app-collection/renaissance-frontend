@@ -12,8 +12,8 @@ import { NavigationItem } from "@typings"
 
 const navigation_top: NavigationItem[] = [
 
-  { name: "Pre-sale", href: "/presale" },
-  { name: "Listing", href: "/listing" },
+  { name: "Pre-sale", href: "#" },
+  { name: "Listing", href: "#" },
 ]
 const navigation_bot: NavigationItem[] = [
   { name: "Bond", href: "/bond", sub: <BondSubMenu/>, },

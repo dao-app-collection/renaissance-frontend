@@ -76,35 +76,6 @@ function LeftAside({ navigation_top, navigation_bot }: { navigation_top: Navigat
         </nav>
         
       </div>
-
-      <div className="flex justify-between px-0">
-        <a
-          href="https://discord.gg/renaissancedao"
-          target="_blank"
-          rel="noreferrer"
-          data-cy="desktop-sidebar-discord-link"
-        >
-          <DiscordIcon className="w-6 h-6 text-orange-600 lg:w-7 lg:h-7" />
-        </a>
-
-        <a
-          href="https://twitter.com/daorenaissance"
-          target="_blank"
-          rel="noreferrer"
-          data-cy="desktop-sidebar-twitter-link"
-        >
-          <TwitterIcon className="w-6 h-6 text-orange-600 lg:w-7 lg:h-7" />
-        </a>
-
-        <a
-          href="https://medium.com/@RenaissanceDAO"
-          target="_blank"
-          rel="noreferrer"
-          data-cy="desktop-sidebar-medium-link"
-        >
-          <MediumIcon className="w-6 h-6 text-orange-600 lg:w-7 lg:h-7" />
-        </a>
-      </div>
     </div>
   )
 }

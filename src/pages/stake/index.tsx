@@ -13,6 +13,9 @@ import { keys } from "@constants"
 import { getProvider, prettify } from "@helper"
 import { error } from "@slices/messagesSlice"
 import { changeApproval, changeStake } from "@slices/stakeThunk"
+import ConnectButton from "@components/ConnectButton"
+import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
+import Button from "@components/ui/Button"
 
 function Stake() {
   // for the switch, we cannot really use another datatype other than boolean
@@ -35,6 +38,10 @@ function Stake() {
     (stakingRebasePercentage / 100) * trimmedBalance,
     4
   )
+
+  const artBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.art
+  })
   const currentIndex = useSelector((state: any) => {
     return state.app.currentIndex
   })
@@ -52,7 +59,7 @@ function Stake() {
 
   return (
     <Layout>
-      <div className="container relative min-h-screen bg-black py-6">
+      <div className="container relative h-full min-h-screen py-6 bg-black">
 
         <PageHeading>
           <div className="flex-grow py-10">
@@ -70,7 +77,7 @@ function Stake() {
                 </PageHeading.Subtitle>
               )} */}
           </div>
-          <div className="px-20 py-10 rounded-md bg-opacity-30">
+          <div className="px-4 rounded-md bg-opacity-30 px-20  py-10">
           <PageHeading.Content>
             <PageHeading.Stat
               title="APY"
@@ -79,7 +86,7 @@ function Stake() {
                   {stakingAPY > 0 ? (
                     `${trimmedStakingAPY}%`
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
@@ -92,7 +99,7 @@ function Stake() {
                   {stakingTVL ? (
                     "$"+ prettify(stakingTVL)
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
@@ -105,7 +112,7 @@ function Stake() {
                   {currentIndex ? (
                     prettify(currentIndex) + "smART"
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
@@ -113,13 +120,13 @@ function Stake() {
           </PageHeading.Content>
           </div>
 
-        <div className="px-4 bg-black">
-      </div>
+          <div className="px-4 bg-black">
+            <ConnectButton/>
+        </div>
         </PageHeading>
 
+        <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
 
-        <div className="py-10">
-          
         <div className="flex justify-center">
             <div className="px-1.5 py-1 inline-flex items-center gap-2 border-gray-600 border-2 rounded-md text-white">
               <button
@@ -147,38 +154,10 @@ function Stake() {
             </div>
           </div>
           
-          <div className="mt-8 bg-dark-1000 bg-opacity-30 px-12">
             <div className="text-white text-2xl py-3">Stake ART</div>
           
             <StakeContent mode={mode} />
-            <div className="text-right text-white text-md py-4">Staked Balance:1000ART     Balance: 100ART</div>
-            <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
-              <div className="text-sm  grid grid-cols-2">
-                  <div className="py-1.5 text-left text-white">Next Reward Amount</div>
-                  <div className="py-1.5 text-right text-white">
-                      <>
-                          {nextRewardValue} ART
-                      </>
-                  </div>
-                  <div className="py-1.5 text-left text-white">Staking Rebase</div>
-                  <div className="py-1.5 text-right text-green-500">
-                      <>
-                          {stakingRebasePercentage}%
-                      </>
-                  </div>
-                  <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                  <div className="py-1.5 text-right text-green-500">
-                      <>
-                          {prettify(fiveDayRate * 100,3)}%
-                      </>
-                  </div>
-              </div>
-          </div>
-            <div className="py-5">
-              <button className="bg-blue-600 px-8 py-4 my-1 text-white font-bold text-md rounded-md">Approve to Continue</button>
-            </div>
-          </div>
-          <div className="px-12 pt-2 text-xs text-gray-600 "> The "Approve" transaction is only needed when staking/unstaking for the first time</div>
+
         </div>
       </div>
     </Layout>
@@ -302,6 +281,80 @@ function StakeContent({ mode }) {
           <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
         </div>
       </CTABox>
+
+      <div className="text-right text-white text-md">Staked Balance: {trimmedBalance} sART  Balance: {prettify(artBalance, 4)} ART</div>
+            <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
+              <div className="text-sm  grid grid-cols-2">
+                  <div className="py-1.5 text-left text-white">Next Reward Amount</div>
+                  <div className="py-1.5 text-right text-white">
+                      <>
+                          {nextRewardValue} ART
+                      </>
+                  </div>
+                  <div className="py-1.5 text-left text-white">Staking Rebase</div>
+                  <div className="py-1.5 text-right text-green-500">
+                      <>
+                          {stakingRebasePercentage}%
+                      </>
+                  </div>
+                  <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
+                  <div className="py-1.5 text-right text-green-500">
+                      <>
+                          {prettify(fiveDayRate * 100,3)}%
+                      </>
+                  </div>
+              </div>
+          </div>
+          <div className="">
+        {isStaking ? (
+          !account ? (
+            <ConnectButton />
+          ) : isAllowanceDataLoading ? (
+            <Button loading={true}>Loading...</Button>
+          ) : account && stakeAllowance > 0 ? (
+            <Button
+              loading={isPendingTxn(pendingTransactions, "staking")}
+              onClick={() => {
+                onChangeStake("stake")
+              }}
+            >
+              {txnButtonText(pendingTransactions, "staking", "Stake ART")}
+            </Button>
+          ) : (
+            <Button
+              loading={isPendingTxn(pendingTransactions, "approve_staking")}
+              onClick={() => {
+                onSeekApproval(keys.token)
+              }}
+            >
+              {txnButtonText(pendingTransactions, "approve_staking", "Approve to Continue")}
+            </Button>
+          )
+        ) : !account ? (
+          <ConnectButton />
+        ) : isAllowanceDataLoading ? (
+          <Button loading={true}>Loading...</Button>
+        ) : account && unstakeAllowance > 0 ? (
+          <Button
+            loading={isPendingTxn(pendingTransactions, "unstaking")}
+            onClick={() => {
+              onChangeStake("unstake")
+            }}
+          >
+            {txnButtonText(pendingTransactions, "unstaking", "Unstake ART")}
+          </Button>
+        ) : (
+          <Button
+            loading={isPendingTxn(pendingTransactions, "approve_unstaking")}
+            onClick={() => {
+              onSeekApproval(keys.stoken)
+            }}
+          >
+            {txnButtonText(pendingTransactions, "approve_unstaking", "Approve to Continue")}
+          </Button>
+        )}
+      </div>
+      <div className="text-xs text-gray-600 "> The "Approve" transaction is only needed when staking/unstaking for the first time</div>
     </div>
   )
 }

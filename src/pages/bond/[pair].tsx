@@ -70,7 +70,7 @@ const BondIcon = bond.bondIconSvg
               subtitle={
                 <>
                   {isBondLoading ? (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={120} />
                   ) : (
                     "$" + prettify(bond.purchased)
                   )}
@@ -82,7 +82,7 @@ const BondIcon = bond.bondIconSvg
               subtitle={
                 <>
                   {isBondLoading ? (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={120} />
                   ) : (
                     "$" + prettify(marketPrice)
                   )}
@@ -94,7 +94,7 @@ const BondIcon = bond.bondIconSvg
                           title="Bond Price"
                           subtitle={
                             isBondLoading ? (
-                              <Skeleton height={30} width={150} />
+                              <Skeleton height={30} width={120} />
                             ) : (
                               "$" + prettify(bond.bondPrice)
                             )
@@ -106,7 +106,9 @@ const BondIcon = bond.bondIconSvg
             <ConnectButton/>
         </div>
         </PageHeading>
-        <div className="my-20 ml-5 py-7 px-3 rounded-md bg-dark-1000 bg-opacity-30">
+
+        
+        <div className="py-6 px-8 rounded-xl bg-dark-1000 bg-opacity-30">
           <Link href="/bond">
             <a className="items-center hidden text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
               <ArrowLeftIcon className="px-20 w-6.5 h-10 group-hover:-translate-x-1 transition transform"/>

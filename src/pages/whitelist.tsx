@@ -1,21 +1,21 @@
 import React from "react"
 import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
 import { useWeb3React } from "@web3-react/core"
 import { useRouter } from "next/router"
+import { useSelector } from "react-redux"
 import useSWR from "swr"
-import CTABox from "@components/ui/CTABox"
 
 import ArtPresaleABI from "@abi/ArtPresale.json"
+import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
+import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
 import { currentAddresses } from "@constants"
 import Presale from "@contracts/Presale"
 import { useContract } from "@hooks/contracts/useContract"
 import { useToken } from "@hooks/contracts/useToken"
 import { useTokenBalance } from "@hooks/contracts/useTokenBalance"
-import ConnectButton from "@components/ConnectButton"
 
 const MAX_ALLOCATION = 1500
 

@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from "react"
+import React, { useState } from "react"
 
 import { MenuIcon } from "@heroicons/react/outline"
-import ConnectButton from "@components/ConnectButton"
 
 import BondSubMenu from "@components/navigation/BondSubMenu"
 import LeftAside from "@components/navigation/LeftAside"

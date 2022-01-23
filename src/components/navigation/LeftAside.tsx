@@ -2,9 +2,6 @@ import clsx from "clsx"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
-import DiscordIcon from "@components/customicons/DiscordIcon"
-import MediumIcon from "@components/customicons/MediumIcon"
-import TwitterIcon from "@components/customicons/TwitterIcon"
 import { NavigationItem } from "@typings"
 
 function LeftAside({ navigation_top, navigation_bot }: { navigation_top: NavigationItem[],navigation_bot:NavigationItem[] }) {

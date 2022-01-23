@@ -5,17 +5,17 @@ import clsx from "clsx"
 import { ethers } from "ethers"
 import { useDispatch, useSelector } from "react-redux"
 
+import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
+import Button from "@components/ui/Button"
 import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"
 import { keys } from "@constants"
 import { getProvider, prettify } from "@helper"
 import { error } from "@slices/messagesSlice"
-import { changeApproval, changeStake } from "@slices/stakeThunk"
-import ConnectButton from "@components/ConnectButton"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
-import Button from "@components/ui/Button"
+import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function Stake() {
   // for the switch, we cannot really use another datatype other than boolean

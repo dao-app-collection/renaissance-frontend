@@ -1,9 +1,10 @@
 import React from "react"
-import { useSelector } from "react-redux";
-import { allBondsMap } from "@helper/bonds/allBonds";
-import Skeleton from "@components/ui/Skeleton";
-import { getProvider, prettify } from "@helper"
+
 import Link from "next/link";
+import { useSelector } from "react-redux";
+
+import { allBondsMap } from "@helper/bonds/allBonds";
+
 
 export default function Home() {
 
@@ -79,9 +80,9 @@ function LandingFront() {
       <img className="w-full h-1/2" src="/images/connectors/renassance.jpg" alt="RenaissanceDao"/>
       <div className="absolute top-0 left-0 px-10">
         <nav className="flex flex-row px-10 py-4 mx-auto">
-            <a href="/" className="flex">
+            <Link href="/">
             <span className="text-2xl font-semibold whitespace-nowrap text-white font-bold pr-8">Renaissance</span>
-          </a>
+          </Link>
           <div className="container flex flex-wrap mx-auto justify-center">
             <ul className="flex flex-row mt-2">
               <li>
@@ -113,5 +114,5 @@ function LandingFront() {
         </div>
       </div>
     </div>
-  );
+  )
 }

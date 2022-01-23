@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react"
 
 import { ArrowLeftIcon } from "@heroicons/react/outline"
+import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
+import { ethers } from "ethers"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useDispatch, useSelector } from "react-redux"
 
+import Bonding from "@components/bonds/Bonding"
+import Redeem from "@components/bonds/Redeem"
+import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
+import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"
 import { getProvider, prettify } from "@helper"
 import { allBondsMap } from "@helper/bonds/allBonds"
 import useBonds from "@hooks/bondData"
-import CTABox from "@components/ui/CTABox"
-import { useWeb3React } from "@web3-react/core"
-import { changeApproval, changeStake } from "@slices/stakeThunk"
 import { error } from "@slices/messagesSlice"
-import { ethers } from "ethers"
-import Bonding from "@components/bonds/Bonding"
-import Redeem from "@components/bonds/Redeem"
-import ConnectButton from "@components/ConnectButton"
+import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function BondPair() {
   const { bonds } = useBonds()

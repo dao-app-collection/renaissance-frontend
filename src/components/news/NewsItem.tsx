@@ -1,5 +1,4 @@
 import ArtExternal from "@components/ui/ArtLinkExternal"
-
 import Card from "@components/ui/Card"
 import { INewsItem } from "@typings"
 

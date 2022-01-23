@@ -1,4 +1,3 @@
-import { ArrowRightIcon } from "@heroicons/react/outline"
 import Link from "next/link"
 
 import Skeleton from "@components/ui/Skeleton"

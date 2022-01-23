@@ -1,9 +1,9 @@
 import React from "react"
 
 import { useSelector } from "react-redux"
-import ConnectButton from "@components/ConnectButton"
 
 import BondTable from "@components/bonds/BondTable"
+import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"

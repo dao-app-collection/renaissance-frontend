@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useSelector, useDispatch } from "react-redux"
@@ -17,7 +19,7 @@ import {
 } from "@helper"
 import { redeemBond } from "@slices/bondSlice"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
-import { useState } from "react"
+
 
 function Redeem({ bond }) {
   const dispatch = useDispatch()

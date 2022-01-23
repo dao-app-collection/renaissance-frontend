@@ -1,9 +1,11 @@
 import React from "react"
-import { useSelector } from "react-redux";
-import { allBondsMap } from "@helper/bonds/allBonds";
-import Skeleton from "@components/ui/Skeleton";
-import { getProvider, prettify } from "@helper"
+
 import Link from "next/link";
+import { useSelector } from "react-redux";
+
+import Skeleton from "@components/ui/Skeleton";
+import { prettify } from "@helper"
+import { allBondsMap } from "@helper/bonds/allBonds";
 
 export default function Home() {
 
@@ -30,19 +32,19 @@ export default function Home() {
   return (
   <div>
     <nav className="flex flex-row bg-black px-10 py-4">
-          <a href="/" className="flex">
+          <Link href="/">
           <span className="text-2xl mt-2 font-semibold whitespace-nowrap text-white font-bold">Renaissance</span>
-        </a>
+        </Link>
       <div className="container flex flex-wrap mx-auto justify-center">
         <ul className="flex flex-row mt-2">
           <li>
             <a href="#" className="py-1 pr-8 text-white" aria-current="page">Marketplace</a>
           </li>
           <li>
-            <a href="/bond" className="py-1 px-8 text-white" aria-current="page">Bond</a>
+            <a href="#" className="py-1 px-8 text-white" aria-current="page">Bond</a>
           </li>
           <li>
-            <a href="/stake" className="py-1 px-8 text-white" aria-current="page">Stake</a>
+            <a href="#" className="py-1 px-8 text-white" aria-current="page">Stake</a>
           </li>
           <li>
             <a href="#" className="py-1 px-8 text-white" aria-current="page">FAQ</a>

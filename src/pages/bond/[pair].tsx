@@ -56,14 +56,14 @@ const BondIcon = bond.bondIconSvg
         data-cy="bond-page"
       >
         <PageHeading>
-          <div className="flex-grow  py-10">
+          <div className="flex-grow py-10">
             <PageHeading.Title>Bond (1,1)</PageHeading.Title>
             <div className="flex item-stretch">
             <div className="py-2.5 text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
                 <BondIcon className="py-2 w-8 h-12"/>
               </div>
           </div>
-          <div className="px-4 rounded-md bg-opacity-30 px-20  py-10">
+          <div className="px-4 rounded-md bg-opacity-30 py-10">
           <PageHeading.Content>
             <PageHeading.Stat
               title="Bonded Value"
@@ -262,7 +262,7 @@ function BondingContent({ mode }) {
 
   return (
     <div className="space-y-6">
-      <CTABox className="flex items-center border-2 border-gray-600 justify-between ">
+      <CTABox className="flex items-center border-2 border-gray-600 justify-between">
         <div className="">
           <input
             onChange={(e: any) => setQuantity(e.target.value)}
@@ -272,7 +272,7 @@ function BondingContent({ mode }) {
           />
         </div>
         <div className="">
-          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
+          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
         </div>
       </CTABox>
     </div>

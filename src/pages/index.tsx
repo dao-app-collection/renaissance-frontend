@@ -1,6 +1,8 @@
 import React from "react"
 
 import Link from "next/link";
+import Image from "next/Image";
+
 import { useSelector } from "react-redux";
 
 import { allBondsMap } from "@helper/bonds/allBonds";
@@ -30,6 +32,7 @@ export default function Home() {
   
   return (
   <div >
+
     <LandingFront/>
     {/*
     <div className="">
@@ -66,24 +69,34 @@ export default function Home() {
 
     <div className="flex justify-center py-4 text-white"> 
         <p>PARTNERSHIPS</p>
-        
     </div>
+
+
+    <div className="flex ">
+        <div>
+          <Image src="/images/connectors/near_logo_wht.svg" alt="Near"  width={100} height={50} />
+        </div>
+        <div>
+          <Image src="/images/connectors/aurora-horiz-rev.svg" alt="Aurora"  width={120} height={50} />
+        </div>
+        <div>
+          <Image src="/images/connectors/frax.png" alt="Frax"  width={20} height={20} />
+        </div>
+      </div>
   </div>
   )
 }
+
 function LandingFront() {
   return (
     <div className="relative rounded-lg shadow-lg">
-      <div className="absolute w-full"> 
-      <div className="bg-black h-screen bg-opacity-60"></div>
-      </div>
-      <img className="w-full h-1/2" src="/images/connectors/renassance.jpg" alt="RenaissanceDao"/>
+      <Image src="/images/connectors/renassance.jpg" alt="RenaissanceDao" layout="responsive"  width={1200} height={500} />
       <div className="absolute top-0 left-0 px-10">
         <nav className="flex flex-row px-10 py-4 mx-auto">
             <Link href="/">
-            <span className="text-2xl font-semibold whitespace-nowrap text-white font-bold pr-8">Renaissance</span>
+            <span className="text-2xl whitespace-nowrap text-white font-bold pr-8">Renaissance</span>
           </Link>
-          <div className="container flex flex-wrap mx-auto justify-center">
+          <div className="container mx-auto flex flex-wrap items-center justify-between">
             <ul className="flex flex-row mt-2">
               <li>
                 <a href="#" className="py-1 px-10 text-white" aria-current="page">Marketplace</a>
@@ -100,12 +113,11 @@ function LandingFront() {
             </ul>
           </div>
         </nav>
-      <div className="absolute px-10">
-          <div className="py-10 px-10"></div>
+      <div className="container absolute px-10 ">
+          <div className="py-10 px-10 py"></div>
           <h2 className="px-20 text-4xl font-bold tracking-tight text-white">The Dencentralized</h2>
           <h2 className="px-20 mb-6 text-4xl font-bold tracking-tight text-white">NFT Reserve Currency</h2>
-          <p className="px-20 leading-normal text-white">Renaissance is a community-owned financial tool for the</p>
-          <p className="px-20 leading-normal text-white">better future of NFTs. We believe in decentralization of art.</p>
+          <p className="px-20 leading-normal text-white">Renaissance is a community-owned financial tool for the better future of NFTs. We believe in decentralization of art.</p>
           <div className="px-20 py-7">
           <Link href="/whitelist">
             <button className="bg-blue-600 px-6 py-3 text-white font-bold text-md rounded-md">Enter App</button>

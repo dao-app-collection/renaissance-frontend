@@ -8,21 +8,21 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 
 import ConnectButton from "@components/ConnectButton"
-import DiscordIcon from "@components/customicons/DiscordIcon"
-import MediumIcon from "@components/customicons/MediumIcon"
-import TwitterIcon from "@components/customicons/TwitterIcon"
 import { NavigationItem } from "@typings"
 
 interface MobileMenuProps {
   sidebarOpen: boolean
   setSidebarOpen: (open: boolean) => void
-  navigation: NavigationItem[]
+  navigation_top: NavigationItem[]
+  navigation_bot: NavigationItem[]
+
 }
 
 function MobileMenu({
   sidebarOpen,
   setSidebarOpen,
-  navigation,
+  navigation_top,
+  navigation_bot,
 }: MobileMenuProps) {
   const { asPath } = useRouter()
   const { active, deactivate } = useWeb3React()
@@ -54,7 +54,7 @@ function MobileMenu({
           leaveFrom="translate-x-0"
           leaveTo="-translate-x-full"
         >
-          <div className="relative flex flex-col flex-1 w-full max-w-xs bg-beige-100">
+          <div className="relative flex flex-col flex-1 w-full max-w-xs bg-black">
             <Transition.Child
               as={Fragment}
               enter="ease-in-out duration-300"
@@ -82,14 +82,14 @@ function MobileMenu({
               </div>
 
               <nav className="px-4 mt-5 space-y-4">
-                {navigation.map((item) => (
-                  <div key={item.name}>
+                {navigation_top.map((item) => (
+                  <div key={item.name} className="hover:bg-dark-1000 rounded-md">
                     <Link key={item.name} href={item.href}>
                       <a
                         className={clsx(
                           asPath === item.href
-                            ? "text-orange-600 font-bold"
-                            : "text-dark-900 font-medium",
+                          ? "text-dark-1000 font-bold"
+                          : "text-white font-medium",
                           "text-xl block"
                         )}
                       >
@@ -100,43 +100,34 @@ function MobileMenu({
                   </div>
                 ))}
 
+                {navigation_bot.map((item) => (
+                  <div key={item.name} className="hover:bg-dark-1000 rounded-md">
+                    <Link key={item.name} href={item.href}>
+                      <a
+                        className={clsx(
+                          asPath === item.href
+                            ? "text-dark-1000 font-bold"
+                            : "text-white font-medium",
+                          "text-xl block"
+                        )}
+                      >
+                        {item.name}
+                      </a>
+                    </Link>
+                    {item?.sub && <>{item.sub}</>}
+                  </div>
+                ))}
                 <ConnectButton />
 
                 {active && (
                   <button
-                    className="mt-1 font-medium text-orange-600 tracking-2% md:text-sm hover:opacity-80 transition"
+                    className="mt-1 font-medium text-white tracking-2% md:text-sm hover:opacity-80 transition"
                     onClick={deactivate}
                   >
                     Disconnect
                   </button>
                 )}
               </nav>
-            </div>
-
-            <div className="flex justify-between px-10 pb-8">
-              <a
-                href="https://discord.gg/renaissancedao"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <DiscordIcon className="w-8 h-8 text-orange-600 lg:w-7 lg:h-7" />
-              </a>
-
-              <a
-                href="https://twitter.com/renaissancedao"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <TwitterIcon className="w-8 h-8 text-orange-600 lg:w-7 lg:h-7" />
-              </a>
-
-              <a
-                href="https://medium.com/@DAORenaissance"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <MediumIcon className="w-8 h-8 text-orange-600 lg:w-7 lg:h-7" />
-              </a>
             </div>
           </div>
         </Transition.Child>

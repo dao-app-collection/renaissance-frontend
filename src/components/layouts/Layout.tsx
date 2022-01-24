@@ -30,11 +30,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <MobileMenu
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          navigation={navigation_top}
+          navigation_top={navigation_top}
+          navigation_bot={navigation_bot}
         />
-
         {/* mobile navbar showing hamburger menu that opens mobile menu */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-1.5 py-1.5 lg:hidden bg-beige-100 dark:bg-dark2-800">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-1.5 py-1.5 lg:hidden bg-black dark:bg-dark2-800">
           {/* <RenaissanceLogo className="w-auto h-6 text-black dark:text-white" /> */}
 
           <button

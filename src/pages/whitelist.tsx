@@ -1,14 +1,15 @@
 import React from "react"
 import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
 import { useWeb3React } from "@web3-react/core"
 import { useRouter } from "next/router"
+import { useSelector } from "react-redux"
 import useSWR from "swr"
-import CTABox from "@components/ui/CTABox"
 
 import ArtPresaleABI from "@abi/ArtPresale.json"
+import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
+import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
 import { currentAddresses } from "@constants"
 import Presale from "@contracts/Presale"
@@ -23,6 +24,7 @@ interface Fields {
 }
 
 export default function Whitelist() {
+  
   const { account } = useWeb3React()
   const [mode, setMode] = useState(false)
 
@@ -46,19 +48,25 @@ export default function Whitelist() {
 
   return (
     <Layout>
-      <div className="container relative min-h-screen py-10 bg-black">
-      <div className="z-20 flex flex-col px-4 mb-10"></div>
+      <div className="container relative h-full min-h-screen bg-black py-6">
 
         <PageHeading>
-          <div className="flex-grow">
+          <div className="flex-grow py-10">
             <PageHeading.Title> Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
-            <div className="mt-8 bg-dark-1000 bg-opacity-30 px-12">
+            </div>
+
+        <div className="px-4 bg-black">
+          <ConnectButton/>
+      </div>
+        </PageHeading>
+            <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
+              
             <div className="text-white text-2xl py-3">Deposit FRAX</div>
-            <StakeContent mode={mode} />
-            <div className="text-right text-white text-md py-4">Max You Can Buy: {} FRAX Balance {} FRAX</div>
+            <DepositContent mode={mode} />
+            <div className="text-right text-white text-md py-6">Max You Can Buy: {} FRAX Balance {} FRAX</div>
               <div className="flex items-stretch py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl m">
                 <PageHeading>
                   <PageHeading.Content>
@@ -67,21 +75,20 @@ export default function Whitelist() {
                       subtitle="aART"
                     />
                   </PageHeading.Content>
+                  
                 </PageHeading>
               </div>
-            </div>
-            <div className="flex items-center justify-center py-5">
-              <button className="bg-blue-600 px-12 py-2 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
+              <div className="flex items-center justify-center py-10">
+              <button className="bg-blue-600 px-12 py-3 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
             </div>  
+            </div>
           </div>
-        </PageHeading>
-      </div>
     </Layout>
   )
 }
 
 
-function StakeContent(mode) {
+function DepositContent(mode) {
 
   const [quantity, setQuantity] = useState(0)
   const isStaking = !mode

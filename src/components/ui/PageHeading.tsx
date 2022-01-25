@@ -41,9 +41,9 @@ interface StatProps {
 
 PageHeading.Stat = function PageHeadingStat({ title, subtitle }: StatProps) {
   return (
-    <div className="sm:text-right">
+    <div className="sm:text-left">
       <div className="text-sm font-medium text-dark-100">{title}</div>
-      <div className="mt-1 text-xl font-medium text-white 2xl:text-3xl">
+      <div className="mt-1 text-xl font-medium text-white 2xl:text-xl">
         {subtitle}
       </div>
     </div>

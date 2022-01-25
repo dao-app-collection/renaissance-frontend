@@ -42,7 +42,7 @@ function ConnectButton(props: ownProps) {
       <div className="md:px-2 2xl:px-4">
         <button
           type="button"
-          className="w-full button 2xl:button-lg button-sm button-primary button-hover"
+          className="bg-black rounded-xl border-2 border-gray w-full button 2xl:button-lg button-sm button-primary button-hover"
           onClick={() => {
             showModal(<ConnectorModal />)
           }}

@@ -18,7 +18,7 @@ function Button({
       disabled={disabled || loading}
       onClick={onClick}
       type="submit"
-      className={`flex items-center text-center button gap-3 button-primary button-hover disabled:opacity-75 ${className}`}
+      className={`flex items-center text-center button gap-3 button-primary button-hover disabled:opacity-75 bg-blue-600 px-4 py-4 my-1 text-white font-semibold text-md rounded-md ${className}`}
     >
       {loading && <Spinner />}
 

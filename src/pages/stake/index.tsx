@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
-import ArtSwitch from "@components/ui/ArtSwitch"
 import Button from "@components/ui/Button"
 import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
@@ -21,7 +20,28 @@ import { changeApproval, changeStake } from "@slices/stakeThunk"
 function Stake() {
   // for the switch, we cannot really use another datatype other than boolean
   const [mode, setMode] = useState(false)
+  const set = () =>{
+    setMode(!mode)
+  }
+  const stakingRebase = useSelector((state: any) => {
+    return state.app.stakingRebase
+  })
+  const sartBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.sart
+  })
+  const trimmedBalance = sartBalance
+  const fiveDayRate = useSelector((state: any) => {
+    return state.app.fiveDayRate
+  })
+  const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
+  const nextRewardValue = prettify(
+    (stakingRebasePercentage / 100) * trimmedBalance,
+    4
+  )
 
+  const artBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.art
+  })
   const currentIndex = useSelector((state: any) => {
     return state.app.currentIndex
   })
@@ -39,10 +59,14 @@ function Stake() {
 
   return (
     <Layout>
-      <div className="container relative min-h-screen py-10">
+      <div className="container relative h-full min-h-screen py-6 bg-black">
+
         <PageHeading>
-          <div className="flex-grow">
-            <PageHeading.Title>Stake</PageHeading.Title>
+          <div className="flex-grow py-10">
+            <PageHeading.Title>Stake (3,3)</PageHeading.Title>
+            <PageHeading.Subtitle>
+              HODL,stake,and compound.
+            </PageHeading.Subtitle>
             {/* {active && (
                 <PageHeading.Subtitle>
                   {secondsUntilNextEpoch > 0 ? (
@@ -53,7 +77,7 @@ function Stake() {
                 </PageHeading.Subtitle>
               )} */}
           </div>
-
+          <div className="px-4 rounded-md bg-opacity-30 px-20  py-10">
           <PageHeading.Content>
             <PageHeading.Stat
               title="APY"
@@ -62,75 +86,85 @@ function Stake() {
                   {stakingAPY > 0 ? (
                     `${trimmedStakingAPY}%`
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
             />
 
             <PageHeading.Stat
-              title="ART STAKED"
+              title="Total Value Deposited"
               subtitle={
                 <>
                   {stakingTVL ? (
-                    `${prettify(stakingTVL)}`
+                    "$"+ prettify(stakingTVL)
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
             />
 
             <PageHeading.Stat
-              title="INDEX"
+              title="Current Index"
               subtitle={
                 <>
                   {currentIndex ? (
-                    `${prettify(currentIndex)} ART`
+                    prettify(currentIndex) + "smART"
                   ) : (
-                    <Skeleton height={40} width={200} />
+                    <Skeleton height={40} width={100} />
                   )}
                 </>
               }
             />
           </PageHeading.Content>
+          </div>
+
+          <div className="px-4 bg-black">
+            <ConnectButton/>
+        </div>
         </PageHeading>
 
-        <div className="py-16">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-4">
-              <span
+        <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
+
+        <div className="flex justify-center">
+            <div className="px-1.5 py-1 inline-flex items-center gap-2 border-gray-600 border-2 rounded-md text-white">
+              <button
+                onClick={set}
                 className={clsx(
-                  "tracking-2% transition-colors font-medium text-dark-300",
+                  "px-3 py-1 tracking-2% transition-colors font-medium",
                   {
-                    "font-semibold !text-wine-600": !mode,
+                    "bg-dark-1000 rounded-md font-semibold": !mode,
                   }
                 )}
               >
                 Stake
-              </span>
-              <ArtSwitch enabled={mode} onChange={setMode} />
-              <span
+              </button>
+              <button
+                onClick={set}
                 className={clsx(
-                  "tracking-2% transition-colors font-medium text-dark-300",
+                  "px-3 py-1 tracking-2% transition-colors font-medium",
                   {
-                    "font-semibold !text-wine-600": mode,
+                    "bg-dark-1000 rounded-md font-semibold": mode,
                   }
                 )}
               >
                 Unstake
-              </span>
+              </button>
             </div>
           </div>
-
-          <div className="mt-8">
+          
+            <div className="text-white text-2xl py-3">Stake ART</div>
+          
             <StakeContent mode={mode} />
-          </div>
+
         </div>
       </div>
     </Layout>
   )
 }
+
+
 
 function StakeContent({ mode }) {
   const dispatch = useDispatch()
@@ -163,7 +197,6 @@ function StakeContent({ mode }) {
   const stakingRebase = useSelector((state: any) => {
     return state.app.stakingRebase
   })
-
   const pendingTransactions = useSelector((state: any) => {
     return state.pendingTransactions
   })
@@ -183,7 +216,7 @@ function StakeContent({ mode }) {
         token,
         walletProvider,
         chainId,
-      })
+      })  
     )
   }
 
@@ -235,81 +268,44 @@ function StakeContent({ mode }) {
 
   return (
     <div className="space-y-6">
-      <CTABox className="flex items-center justify-between max-w-lg mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-        <div className="">
-          <p className="font-medium text-white uppercase text-[32px] tracking-2%">
-            Art
-          </p>
-          <p className="font-medium tracking-2% text-dark-300">
-            (
-            <span onClick={setMax} className="cursor-pointer text-wine-600">
-              Max
-            </span>
-            )
-          </p>
-        </div>
-
+      <CTABox className="flex items-center border-2 border-gray-600 justify-between">
         <div className="">
           <input
             onChange={(e: any) => setQuantity(e.target.value)}
-            className="w-full text-lg font-semibold text-right bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
-            size={6}
-            placeholder="0.0"
+            className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+            size={12}
+            placeholder="0.0 ART"
           />
         </div>
-      </CTABox>
-
-      <CTABox className="max-w-lg py-4 mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-        <div className="space-y-2">
-          <h2 className="font-medium uppercase tracking-2% text-dark-300">
-            Staking Information
-          </h2>
-          <div className="space-y-4">
-            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-              <p>Your Balance</p>
-              {isAppLoading ? (
-                <Skeleton height={20} />
-              ) : (
-                <p className="text-right">{prettify(artBalance, 4)} ART</p>
-              )}
-            </div>
-            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-              <p>Your Staked Balance</p>
-              {isAppLoading ? (
-                <Skeleton height={20} />
-              ) : (
-                <p className="text-right">{trimmedBalance} sART</p>
-              )}
-            </div>
-            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-              <p>Next Reward Amount</p>
-              {isAppLoading ? (
-                <Skeleton height={20} />
-              ) : (
-                <p className="text-right">{nextRewardValue} sART</p>
-              )}
-            </div>
-            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-              <p>Next Reward Yield</p>
-              {isAppLoading ? (
-                <Skeleton height={20} />
-              ) : (
-                <p className="text-right">{stakingRebasePercentage} %</p>
-              )}
-            </div>
-            <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-              <p>ROI (5-Day Rate)</p>
-              {isAppLoading ? (
-                <Skeleton height={20} />
-              ) : (
-                <p className="text-right">{prettify(fiveDayRate * 100, 4)}</p>
-              )}
-            </div>
-          </div>
+        <div className="">
+          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
         </div>
       </CTABox>
 
-      <div className="flex justify-center">
+      <div className="text-right text-white text-md">Staked Balance: {trimmedBalance} sART  Balance: {prettify(artBalance, 4)} ART</div>
+            <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
+              <div className="text-sm  grid grid-cols-2">
+                  <div className="py-1.5 text-left text-white">Next Reward Amount</div>
+                  <div className="py-1.5 text-right text-white">
+                      <>
+                          {nextRewardValue} ART
+                      </>
+                  </div>
+                  <div className="py-1.5 text-left text-white">Staking Rebase</div>
+                  <div className="py-1.5 text-right text-green-500">
+                      <>
+                          {stakingRebasePercentage}%
+                      </>
+                  </div>
+                  <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
+                  <div className="py-1.5 text-right text-green-500">
+                      <>
+                          {prettify(fiveDayRate * 100,3)}%
+                      </>
+                  </div>
+              </div>
+          </div>
+          <div className="">
         {isStaking ? (
           !account ? (
             <ConnectButton />
@@ -331,7 +327,7 @@ function StakeContent({ mode }) {
                 onSeekApproval(keys.token)
               }}
             >
-              {txnButtonText(pendingTransactions, "approve_staking", "Approve")}
+              {txnButtonText(pendingTransactions, "approve_staking", "Approve to Continue")}
             </Button>
           )
         ) : !account ? (
@@ -354,10 +350,11 @@ function StakeContent({ mode }) {
               onSeekApproval(keys.stoken)
             }}
           >
-            {txnButtonText(pendingTransactions, "approve_unstaking", "Approve")}
+            {txnButtonText(pendingTransactions, "approve_unstaking", "Approve to Continue")}
           </Button>
         )}
       </div>
+      <div className="text-xs text-gray-600 "> The "Approve" transaction is only needed when staking/unstaking for the first time</div>
     </div>
   )
 }

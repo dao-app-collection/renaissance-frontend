@@ -44,7 +44,7 @@ function Bond() {
               Receivce ART at a discount.
             </PageHeading.Subtitle>
           </div>
-          <div className="rounded-md bg-opacity-30 px-20 py-10">
+          <div className="rounded-md bg-opacity-30 px-4 py-10">
           <PageHeading.Content>
             <PageHeading.Stat
               title="Treasury Balance"
@@ -72,7 +72,7 @@ function Bond() {
             />
           </PageHeading.Content>
         </div>
-        <div className="px-4 bg-black">
+        <div className="px-2 bg-black">
           <ConnectButton/>
       </div>
         </PageHeading>

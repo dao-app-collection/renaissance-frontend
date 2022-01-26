@@ -77,7 +77,7 @@ function Stake() {
                 </PageHeading.Subtitle>
               )} */}
           </div>
-          <div className="px-4 rounded-md bg-opacity-30 px-20  py-10">
+          <div className="px-20  py-10">
           <PageHeading.Content>
             <PageHeading.Stat
               title="APY"
@@ -120,7 +120,7 @@ function Stake() {
           </PageHeading.Content>
           </div>
 
-          <div className="px-4 bg-black">
+          <div className="px-2 bg-black">
             <ConnectButton/>
         </div>
         </PageHeading>
@@ -274,38 +274,38 @@ function StakeContent({ mode }) {
             onChange={(e: any) => setQuantity(e.target.value)}
             className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
             size={12}
-            placeholder="0.0 ART"
+            placeholder="   0.0 ART"
           />
         </div>
-        <div className="">
-          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
+        <div className="px-3">
+          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 hover:border-transparent rounded">Max amount</button>
         </div>
       </CTABox>
 
       <div className="text-right text-white text-md">Staked Balance: {trimmedBalance} sART  Balance: {prettify(artBalance, 4)} ART</div>
             <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
               <div className="text-sm  grid grid-cols-2">
-                  <div className="py-1.5 text-left text-white">Next Reward Amount</div>
-                  <div className="py-1.5 text-right text-white">
+                  <div className="px-4 py-1.5 text-left text-white">Next Reward Amount</div>
+                  <div className="px-4 py-1.5 text-right text-white">
                       <>
                           {nextRewardValue} ART
                       </>
                   </div>
-                  <div className="py-1.5 text-left text-white">Staking Rebase</div>
-                  <div className="py-1.5 text-right text-green-500">
+                  <div className="px-4 py-1.5 text-left text-white">Staking Rebase</div>
+                  <div className="px-4 py-1.5 text-right text-green-500">
                       <>
                           {stakingRebasePercentage}%
                       </>
                   </div>
-                  <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                  <div className="py-1.5 text-right text-green-500">
+                  <div className="px-4 py-1.5 text-left text-white">ROI (5-Day Rate)</div>
+                  <div className="px-4 py-1.5 text-right text-green-500">
                       <>
                           {prettify(fiveDayRate * 100,3)}%
                       </>
                   </div>
               </div>
           </div>
-          <div className="">
+          <div className="py-5 flex item-stretch">
         {isStaking ? (
           !account ? (
             <ConnectButton />

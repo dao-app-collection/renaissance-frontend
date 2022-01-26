@@ -118,17 +118,15 @@ function LandingFront() {
     <div className="relative flex bg-black">
       
       <img src="/images/connectors/renaissance.svg" alt="RenaissanceDao"/>
-      
-
+    
         <div className="absolute inset-0">
-          <nav className="flex md:justify-between shadow-lg bg-opacity-100 w-screen">
-            <div className="flex items-center px-8">
+          <nav className="flex shadow-lg bg-opacity-100 w-screen">
+            <div className="items-center px-8">
               <Link href="#">
                 <div className="py-3 px-10 text-2xl font-semibold text-white ">Renaissance</div>
               </Link>
             </div>
-            
-            <div className="hidden md:flex text-lg items-center pr-8 space-x-6">
+            <div className="hidden md:flex  text-lg items-center pr-8 space-x-6">
                     <a href="#" className="px-4 mt-2 text-white font-semibold hover:text-green-500 transition duration-300 cursor-pointer">Marketplace</a>
                     <a href="#" className="px-4 mt-2 text-white font-semibold hover:text-green-500 transition duration-300 cursor-pointer">Bond</a>
                     <a href="#" className="px-4 mt-2 text-white font-semibold hover:text-green-500 transition duration-300 cursor-pointer">Stake</a>
@@ -161,7 +159,9 @@ function LandingFront() {
           </nav>
         </div>
         <div className="absolute flex items-end py-10 justify-start px-10 inset-0">
+          <Link href="/whitelist">
           <button className="px-3 py-2 text-md bg-blue-600 text-white rounded-md font-bold">Enter App</button>
+          </Link>
         </div>
     </div>
     

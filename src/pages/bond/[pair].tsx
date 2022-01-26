@@ -102,7 +102,7 @@ const BondIcon = bond.bondIconSvg
             />
           </PageHeading.Content>
         </div>
-          <div className="px-4 bg-black">
+          <div className="px-2 bg-black">
             <ConnectButton/>
         </div>
         </PageHeading>
@@ -268,11 +268,11 @@ function BondingContent({ mode }) {
             onChange={(e: any) => setQuantity(e.target.value)}
             className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
             size={12}
-            placeholder="0.0 ART"
+            placeholder="   0.0 ART"
           />
         </div>
-        <div className="">
-          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
+        <div className="px-3">
+          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded">Max amount</button>
         </div>
       </CTABox>
     </div>

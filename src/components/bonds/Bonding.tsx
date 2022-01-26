@@ -232,11 +232,11 @@ function Bonding({ bond, slippage, setSlippage }) {
                 </CTABox>
             </div>
 
-          <div className="text-right text-white text-md py-4">Max You Can Buy: {format(round(bond.maxBondPrice, 4), 3) || "0"}  ART Balance: {prettify(bond.balance)} {displayUnits}</div>
+          <div className="text-right text-white text-md py-4">Max You Can Buy: {format(round(bond.maxBondPrice, 4), 3) || "0"} ART Balance: {prettify(bond.balance)} {displayUnits}</div>
           <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
             <div className="text-sm  grid grid-cols-2">
-                <div className="py-1.5 text-left text-white">You Will Get</div>
-                <div className="py-1.5 text-right text-white">
+                <div className="px-4 py-1.5 text-left text-white">You Will Get</div>
+                <div className="px-4 py-1.5 text-right text-white">
                     <>
                     {isBondLoading ? (
                     <Skeleton height={20} />
@@ -247,14 +247,14 @@ function Bonding({ bond, slippage, setSlippage }) {
                         )}
                     </>
                 </div>
-                <div className="py-1.5 text-left text-white">Vesting Term</div>
-                <div className="py-1.5 text-right text-white">
+                <div className="px-4 py-1.5 text-left text-white">Vesting Term</div>
+                <div className="px-4 py-1.5 text-right text-white">
                     <>
                     {isBondLoading ? <Skeleton height={20} /> : vestingPeriod()}
                     </>
                 </div>
-                <div className="py-1.5 text-left text-white">Debt Ratio</div>
-                <div className="py-1.5 text-right text-green-500">
+                <div className="px-4 py-1.5 text-left text-white">Debt Ratio</div>
+                <div className="px-4 py-1.5 text-right text-green-500">
                     <>
                     {isBondLoading ? (
                     <Skeleton height={20} />
@@ -265,8 +265,8 @@ function Bonding({ bond, slippage, setSlippage }) {
                     )}
                     </>
                 </div>
-                <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                <div className="py-1.5 text-right text-green-500">
+                <div className="px-4 py-1.5 text-left text-white">ROI (5-Day Rate)</div>
+                <div className="px-4 py-1.5 text-right text-green-500">
                     <>
                     {prettify(bond.bondDiscount * 100)}%
                     </>

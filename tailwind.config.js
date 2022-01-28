@@ -1,8 +1,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme")
 
 module.exports = {
-  mode: "jit",
-  purge: [
+  content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
@@ -18,24 +17,24 @@ module.exports = {
     },
     extend: {
       opacity: {
-        '0': '0',
-        '20': '.20',
-        '40': '.40',
-        '60': '.60',
-        '80': '.80',
-        '100': '1',
+        0: "0",
+        20: ".20",
+        40: ".40",
+        60: ".60",
+        80: ".80",
+        100: "1",
       },
       screens: {
-        'sm': '640px',
-      // => @media (min-width: 640px) { ... }
-        'md': '768px',
-      // => @media (min-width: 768px) { ... }
-        'lg': '1024px',
-      // => @media (min-width: 1024px) { ... }
-        'xl': '1280px',
-      // => @media (min-width: 1280px) { ... }
-        '2xl': '1536px',
-      // => @media (min-width: 1536px) { ... }
+        sm: "640px",
+        // => @media (min-width: 640px) { ... }
+        md: "768px",
+        // => @media (min-width: 768px) { ... }
+        lg: "1024px",
+        // => @media (min-width: 1024px) { ... }
+        xl: "1280px",
+        // => @media (min-width: 1280px) { ... }
+        "2xl": "1536px",
+        // => @media (min-width: 1536px) { ... }
         "3xl": "2200px",
       },
       boxShadow: {
@@ -93,7 +92,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ['responsive', 'hover', 'focus', 'group-hover'],
+      textColor: ["responsive", "hover", "focus", "group-hover"],
     },
   },
   // eslint-disable-next-line global-require

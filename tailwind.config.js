@@ -43,7 +43,7 @@ module.exports = {
         red: "0px 0px 20px rgba(190, 31, 62, 0.15)",
       },
       fontFamily: {
-        sans: ["IBM Plex Mono", ...defaultTheme.fontFamily.sans],
+        sans: ["SF Pro Display", ...defaultTheme.fontFamily.sans],
       },
       letterSpacing: {
         "2%": "2%",
@@ -53,6 +53,8 @@ module.exports = {
         layoutSM: "230px repeat(10, minmax(0, 1fr)) 230px",
       },
       colors: {
+        "bg-partnerships": "#18191D",
+        "landing-dark": "#787E8E",
         beige: {
           100: "#FAF6F6",
         },

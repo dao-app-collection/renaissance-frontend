@@ -27,7 +27,7 @@ function ConnectButton(props: ownProps) {
           <div className="tracking-2% md:text-sm 2xl:text-base">
             <div className="flex items-center gap-3">
               <span className="uppercase text-dark-800">Wallet</span>
-              <span className="w-3 h-3 rounded-full bg-[#24DB4D]"></span>
+              <span className="w-3 h-3 rounded-full bg-[#cbd3cc]"></span>
             </div>
 
             <p className="text-dark-100">{accountFormatted}</p>
@@ -39,10 +39,10 @@ function ConnectButton(props: ownProps) {
 
   return (
     <div className={customStyle ? customStyle : ""}>
-      <div className="md:px-2 2xl:px-4">
+      <div className="2xl:px-6">
         <button
           type="button"
-          className="bg-black rounded-xl border-2 border-gray w-full button 2xl:button-lg button-sm button-primary button-hover"
+          className="bg-black sm:text-xs font-bold rounded-xl border border-gray-600 w-full button 2xl:button-lg button-sm button-primary button-hover"
           onClick={() => {
             showModal(<ConnectorModal />)
           }}
@@ -55,12 +55,12 @@ function ConnectButton(props: ownProps) {
           {error instanceof UnsupportedChainIdError ? (
             <button
               onClick={switchChains}
-              className="text-xs font-medium text-left text-orange-600"
+              className="text-xs font-medium text-left text-gray-200"
             >
               Incorrect Chain! Click to switch
             </button>
           ) : (
-            <p className="text-xs font-medium text-orange-600">
+            <p className="text-xs font-medium text-gray-200">
               {errorMessage}
             </p>
           )}

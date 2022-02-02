@@ -55,6 +55,8 @@ module.exports = {
       colors: {
         "bg-partnerships": "#18191D",
         "landing-dark": "#787E8E",
+        "bg-header" : "#18181C",
+        "bg" : "#141416",
         beige: {
           100: "#FAF6F6",
         },

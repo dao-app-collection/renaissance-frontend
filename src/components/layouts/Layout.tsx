@@ -17,7 +17,9 @@ const navigation_top: NavigationItem[] = [
 const navigation_bot: NavigationItem[] = [
   { name: "Bond", href: "/bond", sub: <BondSubMenu/>, },
   { name: "Stake", href: "/stake" },
-  { name: "Whitelist", href: "/whitelist" },
+  { name: "Whitelist A", href: "/whitelist" },
+  { name: "Whitelist B", href: "/whitelistB" },
+
 
 ]
 
@@ -39,25 +41,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <button
             type="button"
-            className="inline-flex items-center justify-center w-12 h-12 text-gray-500 -ml-0.5 -mt-0.5 rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-600"
+            className="inline-flex items-center justify-center w-16 h-12 text-gray-500 -ml-0.5 -mt-0.5 rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-600"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
             <MenuIcon className="w-6 h-6" aria-hidden="true" />
           </button>
+          
         </div>
         
-        <div className="lg:grid 2xl:grid-cols-10 lg:grid-cols-10">       
+        <div className="lg:grid 2xl:grid-cols-10 lg:grid-cols-8">       
           <div className="hidden col-span-2 lg:block">
             <nav
               aria-label="Sidebar"
-              className="sticky top-0 max-w-full divide-y divide-dark-1000"
+              className="sticky top-0 divide-y divide-dark-1000"
             >
               <LeftAside navigation_top={navigation_top} navigation_bot={navigation_bot}/>
             </nav>
           </div>
 
-          <main className="lg:col-span-8 xl:col-span-8">{children}</main>
+          <main className="lg:col-span-6 xl:col-span-6">{children}</main>
 
         </div>
       </div>

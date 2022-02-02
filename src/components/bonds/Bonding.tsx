@@ -2,7 +2,6 @@ import { useCallback, useState, useEffect } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import clsx from "clsx"
 import { useSelector, useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
@@ -25,7 +24,58 @@ import { error } from "@slices/messagesSlice"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
 import { parseToFixed } from "@utils/parseUtils"
 
+function Content({ bond, quantity }){
 
+  const currentBlock = useSelector((state: any) => {
+    return state.app.currentBlock
+  })
+
+  const vestingPeriod = () => {
+    const vestingBlock = parseInt(currentBlock) + parseInt(bond.vestingTerm)
+    const seconds = secondsUntilBlock(currentBlock, vestingBlock)
+    return prettifySeconds(seconds, "day")
+  }
+  const isBondLoading = useSelector(
+    (state: any) => state.bonding.loading ?? true
+  )
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 bg-bg-header bg-opacity-50 rounded-lg flex-wrap items-center lg:justify-items-center gap-x-20 py-4 px-3">
+    <div className="grid grid-rows-2 text-left">
+        <div className="text-gray-500 row-start-1 text-md">What You Will Get</div>
+        <div className="row-start-2  text-lg">
+          <>
+            {isBondLoading ? (
+            <Skeleton height={20} />
+            ) : (
+            <p className="text-white">
+              {format(round(bond.bondQuote, 4), 3) || "0"} ART
+            </p>
+            )}
+          </>
+        </div>
+      </div>
+    <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">Vesting Term</div>
+      <div className="row-start-2 text-white text-lg">
+        <p>
+          {isBondLoading ? <Skeleton height={20} /> : vestingPeriod()}
+        </p>
+    </div>
+  </div>
+
+  <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">ROI</div>
+      <div className="row-start-2 text-white text-lg">
+        <p>
+          {prettify(bond.bondDiscount * 100)}%
+        </p>
+    </div>
+  </div>
+</div>
+
+
+  )
+}
 
 function Bonding({ bond, slippage, setSlippage }) {
     const SECONDS_TO_REFRESH = 60
@@ -89,7 +139,7 @@ function Bonding({ bond, slippage, setSlippage }) {
           showModal(
             <ProceedPromptModal
               onProceed={proceedAction}
-              overview={<BuyInfo bond={bond} quantity={quantity} />}
+              overview={<Content bond={bond} quantity={quantity} />}
             />
           )
         }
@@ -114,7 +164,7 @@ function Bonding({ bond, slippage, setSlippage }) {
           showModal(
             <ProceedPromptModal
               onProceed={proceedAction}
-              overview={<BuyInfo bond={bond} quantity={quantity} />}
+              overview={<Content bond={bond} quantity={quantity} />}
             />
           )
         }
@@ -207,75 +257,37 @@ function Bonding({ bond, slippage, setSlippage }) {
       .toUpperCase()
       .replace("-LP", " LP")
 
-      const BondIcon = bond.bondIconSvg
+    const BondIcon = bond.bondIconSvg
 
-      return (
-        <div className="mt-8 px-12">
+    return (
+        <div className="mt-8 px-1">
             <div className="flex item-stretch">
                     <div className="py-2 px-1.5 text-white text-xl font-semibold">Bond</div>
                     <div className="py-2 px-1.5 text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
-                    <BondIcon className="py-2 w-8 h-12"/>
+                    <BondIcon className="py-2 w-8 h-11"/>
             </div>
             <div className="space-y-6">
-                <CTABox className="flex items-center border-2 border-gray-600 justify-between ">
+                <CTABox className="flex items-center border border-gray-700 justify-between ">
                     <div className="">
                         <input
                             onChange={(e: any) => setQuantity(e.target.value)}
-                            className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+                            className="w-full h-1/4 md:text-md ml-3 text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
                             size={12}
                             placeholder="0.0 ART"
                         />
                     </div>
-                    <div className="">
-                        <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
-                    </div>
+                        <button onClick={setMax} className="mx-6 py-2 px-4 text-sm md:text-md bg-transparent hover:bg-blue-500 text-indigo-500 font-bold hover:text-white border border-indigo-500 hover:border-transparent rounded bg-dark-1500">Max amount</button>
                 </CTABox>
-            </div>
-
-          <div className="text-right text-white text-md py-4">Max You Can Buy: {format(round(bond.maxBondPrice, 4), 3) || "0"} ART Balance: {prettify(bond.balance)} {displayUnits}</div>
-          <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
-            <div className="text-sm  grid grid-cols-2">
-                <div className="px-4 py-1.5 text-left text-white">You Will Get</div>
-                <div className="px-4 py-1.5 text-right text-white">
-                    <>
-                    {isBondLoading ? (
-                    <Skeleton height={20} />
-                    ) : (
-                    <p className="text-right">
-                        {format(round(bond.bondQuote, 4), 3) || "0"} ART
-                    </p>
-                        )}
-                    </>
-                </div>
-                <div className="px-4 py-1.5 text-left text-white">Vesting Term</div>
-                <div className="px-4 py-1.5 text-right text-white">
-                    <>
-                    {isBondLoading ? <Skeleton height={20} /> : vestingPeriod()}
-                    </>
-                </div>
-                <div className="px-4 py-1.5 text-left text-white">Debt Ratio</div>
-                <div className="px-4 py-1.5 text-right text-green-500">
-                    <>
-                    {isBondLoading ? (
-                    <Skeleton height={20} />
-                    ) : (
-                    <p className="text-right">
-                        {prettify(bond.debtRatio / 10000000)}%
-                    </p>
-                    )}
-                    </>
-                </div>
-                <div className="px-4 py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                <div className="px-4 py-1.5 text-right text-green-500">
-                    <>
-                    {prettify(bond.bondDiscount * 100)}%
-                    </>
-                </div>
-            </div>
-        </div>
-        <div className="py-5 flex item-stretch">
+              </div>
+              <div className="text-right text-white text-md py-4"> 
+                <span className="">Max You Can Buy: {format(round(bond.maxBondPrice, 4), 3) || "0"} ART </span>
+                <span className="px-0 md:px-5"></span>
+                <span className="">Balance: {prettify(bond.balance)} {displayUnits}</span>
+              </div>
+              <Content bond={bond} quantity={quantity}/>
+        <div className="py-4 flex item-stretch">
             {!account ? (
-              <ConnectButton />
+              <ConnectButton/>
             ) : hasAllowance() ? (
               <Button
                 disabled={!bond.isAvailable}
@@ -297,79 +309,13 @@ function Bonding({ bond, slippage, setSlippage }) {
               </Button>
             )}
         </div>
-      <div className="pt-2 text-xs text-gray-600 "> The "Approve" transaction is only needed when bonding for the first time</div>
-    </div>
-    )
-}
-
-function BuyInfo({ bond, quantity }) {
-    const isBondLoading = useSelector(
-      (state: any) => state.bonding.loading ?? true
-    )
-  
-    const marketPrice = useSelector((state: any) => {
-      return state.app.marketPrice
-    })
-  
-    return (
-      <div className="py-6 mt-3 text-sm sm:text-base space-y-2">
-        <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-          <p>Bonding</p>
-          {isBondLoading ? (
-            <Skeleton height={20} />
-          ) : (
-            <p className="text-right">
-              {quantity} <span className="capitalize">{bond.name}</span>
-            </p>
-          )}{" "}
-        </div>
-  
-        <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-          <p>You Will Receive</p>
-          {isBondLoading ? (
-            <Skeleton height={20} />
-          ) : (
-            <p className="text-right">
-              {format(round(bond.bondQuote, 4), 3) || "0"} ART
-            </p>
-          )}
-        </div>
-  
-        <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-          <p>Bond Price</p>
-          {isBondLoading ? (
-            <Skeleton height={20} />
-          ) : (
-            <p className="text-right">${prettify(bond.bondPrice)}</p>
-          )}
-        </div>
-  
-        <div className="font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-          <p>Market Price</p>
-          {isBondLoading ? (
-            <Skeleton height={20} />
-          ) : (
-            <p className="text-right">${prettify(marketPrice)}</p>
-          )}
-        </div>
-  
-        <div className="items-center font-medium text-white grid grid-cols-2 gap-2 sm:gap-16 tracking-2%">
-          <p>Discount</p>
-          {isBondLoading ? (
-            <Skeleton height={20} />
-          ) : (
-            <p
-              className={clsx("text-right", {
-                "text-red-600": bond.bondDiscount < 0,
-                "text-orange-600": bond.bondDiscount > 0,
-              })}
-            >
-              {bond.bondDiscount && prettify(bond.bondDiscount * 100)}%
-            </p>
-          )}
-        </div>
+        <div className="text-xs text-gray-600"> 
+        {(account && !hasAllowance()) ?
+        <div>The "Approve" transaction is only needed when bonding for the first time</div> :
+        <div></div>
+        }
       </div>
-    )
-  }
-
-  export default Bonding
+    </div>
+  )
+}
+export default Bonding

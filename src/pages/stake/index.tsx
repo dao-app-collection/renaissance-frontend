@@ -3,19 +3,137 @@ import { useState } from "react"
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
 import { ethers } from "ethers"
+import Image from "next/image"
 import { useDispatch, useSelector } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import Button from "@components/ui/Button"
 import CTABox from "@components/ui/CTABox"
-import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"
 import { keys } from "@constants"
 import { getProvider, prettify } from "@helper"
 import { error } from "@slices/messagesSlice"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
 import { changeApproval, changeStake } from "@slices/stakeThunk"
+
+
+function Header(){
+
+  const isBondLoading = useSelector(
+    (state: any) => state.bonding.loading ?? true
+  )
+
+  const stakingAPY = useSelector((state: any) => {
+    return state.app.stakingAPY
+  })
+  const stakingTVL = useSelector((state: any) => {
+    return state.app.stakingTVL
+  })
+
+  const currentIndex = useSelector((state: any) => {
+    return state.app.currentIndex
+  })
+  const trimmedStakingAPY = prettify(stakingAPY * 100)
+
+  return (
+    <div className="grid grid-cols-4 text-white px-10 space-x-12 md:text-md 2xl:text-sm mr-10">
+      <div className="space-y-2 align-middle py-5">
+          <div className="text-4xl font-bold">Stake (3,3)</div>
+          <div className="text-dark-600 row-start-2 text-md">HODL, stake, and compound</div>     
+      </div>
+      <div className="bg-bg-header bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
+        <div className="grid grid-rows-2">
+            <div className="text-gray-500 row-start-1 text-md">APY</div>
+            <div className="row-start-2  text-lg">
+            <>
+                  {stakingAPY > 0 ? (
+                    `${trimmedStakingAPY}%`
+                  ) : (
+                    <Skeleton height={40} width={100} />
+                  )}
+                </>
+            </div>
+          </div>
+        <div className="grid grid-rows-2">
+          <div className="text-gray-500 row-start-1 text-md">Total Value Deposited</div>
+          <div className="row-start-2 text-white text-lg">
+          <>
+                  {stakingTVL ? (
+                    "$"+ prettify(stakingTVL)
+                  ) : (
+                    <Skeleton height={40} width={100} />
+                  )}
+            </>
+        </div>
+      </div>
+      <div className="grid grid-rows-2">
+          <div className="text-gray-500 row-start-1 text-md">Current Index</div>
+          <div className="row-start-2 text-white text-lg">
+          <>
+                  {currentIndex ? (
+                    prettify(currentIndex) + " smART"
+                  ) : (
+                    <Skeleton height={40} width={100} />
+                  )}
+                </>
+        </div>
+      </div>
+    </div>
+  </div>
+  )
+}
+
+
+function Content(){
+  const sartBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.sart
+  })
+  const stakingRebase = useSelector((state: any) => {
+    return state.app.stakingRebase
+  })
+  const trimmedBalance = sartBalance
+  const fiveDayRate = useSelector((state: any) => {
+    return state.app.fiveDayRate
+  })
+  const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
+  const nextRewardValue = prettify(
+    (stakingRebasePercentage / 100) * trimmedBalance,
+    4
+  )
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 bg-bg-header bg-opacity-50 rounded-lg flex-wrap items-center lg:justify-items-center gap-x-20 py-4 px-3">
+    <div className="grid grid-rows-2 text-left">
+        <div className="text-gray-500 row-start-1 text-md">Newt Reward Amount</div>
+        <div className="row-start-2 text-white  text-lg">
+                      <>
+                        {prettify(Number({nextRewardValue}),4)} ART
+                      </>
+        </div>
+      </div>
+    <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">Staking Rebase</div>
+      <div className="row-start-2 text-white text-lg">
+      <>
+        {stakingRebasePercentage}%
+      </>
+    </div>
+  </div>
+
+  <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">ROI (5-Day Rate)</div>
+      <div className="row-start-2 text-white text-lg">
+        <>
+          {prettify(fiveDayRate * 100,3)}%
+        </>
+    </div>
+  </div>
+</div>
+
+
+  )
+}
+
 
 function Stake() {
   // for the switch, we cannot really use another datatype other than boolean
@@ -59,80 +177,21 @@ function Stake() {
 
   return (
     <Layout>
-      <div className="container relative h-full min-h-screen py-6 bg-black">
-
-        <PageHeading>
-          <div className="flex-grow py-10">
-            <PageHeading.Title>Stake (3,3)</PageHeading.Title>
-            <PageHeading.Subtitle>
-              HODL,stake,and compound.
-            </PageHeading.Subtitle>
-            {/* {active && (
-                <PageHeading.Subtitle>
-                  {secondsUntilNextEpoch > 0 ? (
-                    `Next Rebase: ~${timeText}`
-                  ) : (
-                    <Skeleton height={15} width={80} />
-                  )}
-                </PageHeading.Subtitle>
-              )} */}
+      <div className="container relative h-full min-h-screen bg-black">
+      <div className="px-8 bg-black grid grid-cols-12 pt-6 py-8">
+          <div className="md:grid col-start-11 col-span-2 hidden">
+                <ConnectButton/>
           </div>
-          <div className="px-20  py-10">
-          <PageHeading.Content>
-            <PageHeading.Stat
-              title="APY"
-              subtitle={
-                <>
-                  {stakingAPY > 0 ? (
-                    `${trimmedStakingAPY}%`
-                  ) : (
-                    <Skeleton height={40} width={100} />
-                  )}
-                </>
-              }
-            />
-
-            <PageHeading.Stat
-              title="Total Value Deposited"
-              subtitle={
-                <>
-                  {stakingTVL ? (
-                    "$"+ prettify(stakingTVL)
-                  ) : (
-                    <Skeleton height={40} width={100} />
-                  )}
-                </>
-              }
-            />
-
-            <PageHeading.Stat
-              title="Current Index"
-              subtitle={
-                <>
-                  {currentIndex ? (
-                    prettify(currentIndex) + "smART"
-                  ) : (
-                    <Skeleton height={40} width={100} />
-                  )}
-                </>
-              }
-            />
-          </PageHeading.Content>
-          </div>
-
-          <div className="px-2 bg-black">
-            <ConnectButton/>
         </div>
-        </PageHeading>
-
-        <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
+        <Header/>
+        <div className="mt-10 mx-10 py-7 px-10 mb-5 rounded-md bg-bg-header bg-opacity-50 mr-20">
 
         <div className="flex justify-center">
-            <div className="px-1.5 py-1 inline-flex items-center gap-2 border-gray-600 border-2 rounded-md text-white">
+            <div className="px-1 py-1 inline-flex items-center gap-2 border-dark-1000 border-2 rounded-md text-white">
               <button
                 onClick={set}
                 className={clsx(
-                  "px-3 py-1 tracking-2% transition-colors font-medium",
+                  "px-5 py-1.5 tracking-2% transition-colors font-medium",
                   {
                     "bg-dark-1000 rounded-md font-semibold": !mode,
                   }
@@ -153,9 +212,15 @@ function Stake() {
               </button>
             </div>
           </div>
-          
-            <div className="text-white text-2xl py-3">Stake ART</div>
-          
+          <div className="flex item-stretch">
+            <div className="text-white text-2xl py-3 px-1.5">Stake ART</div>
+            <Image
+                  src="/images/r_logo.svg"
+                  alt="Near"
+                  width={25}
+                  height={25}
+              />
+              </div>
             <StakeContent mode={mode} />
 
         </div>
@@ -167,6 +232,7 @@ function Stake() {
 
 
 function StakeContent({ mode }) {
+
   const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React()
   const rpcProvider = getProvider()
@@ -268,21 +334,24 @@ function StakeContent({ mode }) {
 
   return (
     <div className="space-y-6">
-      <CTABox className="flex items-center border-2 border-gray-600 justify-between">
+      <CTABox className="flex items-center border border-gray-700 justify-between ">
         <div className="">
           <input
             onChange={(e: any) => setQuantity(e.target.value)}
-            className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+            className="w-full h-1/4 md:text-md ml-3 text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
             size={12}
-            placeholder="   0.0 ART"
+            placeholder="0.0 ART"
           />
         </div>
-        <div className="px-3">
-          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 hover:border-transparent rounded">Max amount</button>
-        </div>
+          <button onClick={setMax} className="mx-6 py-2 px-4 text-sm md:text-md bg-transparent hover:bg-blue-500 text-indigo-500 font-semibold hover:text-white border border-indigo-500 hover:border-transparent rounded bg-dark-1500">Max amount</button>
       </CTABox>
-
-      <div className="text-right text-white text-md">Staked Balance: {trimmedBalance} sART  Balance: {prettify(artBalance, 4)} ART</div>
+      <Content/>
+      {/*
+        <div className="text-right text-white text-md py-4"> 
+                  <span className="">Staked Balance: {trimmedBalance} sART </span>
+                  <span className="px-0 md:px-5"></span>
+                  <span className="">Balance: {prettify(artBalance, 4)} ART</span>
+        </div>
             <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
               <div className="text-sm  grid grid-cols-2">
                   <div className="px-4 py-1.5 text-left text-white">Next Reward Amount</div>
@@ -305,7 +374,8 @@ function StakeContent({ mode }) {
                   </div>
               </div>
           </div>
-          <div className="py-5 flex item-stretch">
+      */}
+          <div className="flex item-stretch">
         {isStaking ? (
           !account ? (
             <ConnectButton />
@@ -354,7 +424,12 @@ function StakeContent({ mode }) {
           </Button>
         )}
       </div>
-      <div className="text-xs text-gray-600 "> The "Approve" transaction is only needed when staking/unstaking for the first time</div>
+      <div className="text-xs text-gray-600"> 
+        {(account) ?
+        <div>The "Approve" transaction is only needed when bonding for the first time</div> :
+        <div></div>
+        }
+      </div>
     </div>
   )
 }

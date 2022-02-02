@@ -16,7 +16,7 @@ function LeftAside({ navigation_top, navigation_bot }: { navigation_top: Navigat
         <nav className="flex-1 px-0">
 
           <div className="text-gray-600 mt-5 mb-1 pl-2">NFT Marketplace</div>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {navigation_top.map((item) => (
               
               <div key={item.name}>
@@ -48,7 +48,7 @@ function LeftAside({ navigation_top, navigation_bot }: { navigation_top: Navigat
           <hr className="mt-5 border-gray-600"></hr>
 
           <div className="text-gray-600 mt-5 mb-1 pl-2">Finance</div>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {navigation_bot.map((item) => (
               <div key={item.name}>
                 <Link key={item.name} href={item.href}>                  
@@ -71,7 +71,6 @@ function LeftAside({ navigation_top, navigation_bot }: { navigation_top: Navigat
             ))}
           </div>
         </nav>
-        
       </div>
     </div>
   )

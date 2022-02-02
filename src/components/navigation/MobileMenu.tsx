@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
@@ -78,7 +79,19 @@ function MobileMenu({
 
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
-                <img className="w-auto h-8" src="/logo.svg" alt="Workflow" />
+              <Link href="/">
+          <div className="flex items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
+            <Image
+              src={"/images/renaissance-logo.svg"}
+              alt="logo"
+              width={"32px"}
+              height={"32px"}
+              className="absolute"
+            />
+            <div className="w-4" />
+            Renaissance
+          </div>
+        </Link>
               </div>
 
               <nav className="px-4 mt-5 space-y-4">

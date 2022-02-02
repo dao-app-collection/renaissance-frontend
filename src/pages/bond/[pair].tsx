@@ -13,13 +13,101 @@ import Redeem from "@components/bonds/Redeem"
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import CTABox from "@components/ui/CTABox"
-import PageHeading from "@components/ui/PageHeading"
 import Skeleton from "@components/ui/Skeleton"
 import { getProvider, prettify } from "@helper"
 import { allBondsMap } from "@helper/bonds/allBonds"
 import useBonds from "@hooks/bondData"
 import { error } from "@slices/messagesSlice"
 import { changeApproval, changeStake } from "@slices/stakeThunk"
+
+
+function Header(){
+
+  const isBondLoading = useSelector(
+    (state: any) => state.bonding.loading ?? true
+  )
+
+  const marketPrice = useSelector((state: any) => {
+    return state.app.marketPrice
+  })
+
+  const treasuryBalance = useSelector((state: any) => {
+    if (state.bonding.loading == false) {
+      let tokenBalances = 0
+      for (const bond in allBondsMap) {
+        if (state.bonding[bond]) {
+          tokenBalances += state.bonding[bond].purchased
+        }
+      }
+      return tokenBalances
+    }
+  })
+  const { bonds } = useBonds()
+  const router = useRouter()
+  // for the switch, we cannot really use another datatype other than boolean
+
+  const [bond, setBond] = useState<any>({})
+
+  useEffect(() => {
+    if (!router.query.pair) return
+    setBond(allBondsMap[router.query.pair.toString()])
+  }, [bonds, router])
+
+  if (!bond.name) return null
+
+  const BondIcon = bond.bondIconSvg
+
+  return (
+    <div className="grid grid-cols-4 text-white px-10 space-x-16 md:text-md 2xl:text-sm mr-10">
+      <div className="space-y-2 align-middle py-5">
+          <div className="text-4xl font-bold">Bond (1,1)</div>
+          <div className="flex item-stretch">
+            <div className="text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
+                <BondIcon className="w-8 h-8"/>
+              </div>
+
+      </div>
+      <div className="bg-bg-header bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
+        <div className="grid grid-rows-2">
+            <div className="text-gray-500 row-start-1 text-md">Bonded Value</div>
+            <div className="row-start-2  text-lg">
+              <>
+              {isBondLoading ? (
+                <Skeleton height={40} width={100} />
+                  ) : (
+                "$" + prettify(treasuryBalance)
+                )}
+              </>
+            </div>
+          </div>
+        <div className="grid grid-rows-2">
+          <div className="text-gray-500 row-start-1 text-md">ART Market Price</div>
+          <div className="row-start-2 text-white text-lg">
+            <>
+              {isBondLoading ? (
+                <Skeleton height={40} width={100} />
+                  ) : (
+                "$" + prettify(marketPrice)
+              )}
+            </>
+        </div>
+      </div>
+      <div className="grid grid-rows-2">
+          <div className="text-gray-500 row-start-1 text-md">Bond Price</div>
+          <div className="row-start-2 text-white text-lg">
+            <>
+              {isBondLoading ? (
+                <Skeleton height={40} width={100} />
+                  ) : (
+                "$" + prettify(marketPrice)
+              )}
+            </>
+        </div>
+      </div>
+    </div>
+  </div>
+  )
+}
 
 function BondPair() {
   const { bonds } = useBonds()
@@ -52,75 +140,28 @@ const BondIcon = bond.bondIconSvg
   return (
     <Layout>
       <div
-        className="container relative h-full min-h-screen py-6 bg-black"
+        className="container relative h-full min-h-screen bg-black"
         data-cy="bond-page"
       >
-        <PageHeading>
-          <div className="flex-grow py-10">
-            <PageHeading.Title>Bond (1,1)</PageHeading.Title>
-            <div className="flex item-stretch">
-            <div className="py-2.5 text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
-                <BondIcon className="py-2 w-8 h-12"/>
-              </div>
+        <div className="px-8 bg-black grid grid-cols-12 pt-6 py-8">
+          <div className="md:grid col-start-11 col-span-2 hidden">
+                <ConnectButton/>
           </div>
-          <div className="px-4 rounded-md bg-opacity-30 py-10">
-          <PageHeading.Content>
-            <PageHeading.Stat
-              title="Bonded Value"
-              subtitle={
-                <>
-                  {isBondLoading ? (
-                    <Skeleton height={40} width={120} />
-                  ) : (
-                    "$" + prettify(bond.purchased)
-                  )}
-                </>
-              }
-            />
-            <PageHeading.Stat
-              title="ART Market Price"
-              subtitle={
-                <>
-                  {isBondLoading ? (
-                    <Skeleton height={40} width={120} />
-                  ) : (
-                    "$" + prettify(marketPrice)
-                  )}
-                </>
-              }
-            />
-
-            <PageHeading.Stat
-                          title="Bond Price"
-                          subtitle={
-                            isBondLoading ? (
-                              <Skeleton height={30} width={120} />
-                            ) : (
-                              "$" + prettify(bond.bondPrice)
-                            )
-                          }
-            />
-          </PageHeading.Content>
         </div>
-          <div className="px-2 bg-black">
-            <ConnectButton/>
-        </div>
-        </PageHeading>
-
-        
-        <div className="py-6 px-8 rounded-xl bg-dark-1000 bg-opacity-30">
+        <Header/>
+        <div className="mt-10 mx-10 py-7 px-10 mb-5 rounded-md bg-bg-header bg-opacity-50 mr-20">
           <Link href="/bond">
-            <a className="items-center hidden text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
+            <a className="px-10 items-center hidden text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
               <ArrowLeftIcon className="px-20 w-6.5 h-10 group-hover:-translate-x-1 transition transform"/>
             </a>
           </Link>
 
           <div className="flex justify-center">
-            <div className="px-1.5 py-1 inline-flex items-center gap-2 border-gray-600 border-2 rounded-md text-white">
+            <div className="px-1 py-1 inline-flex items-center gap-2 border-dark-1000 border-2 rounded-md text-white">
               <button
                 onClick={set}
                 className={clsx(
-                  "px-3 py-1 tracking-2% transition-colors font-medium",
+                  "px-5 py-1.5 tracking-2% transition-colors font-medium",
                   {
                     "bg-dark-1000 rounded-md font-semibold": !mode,
                   }
@@ -159,6 +200,7 @@ const BondIcon = bond.bondIconSvg
     </Layout>
   )
 }
+
 
 function BondingContent({ mode }) {
   const dispatch = useDispatch()

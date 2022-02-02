@@ -2,6 +2,7 @@ import { useState } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import Image from "next/image"
 import { useSelector, useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
@@ -19,6 +20,63 @@ import {
 } from "@helper"
 import { redeemBond } from "@slices/bondSlice"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
+
+
+function Content({ bond, quantity }){
+
+  const currentBlock = useSelector((state: any) => {
+    return state.app.currentBlock
+  })
+
+
+  const vestingTime = () => {
+    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock)
+  }
+  const isBondLoading = useSelector(
+    (state: any) => state.bonding.loading ?? true
+  )
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 bg-bg-header bg-opacity-50 rounded-lg flex-wrap items-center lg:justify-items-center gap-x-20 py-4 px-3">
+    <div className="grid grid-rows-2 text-left">
+        <div className="text-gray-500 row-start-1 text-md">What You Will Get</div>
+        <div className="row-start-2  text-lg">
+          <>
+            {isBondLoading ? (
+            <Skeleton height={20} />
+            ) : (
+            <p className="text-white">
+              {format(round(bond.bondQuote, 4), 3) || "0"} ART
+            </p>
+            )}
+          </>
+        </div>
+      </div>
+    <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">Time Untill Fully Vested</div>
+      <div className="row-start-2 text-white text-lg">
+        <p>
+        {isBondLoading ? (
+                    <Skeleton height={20} />
+                  ) : (
+                    <p className="text-right">{vestingTime()}</p>
+                  )}        </p>
+    </div>
+  </div>
+
+  <div className="grid grid-rows-2 text-left">
+      <div className="text-gray-500 row-start-1 text-md">ROI</div>
+      <div className="row-start-2 text-white text-lg">
+        <p>
+          {prettify(bond.bondDiscount * 100)}%
+        </p>
+    </div>
+  </div>
+</div>
+
+
+  )
+}
+
 
 
 function Redeem({ bond }) {
@@ -104,71 +162,37 @@ function Redeem({ bond }) {
       const BondIcon = bond.bondIconSvg
 
   return (
-        
-    <div className="mt-8 px-12">
+      
+    <div className="mt-8 px-1">
         <div className="flex item-stretch">
                 <div className="py-2 px-1.5 text-white text-xl font-semibold">Redeem ART</div>
-                <BondIcon className="py-2 w-8 h-12"/>
+                <Image
+                  src="/images/r_logo.svg"
+                  alt="Near"
+                  width={25}
+                  height={25}
+              />
         </div>
     <div className="space-y-6">
-        <CTABox className="flex items-center border-2 border-gray-600 justify-between ">
+        <CTABox className="flex items-center border border-gray-700 justify-between ">
             <div className="">
                 <input
                     onChange={(e: any) => setQuantity(e.target.value)}
-                    className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+                    className="w-full h-1/4 md:text-md ml-3 text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
                     size={12}
                     placeholder="0.0 ART"
                 />
             </div>
-            <div className="">
-                <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Max amount</button>
-            </div>
+                <button onClick={setMax} className="mx-6 py-2 px-4 text-sm md:text-md bg-transparent hover:bg-blue-500 text-indigo-500 font-bold hover:text-white border border-indigo-500 hover:border-transparent rounded bg-dark-1500">Max amount</button>
         </CTABox>
     </div>
-
-
-    <div className="text-right text-white text-md py-4">Pending Rewards: {prettify(bond.interestDue)} ART Claimable Rewards: {prettify(bond.pendingPayout)} ART</div>
-          <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
-            <div className="text-sm  grid grid-cols-2">
-                <div className="py-1.5 text-left text-white">You Will Get</div>
-                <div className="py-1.5 text-right text-white">
-                    <>
-                    {isBondLoading ? (
-                    <Skeleton height={20} />
-                    ) : (
-                    <p className="text-right">
-                        {format(round(bond.bondQuote, 4), 3) || "0"} ART
-                    </p>
-                        )}
-                    </>
-                </div>
-                <div className="py-1.5 text-left text-white">Time Until Fully Vested</div>
-                <div className="py-1.5 text-right text-white">
-                    <>
-                    <p className="text-right">{vestingTime()}</p>
-                    </>
-                </div>
-                <div className="py-1.5 text-left text-white">Debt Ratio</div>
-                <div className="py-1.5 text-right text-green-500">
-                    <>
-                    {isBondLoading ? (
-                    <Skeleton height={20} />
-                    ) : (
-                    <p className="text-right">
-                        {prettify(bond.debtRatio / 10000000)}%
-                    </p>
-                    )}
-                    </>
-                </div>
-                <div className="py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                <div className="py-1.5 text-right text-green-500">
-                    <>
-                    {prettify(bond.bondDiscount * 100)}%
-                    </>
-                </div>
-            </div>
-        </div>
-        <div className="py-5 flex item-stretch">
+    <div className="text-right text-white text-md py-4"> 
+                <span className="">Pending Rewards: {prettify(bond.interestDue)} ART </span>
+                <span className="px-0 md:px-5"></span>
+                <span className="">Claimable Rewards: {prettify(bond.pendingPayout)} ART</span>
+    </div>
+    <Content bond={bond} quantity={quantity}/>
+        <div className="py-4 flex item-stretch">
         {!account ? (
             <ConnectButton />
           ) : (

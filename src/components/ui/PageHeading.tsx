@@ -16,7 +16,7 @@ PageHeading.Title = function PageHeadingTitle({
   children: string
 }) {
   return (
-    <p className="items-center text-3xl font-semibold text-white gap-2 sm:text-3xl tracking-2%">
+    <p className="items-center text-4xl font-semibold text-white gap-2 sm:text-4xl tracking-2%">
       {children}
     </p>
   )
@@ -41,9 +41,9 @@ interface StatProps {
 
 PageHeading.Stat = function PageHeadingStat({ title, subtitle }: StatProps) {
   return (
-    <div className="sm:text-left">
-      <div className="text-sm font-medium text-dark-100">{title}</div>
-      <div className="mt-1 text-xl font-medium text-white 2xl:text-xl">
+    <div className="sm:text-right">
+      <div className="text-sm font-medium text-white">{title}</div>
+      <div className="mt-1  text-xl font-medium text-white 2xl:text-xl">
         {subtitle}
       </div>
     </div>

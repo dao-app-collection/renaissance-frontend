@@ -1,56 +1,62 @@
-import React, { useRef } from "react"
+import React, { useState } from "react"
 
-import { ArrowRightIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
-import Reward from "react-rewards"
-import { useSWRConfig } from "swr"
+import { useDispatch, useSelector } from "react-redux"
+import useSWR, { useSWRConfig } from "swr"
 
-import ArtPresaleABI from "@abi/ArtPresale.json"
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/PageHeading"
-import Skeleton from "@components/ui/Skeleton"
-import Spinner from "@components/ui/Spinner"
 import { currentAddresses } from "@constants"
-import Presale from "@contracts/Presale"
-import { useContract } from "@hooks/contracts/useContract"
-import { useToken } from "@hooks/contracts/useToken"
-import { useTokenAllowance } from "@hooks/contracts/useTokenAllowance"
-import { useTokenBalance } from "@hooks/contracts/useTokenBalance"
-import { parseToFixed } from "@utils/parseUtils"
+import {
+  approve,
+  deposit,
+  getAllowance,
+  getAArtBalance,
+  getFraxBalance,
+  getUser,
+  getWhitelistedState,
+} from "@helper/presale"
+import { error } from "@slices/messagesSlice"
+
+const MAX_ALLOCATION = 1500
 
 interface Fields {
   amount: number
 }
 
 export default function Whitelist() {
-  const { account, active } = useWeb3React()
+  const [mode, setMode] = useState(false)
+
+  const { account } = useWeb3React()
+  const dispatch = useDispatch()
   const { mutate } = useSWRConfig()
 
-  const presale = useContract(
-    Presale,
-    currentAddresses.DAI_ART_PRESALE_ADDRESS,
-    ArtPresaleABI
+  const { data: user } = useSWR(["/user", account], (_, account) =>
+    getUser(account)
   )
 
-  const aArt = useToken(currentAddresses.AART_ADDRESS, {
-    decimals: 9,
-  })
-  const art = useToken(currentAddresses.ART_ADDRESS, { decimals: 9 })
-
-  const aArtBalance = useTokenBalance(aArt)
-  const aArtAllowance = useTokenAllowance(
-    aArt,
-    currentAddresses.DAI_ART_PRESALE_ADDRESS
+  const { data: isWhitelisted } = useSWR(
+    ["/whitelisted", account],
+    (_, account) => getWhitelistedState(account)
   )
 
-  const artBalance = useTokenBalance(art)
+  const { data: aArtBalance } = useSWR(
+    ["/aArtPayout", account],
+    (_, account) => getAArtBalance(account)
+  )
+
+  const { data: fraxBalance } = useSWR(["/fraxBalance", account], (_, account) =>
+    getFraxBalance(account)
+  )
+
+  const { data: fraxAllowance } = useSWR(
+    ["/fraxAllowance", account],
+    (_, account) => getAllowance(account)
+  )
 
   const {
     register,
@@ -64,200 +70,106 @@ export default function Whitelist() {
     reValidateMode: "onChange",
   })
 
-  const isAllowanceSufficient = aArtAllowance.allowance >= watch("amount")
-
-  const rewardsRef = useRef(null)
+  const isAllowanceSufficient = fraxAllowance >= watch("amount")
+  const remaining = MAX_ALLOCATION - user?.amount
 
   async function onSubmit({ amount }: Fields) {
     try {
-      if (amount <= 0) {
-        toast.error("Please enter amount greater than 0!")
-      }
       if (isAllowanceSufficient) {
-        await presale.withdraw(amount)
-        // shoot some grapes
-        rewardsRef.current.rewardMe()
+        await deposit(amount)
         mutate(["/user", account])
-        aArtBalance.mutate()
-        artBalance.mutate()
+        mutate(["/aArtPayout", account])
+        mutate(["/fraxBalance", account])
         reset({ amount: 0 })
       } else {
-        await aArt.approve(
-          currentAddresses.DAI_ART_PRESALE_ADDRESS,
-          ethers.constants.MaxUint256
-        )
-        aArtAllowance.mutate()
+        await approve(currentAddresses.AART_PRESALE_ADDRESS, 1500)
+        mutate(["/fraxAllowance", account])
       }
-    } catch (error) {
-      if (
-        error?.data?.message ===
-        "Error: VM Exception while processing transaction: reverted with reason string 'ART is not yet claimable'"
-      ) {
-        toast.error("ART is not yet claimable!")
-      } else {
-        toast.error("Something went wrong")
-      }
+    } catch (e) {
+      dispatch(error("Check your deposit limit!"))
     }
   }
 
   const router = useRouter()
 
-  const maxaArtTrimmed = parseToFixed(aArtBalance.balance, 4)
-
   return (
     <Layout>
-      <div className="container relative h-full min-h-screen py-10">
+      <div className="container relative h-full min-h-screen bg-black py-6">
+
         <PageHeading>
-          <div className="flex-grow">
-            <PageHeading.Title>Claim</PageHeading.Title>
+          <div className="flex-grow py-10">
+            <PageHeading.Title> Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
-              aART Remaining:{" "}
-              {aArtBalance.balance > 0 && (
-                <span className="text-orange-600 capitalize">Yes</span>
-              )}
-              {!aArtBalance.balance && (
-                <span className="text-orange-600 capitalize">No</span>
-              )}
+              For Virtuosos & Maestros.
             </PageHeading.Subtitle>
-          </div>
-
-          <PageHeading.Content>
-            <PageHeading.Stat
-              title="aART BALANCE"
-              subtitle={
-                aArtBalance.balance >= 0 ? (
-                  <>{aArtBalance.balance} aART</>
-                ) : (
-                  <Skeleton className="inline-block" height={15} width={80} />
-                )
-              }
-            />
-            <PageHeading.Stat
-              title="ART BALANCE"
-              subtitle={
-                artBalance.balance >= 0 ? (
-                  <>{artBalance.balance} ART</>
-                ) : (
-                  <Skeleton className="inline-block" height={15} width={80} />
-                )
-              }
-            />
-          </PageHeading.Content>
-        </PageHeading>
-
-        <section className="mt-14 space-y-10 xl:space-y-12">
-          <div className="flex justify-center">
-            <p className="max-w-lg mx-auto font-medium sm:text-sm sm:px-0 2xl:leading-relaxed xl:px-4 2xl:px-6 2xl:text-[17px] text-dark-700 xl:max-w-xl 2xl:max-w-2xl tracking-2%">
-              ArtDAO has conducted a fixed price auction of aART. Your aART is
-              to be converted to Art 1:1. Please claim your ART at your earliest
-              convenience.{" "}
-              <Link href="https://medium.com/@ArtDAO/3057b706a11a">
-                <a
-                  className="inline-flex items-center font-medium text-orange-600 2xl:gap-2 gap-2 md:gap-1.5 group tracking-2%"
-                  target="_blank"
-                  rel="noopener nofollow"
-                >
-                  <span>Learn more</span>
-                  <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition transform" />
-                </a>
-              </Link>
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="max-w-lg mx-auto sm:px-0 2xl:max-w-2xl xl:max-w-xl">
-              <CTABox className="flex items-center justify-between">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-2xl font-medium 2xl:text-[32px] text-dark-1000 tracking-2%">
-                      aART
-                    </p>
-                  </div>
-
-                  <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
-                    Balance{" "}
-                    {aArtBalance.balance >= 0 ? (
-                      <>{maxaArtTrimmed} aART</>
-                    ) : (
-                      <Skeleton
-                        className="inline-block"
-                        height={15}
-                        width={80}
-                      />
-                    )}{" "}
-                    (
-                    <button
-                      className="font-medium text-orange-600"
-                      type="button"
-                      onClick={() => {
-                        setValue("amount", aArtBalance.balance, {
-                          shouldValidate: true,
-                        })
-                      }}
-                    >
-                      Max
-                    </button>
-                    )
-                  </p>
-                </div>
-
-                <input
-                  className="w-full text-3xl font-semibold text-right border-transparent outline-none reset-number-spinner text-dark-400 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
-                  type="number"
-                  placeholder="0.0"
-                  step="0.000000001"
-                  {...register("amount", {
-                    required: true,
-                    max: aArtBalance.balance,
-                    min: 0,
-                  })}
-                />
-              </CTABox>
             </div>
 
-            <div className="mt-12">
-              <div className="w-1 h-1 mx-auto">
-                <Reward
-                  ref={rewardsRef}
-                  type="emoji"
-                  config={{
-                    emoji: ["🍇"],
-                    lifetime: 100,
-                    springAnimation: false,
-                    spread: 80,
-                  }}
-                >
-                  <div></div>
-                </Reward>
-              </div>
-
-              <div className="flex justify-center">
-                {active && (
-                  <button
-                    disabled={!isValid || isSubmitting}
-                    type="submit"
-                    className="flex items-center button gap-3 button-primary button-hover disabled:opacity-75"
-                  >
-                    {isSubmitting && <Spinner />}
-
-                    <span>
-                      {isAllowanceSufficient || !watch("amount")
-                        ? "Claim ART"
-                        : "Approve"}
-                    </span>
-                  </button>
-                )}
-
-                {!active && (
-                  <div className="flex justify-center">
-                    <ConnectButton customStyle="w-100" />
-                  </div>
-                )}
-              </div>
-            </div>
-          </form>
-        </section>
+        <div className="px-2 bg-black">
+          <ConnectButton/>
       </div>
+        </PageHeading>
+            <div className="py-7 px-20 rounded-xl bg-dark-1000 bg-opacity-30">
+              
+            <div className="text-white text-2xl py-3">Deposit FRAX</div>
+            <DepositContent mode={mode} />
+            <div className="text-right text-white text-md py-6">Max You Can Buy: {} FRAX Balance {} FRAX</div>
+              <div className="flex items-stretch py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl m">
+                <PageHeading>
+                  <PageHeading.Content>
+                    <PageHeading.Stat
+                      title="What You Will Get"
+                      subtitle="aART"
+                    />
+                  </PageHeading.Content>
+                  
+                </PageHeading>
+              </div>
+              <div className="flex items-center justify-center py-10">
+              <button className="bg-blue-600 px-12 py-3 mx-1 text-white font-bold text-md rounded-md">Deposit</button>
+            </div>  
+            </div>
+          </div>
     </Layout>
+  )
+}
+
+
+function DepositContent(mode) {
+
+  const [quantity, setQuantity] = useState(0)
+  const isStaking = !mode
+  const isUnstaking = mode
+  const isAppLoading = useSelector((state: any) => state.app.loading)
+
+  const artBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.art
+  })
+  const sartBalance = useSelector((state: any) => {
+    return state.account.balances && state.account.balances.sart
+  })
+  const setMax = () => {
+    if (isStaking) {
+      setQuantity(artBalance)
+    } else {
+      setQuantity(sartBalance)
+    }
+  }
+  return (
+    <div className="space-y-6">
+      <CTABox className="flex items-center border-2 border-gray-600 justify-between ">
+        <div className="">
+          <input
+            onChange={(e: any) => setQuantity(e.target.value)}
+            className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+            size={12}
+            placeholder="   0.0 FRAX"
+          />
+        </div>
+        <div className="px-3">
+          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 border border-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-md">Max amount</button>
+        </div>
+      </CTABox>
+      </div>
+      
   )
 }

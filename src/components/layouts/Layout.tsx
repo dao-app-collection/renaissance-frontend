@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import { MenuIcon } from "@heroicons/react/outline"
 
-import BondSubMenu from "@components/navigation/BondSubMenu"
+// import BondSubMenu from "@components/navigation/BondSubMenu"
 import LeftAside from "@components/navigation/LeftAside"
 import MobileMenu from "@components/navigation/MobileMenu"
 //import RightAside from "@components/navigation/RightAside"
@@ -11,16 +11,13 @@ import { NavigationItem } from "@typings"
 
 const navigation_top: NavigationItem[] = [
 
-  { name: "Pre-sale", href: "#" },
-  { name: "Listing", href: "#" },
+  // { name: "Pre-sale", href: "#" },
+  // { name: "Listing", href: "#" },
 ]
 const navigation_bot: NavigationItem[] = [
-  { name: "Bond", href: "/bond", sub: <BondSubMenu/>, },
-  { name: "Stake", href: "/stake" },
-  { name: "Whitelist A", href: "/whitelist" },
-  { name: "Whitelist B", href: "/whitelistB" },
-
-
+  // { name: "Bond", href: "/bond", sub: <BondSubMenu/>, },
+  // { name: "Stake", href: "/stake" },
+  { name: "Whitelist", href: "/whitelist" },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {

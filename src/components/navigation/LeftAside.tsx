@@ -15,7 +15,7 @@ function LeftAside({ navigation_top, navigation_bot }: { navigation_top: Navigat
 
         <nav className="flex-1 px-0">
 
-          <div className="text-gray-600 mt-5 mb-1 pl-2">NFT Marketplace</div>
+          <div className="text-gray-600 mt-5 mb-1 pl-2">NFT Marketplace (Coming soon)</div>
           <div className="space-y-5">
             {navigation_top.map((item) => (
               

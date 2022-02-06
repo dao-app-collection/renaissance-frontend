@@ -26,9 +26,9 @@ async function deposit(amount: number) {
   await tx.wait()
 }
 
-async function getTotalRaisedDAI() {
+async function getTotalRaisedFRAX() {
   const contract = getContract()
-  const totalRaised = await contract.totalRaisedDAI()
+  const totalRaised = await contract.totalRaisedFRAX()
   const formattedRaised = totalRaised.number() as Number
 
   return formattedRaised
@@ -125,7 +125,7 @@ async function setPresale() {
 
 export {
   deposit,
-  getTotalRaisedDAI,
+  getTotalRaisedFRAX,
   startSale,
   whiteListUser,
   getWhitelistedState,

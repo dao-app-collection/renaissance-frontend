@@ -85,6 +85,7 @@ async function getAllowance(owner: string) {
   return parseFloat(ethers.utils.formatEther(allowance))
 }
 
+//For testing with mock frax
 async function mintFrax(address: string) {
   const provider = getProvider()
 

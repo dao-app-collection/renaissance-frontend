@@ -34,18 +34,6 @@ async function getTotalRaisedFRAX() {
   return formattedRaised
 }
 
-async function startSale() {
-  const contract = getContract()
-  const tx = await contract.start()
-  await tx.wait()
-}
-
-async function whiteListUser(address: string) {
-  const contract = getContract()
-  const tx = await contract.addWhitelist(address)
-  await tx.wait()
-}
-
 async function getWhitelistedState(address: string): Promise<boolean> {
   const contract = getContract()
   const isWhitelisted = await contract.whitelisted(address)
@@ -85,18 +73,6 @@ async function getAllowance(owner: string) {
   return parseFloat(ethers.utils.formatEther(allowance))
 }
 
-//For testing with mock frax
-async function mintFrax(address: string) {
-  const provider = getProvider()
-
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
-
-  const val = ethers.utils.parseEther("1500")
-
-  const payout = await contract.mint(address, val)
-  await payout.wait()
-}
-
 async function getFraxBalance(address: string) {
   const provider = getProvider()
 
@@ -115,6 +91,20 @@ async function getAArtBalance(address: string) {
   return ethers.utils.formatUnits(payout, 9)
 }
 
+//DEV / TEST FUNCTIONS FROM HERE
+
+//For testing with mock frax
+async function mintFrax(address: string) {
+  const provider = getProvider()
+
+  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
+
+  const val = ethers.utils.parseEther("1500")
+
+  const payout = await contract.mint(address, val)
+  await payout.wait()
+}
+
 async function setPresale() {
   const provider = getProvider()
 
@@ -122,6 +112,18 @@ async function setPresale() {
 
   const payout = await contract.setPresale(presaleAddress)
   return payout as number
+}
+
+async function startSale() {
+  const contract = getContract()
+  const tx = await contract.start()
+  await tx.wait()
+}
+
+async function whiteListUser(address: string) {
+  const contract = getContract()
+  const tx = await contract.addWhitelist(address)
+  await tx.wait()
 }
 
 export {

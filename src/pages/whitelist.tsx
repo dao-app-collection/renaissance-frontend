@@ -18,13 +18,12 @@ import {
   getAllowance,
   getFraxBalance,
   getAArtPrice,
+  getAArtBalance,
   getUserRemainingAllocation,
   getWhitelistedState,
 } from "@helper/presale"
 import { error } from "@slices/messagesSlice"
 import { parseEthersErrorMessage } from "@utils/parseUtils"
-
-const MAX_ALLOCATION = 1000
 
 export default function Whitelist() {
   const { account, library } = useWeb3React<Web3Provider>()
@@ -32,11 +31,16 @@ export default function Whitelist() {
   const { mutate } = useSWRConfig()
 
   const [txPending, setTxPending] = useState(false)
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState("")
 
   const { data: isWhitelisted } = useSWR(
     ["/whitelisted", account],
     (_, account) => getWhitelistedState(account)
+  )
+
+  const { data: aArtBalance } = useSWR(
+    ["/aArtBalance", account],
+    (_, account) => getAArtBalance(account)
   )
 
   const { data: fraxBalance } = useSWR(
@@ -49,7 +53,7 @@ export default function Whitelist() {
     (_, account) => getAllowance(account)
   )
 
-  const { data: amountClaimable } = useSWR(
+  const { data: userRemainingAllocation } = useSWR(
     ["/userRemainingAllocation", account],
     (_, account) =>
       getUserRemainingAllocation(account).then((number) => (+number).toFixed(2))
@@ -58,27 +62,33 @@ export default function Whitelist() {
   const { data: aArtPrice } = useSWR(["/aArtPrice", account], getAArtPrice)
 
   const isAllowanceSufficient = fraxAllowance >= +amount
-  const isValid =
-    !isNaN(+amount) && +amount > 0 && +amount <= MAX_ALLOCATION * +aArtPrice
+  const maxAArtClaimable = +userRemainingAllocation / +aArtPrice
   const receivingAmount = (+amount / +aArtPrice).toFixed(4)
+  const maxFraxDeposit =
+    +fraxBalance > +userRemainingAllocation
+      ? +userRemainingAllocation
+      : +fraxBalance
+  const validateInput = (input: string | number | undefined): input is number =>
+    !isNaN(+input) && +input > 0 && +input <= +userRemainingAllocation
+  const isValid = validateInput(amount)
   const buttonDisabled = !isWhitelisted || !amount || !isValid
 
   async function onSubmit() {
     if (library) {
       try {
         setTxPending(true)
-        if (isAllowanceSufficient) {
+        if (isAllowanceSufficient && isValid) {
           await deposit(library, amount)
           mutate(["/user", account])
           mutate(["/aArtPayout", account])
           mutate(["/fraxBalance", account])
           mutate(["/userRemainingAllocation", account])
-          setAmount(0)
+          setAmount("")
         } else {
           await approve(
             library,
             currentAddresses.AART_PRESALE_ADDRESS,
-            MAX_ALLOCATION
+            maxAArtClaimable * +aArtPrice
           )
           mutate(["/fraxAllowance", account])
         }
@@ -104,11 +114,25 @@ export default function Whitelist() {
         </PageHeading>
         <div className="px-20 py-7 rounded-xl bg-scheme-600 max-w-[1000px]">
           <div className="py-3 text-2xl text-white">Deposit FRAX</div>
-          <DepositContent amount={amount} setAmount={setAmount} />
+          <DepositContent
+            maxFraxDeposit={maxFraxDeposit}
+            amount={amount}
+            setAmount={setAmount}
+          />
           <div className="flex justify-end flex-grow w-full py-4 text-white text-md">
-            <div className="mx-6">Max You Can Buy: {amountClaimable} aART</div>{" "}
             <div>
-              Balance{" "}
+              aArt Balance: {!isNaN(+aArtBalance) ? aArtBalance : "--"} aART
+            </div>
+            <div className="flex-grow" />
+            <div className="mx-6">
+              Max You Can Buy:{" "}
+              {!isNaN(maxAArtClaimable) && isWhitelisted
+                ? maxAArtClaimable
+                : "--"}{" "}
+              aART
+            </div>
+            <div>
+              Balance:{" "}
               {!isNaN(+fraxBalance) ? (+fraxBalance).toFixed(2) : "0.00"} FRAX
             </div>
           </div>
@@ -118,7 +142,12 @@ export default function Whitelist() {
               {!isNaN(+receivingAmount) ? receivingAmount : "0.0000"} aART
             </div>
           </div>
-          <div className="flex items-center justify-center py-6">
+          <div className="flex flex-col items-center justify-center py-6">
+            {account && !isWhitelisted && (
+              <div className="text-gray-400">
+                (This address is not whitelisted)
+              </div>
+            )}
             <Button
               className="px-14"
               disabled={buttonDisabled}
@@ -135,19 +164,17 @@ export default function Whitelist() {
 }
 
 function DepositContent({
+  maxFraxDeposit,
   amount,
   setAmount,
 }: {
-  amount: number
-  setAmount: (quantity: number) => void
+  maxFraxDeposit: number
+  amount: string
+  setAmount: (quantity: string) => void
 }) {
   const isAppLoading = !!useSelector((state: any) => state.app.loading)
-
-  const fraxBalance = useSelector((state: any) => {
-    return state.account.balances ? state.account.balances.frax : "0"
-  })
-
-  const setMax = () => setAmount(fraxBalance)
+  const maxButtonDisabled = maxFraxDeposit === 0
+  const setMax = () => setAmount(maxFraxDeposit.toString())
 
   return (
     <div className="space-y-6">
@@ -157,12 +184,14 @@ function DepositContent({
             value={amount}
             disabled={isAppLoading}
             onChange={(e: any) => setAmount(e.target.value)}
-            className="w-full text-xl text-left bg-transparent outline-none text-scheme-400 text-dark-input tracking-2%"
+            className={`w-full text-xl text-left bg-transparent outline-none text-${
+              +amount > 0 ? "gray-200" : "scheme-400"
+            } text-dark-input tracking-2%`}
             size={12}
             placeholder="0.0 FRAX"
           />
         </div>
-        <MaxButton onClick={setMax} />
+        <MaxButton disabled={maxButtonDisabled} onClick={setMax} />
       </CTABox>
     </div>
   )

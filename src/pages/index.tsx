@@ -79,12 +79,10 @@ function Nav() {
             Stake
           </a>
           <Link passHref={true} href="/whitelist">
-          <div            
-            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-blue-500"
-          >
-            {" "}
-            Whitelist
-          </div>
+            <div className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-blue-500">
+              {" "}
+              Whitelist
+            </div>
           </Link>
         </div>
       </div>
@@ -243,24 +241,24 @@ function SlashScreen() {
           </div>
         </div>
         <div className="h-full w-full flex items-center">
-        <div className="z-10 flex flex-col px-4 mt-[-2rem] md:mt-0 md:max-w-min">
-          <div className="text-5xl font-semibold text-white md:whitespace-nowrap lg:text-6xl">
-            The Rebirth of NFTs
+          <div className="z-10 flex flex-col px-4 mt-[-2rem] md:mt-0 md:max-w-min">
+            <div className="text-5xl font-semibold text-white md:whitespace-nowrap lg:text-6xl">
+              The Rebirth of NFTs
+            </div>
+            <div className="h-4" />
+            <div className="text-xl text-white">
+              Renaissance is a community-owned financial tool for the better
+              future of NFTs. We believe in decentralization of art.
+            </div>
+            <div className="h-8" />
+            <div className="flex justify-center pt-4 pb-8 md:justify-start ">
+              <Link passHref={true} href="/whitelist">
+                <button className="px-6 py-3 font-bold text-white bg-blue-500 rounded-lg text-md hover:opacity-70 transition">
+                  Enter App
+                </button>
+              </Link>
+            </div>
           </div>
-          <div className="h-4" />
-          <div className="text-xl text-white">
-            Renaissance is a community-owned financial tool for the better
-            future of NFTs. We believe in decentralization of art.
-          </div>
-          <div className="h-8" />
-          <div className="flex justify-center pt-4 pb-8 md:justify-start ">
-            <Link passHref={true} href="/whitelist">
-              <button className="px-6 py-3 font-bold text-white bg-blue-500 rounded-lg text-md hover:opacity-70 transition">
-                Enter App
-              </button>
-            </Link>
-          </div>
-        </div>
         </div>
       </div>
     </div>

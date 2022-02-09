@@ -62,7 +62,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <main className="lg:col-span-6 2xl:col-span-8">{children}</main>
+          <main className="lg:col-span-6 2xl:col-span-8">
+            <div className="md:px-15 lg:px-20">{children}</div>
+          </main>
         </div>
       </div>
     </>

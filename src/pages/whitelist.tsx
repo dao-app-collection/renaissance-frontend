@@ -104,21 +104,19 @@ export default function Whitelist() {
 
   return (
     <Layout>
-      <div className="container relative h-full min-h-screen py-6 bg-scheme-bg">
+      <ConnectButton customStyle="z-50 absolute right-[5px] top-[50px] w-[200px] lg:right-[40px]" />
+      <div className="container relative h-full min-h-screen py-6">
         {/* <PageHeading> */}
-        <div className="flex w-full justify-items-end ">
-          <ConnectButton customStyle="w-[150px]" />
-        </div>
         {/* </PageHeading> */}
         <PageHeading>
-          <div className="flex-grow py-10">
+          <div className="flex-grow mt-[50px] py-10">
             <PageHeading.Title> Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
           </div>
         </PageHeading>
-        <div className="px-20 py-7 rounded-xl bg-scheme-600">
+        <div className="px-20 py-7 rounded-xl bg-scheme-600 max-w-[1000px]">
           <div className="py-3 text-2xl text-white">Deposit FRAX</div>
           <DepositContent amount={amount} setAmount={setAmount} />
           <div className="flex justify-end flex-grow w-full py-4 text-white text-md">
@@ -128,7 +126,7 @@ export default function Whitelist() {
               {!isNaN(+fraxBalance) ? (+fraxBalance).toFixed(2) : "0.00"} FRAX
             </div>
           </div>
-          <div className="py-5 md:py-5 bg-scheme-200 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl">
+          <div className="py-5 md:py-5 bg-scheme-200 bg-opacity-60 sm:py-4 sm:px-10 px-4 rounded-xl">
             <div className="text-sm text-scheme-400">You will receive</div>
             <div className="text-lg text-white">
               {!isNaN(+receivingAmount) ? receivingAmount : "0.00000"} aART

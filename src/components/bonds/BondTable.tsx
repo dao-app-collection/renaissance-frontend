@@ -82,23 +82,26 @@ export default function BondTable() {
                     )
                   return (
                     <Link key={bond.name} href={href} passHref={true}>
-                    <tr key={bond.name} className="transition duration-300 ease-in-out hover:bg-gray-600">
-                      <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
-                      <BondIcon className="w-20 h-8" />
-                        {bond.name.split("_").join(" ")}
-                      </td>
-                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
-                        ${prettify(bond.bondPrice)}
-                      </td>
+                      <tr
+                        key={bond.name}
+                        className="transition duration-300 ease-in-out hover:bg-gray-600"
+                      >
+                        <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
+                          <BondIcon className="w-20 h-8" />
+                          {bond.name.split("_").join(" ")}
+                        </td>
+                        <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
+                          ${prettify(bond.bondPrice)}
+                        </td>
 
-                      <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
-                        {prettify(bond.bondDiscount * 100)}%
-                      </td>
+                        <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
+                          {prettify(bond.bondDiscount * 100)}%
+                        </td>
 
-                      <td className="px-6 py-4 font-medium text-right text-white whitespace-nowrap">
-                        ${prettify(bond.purchased)}
-                      </td>
-                    </tr>
+                        <td className="px-6 py-4 font-medium text-right text-white whitespace-nowrap">
+                          ${prettify(bond.purchased)}
+                        </td>
+                      </tr>
                     </Link>
                   )
                 })}

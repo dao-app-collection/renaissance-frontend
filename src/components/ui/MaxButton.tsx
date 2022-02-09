@@ -4,7 +4,7 @@ export const MaxButton = ({
 }: {
   onClick: VoidFunction
   styles?: string
-}  & React.HTMLAttributes<HTMLButtonElement>) => {
+} & React.HTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       onClick={onClick}

@@ -105,7 +105,7 @@ export const loadAccountDetails = createAsyncThunk(
         addresses[chainId].STAKING_ADDRESS
       )
     }
-    
+
     if (addresses[chainId].FRAX_RESERVE_ADDRESS) {
       const fraxContract = new ethers.Contract(
         addresses[chainId].FRAX_RESERVE_ADDRESS,

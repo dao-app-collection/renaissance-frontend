@@ -20,9 +20,7 @@ import useBonds from "@hooks/bondData"
 import { error } from "@slices/messagesSlice"
 import { changeApproval, changeStake } from "@slices/stakeThunk"
 
-
-function Header(){
-
+function Header() {
   const isBondLoading = useSelector(
     (state: any) => state.bonding.loading ?? true
   )
@@ -60,52 +58,55 @@ function Header(){
   return (
     <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-16 md:text-md 2xl:text-sm">
       <div className="py-5 align-middle space-y-2">
-          <div className="text-4xl font-bold">Bond (1,1)</div>
-          <div className="flex item-stretch">
-            <div className="text-xl font-semibold text-white uppercase">{bond.name.split("_").join(" ")}</div>
-                <BondIcon className="w-8 h-8"/>
-              </div>
-
+        <div className="text-4xl font-bold">Bond (1,1)</div>
+        <div className="flex item-stretch">
+          <div className="text-xl font-semibold text-white uppercase">
+            {bond.name.split("_").join(" ")}
+          </div>
+          <BondIcon className="w-8 h-8" />
+        </div>
       </div>
       <div className="inline-flex flex-wrap items-center px-3 py-2 rounded-lg bg-bg-scheme-500 bg-opacity-50 col-span-3 gap-x-20 gap-y-5">
         <div className="grid grid-rows-2">
-            <div className="text-gray-500 row-start-1 text-md">Bonded Value</div>
-            <div className="text-lg row-start-2">
-              <>
+          <div className="text-gray-500 row-start-1 text-md">Bonded Value</div>
+          <div className="text-lg row-start-2">
+            <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
-                  ) : (
+              ) : (
                 "$" + prettify(treasuryBalance)
-                )}
-              </>
-            </div>
+              )}
+            </>
           </div>
+        </div>
         <div className="grid grid-rows-2">
-          <div className="text-gray-500 row-start-1 text-md">ART Market Price</div>
+          <div className="text-gray-500 row-start-1 text-md">
+            ART Market Price
+          </div>
           <div className="text-lg text-white row-start-2">
             <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
-                  ) : (
+              ) : (
                 "$" + prettify(marketPrice)
               )}
             </>
+          </div>
         </div>
-      </div>
-      <div className="grid grid-rows-2">
+        <div className="grid grid-rows-2">
           <div className="text-gray-500 row-start-1 text-md">Bond Price</div>
           <div className="text-lg text-white row-start-2">
             <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
-                  ) : (
+              ) : (
                 "$" + prettify(marketPrice)
               )}
             </>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   )
 }
 
@@ -132,10 +133,10 @@ function BondPair() {
   }, [bonds, router])
 
   if (!bond.name) return null
-const set = () =>{
-  setMode(!mode)
-}
-const BondIcon = bond.bondIconSvg
+  const set = () => {
+    setMode(!mode)
+  }
+  const BondIcon = bond.bondIconSvg
 
   return (
     <Layout>
@@ -145,14 +146,14 @@ const BondIcon = bond.bondIconSvg
       >
         <div className="px-8 py-8 pt-6 bg-black grid grid-cols-12">
           <div className="hidden md:grid col-start-11 col-span-2">
-                <ConnectButton/>
+            <ConnectButton />
           </div>
         </div>
-        <Header/>
+        <Header />
         <div className="px-10 mx-10 mt-10 mb-5 mr-20 py-7 rounded-md bg-bg-scheme-500 bg-opacity-50">
           <Link href="/bond">
             <a className="items-center hidden px-10 text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
-              <ArrowLeftIcon className="h-10 px-20 w-6.5 group-hover:-translate-x-1 transition transform"/>
+              <ArrowLeftIcon className="h-10 px-20 w-6.5 group-hover:-translate-x-1 transition transform" />
             </a>
           </Link>
 
@@ -182,16 +183,20 @@ const BondIcon = bond.bondIconSvg
               </button>
             </div>
           </div>
-        
+
           <div className="mt-8">
             {isBonding && (
               <div>
-              <Bonding bond={bond} slippage={slippage} setSlippage={setSlippage}/>
+                <Bonding
+                  bond={bond}
+                  slippage={slippage}
+                  setSlippage={setSlippage}
+                />
               </div>
             )}
             {isRedeeming && (
-             <div>
-                <Redeem bond={bond}/>
+              <div>
+                <Redeem bond={bond} />
               </div>
             )}
           </div>
@@ -200,7 +205,6 @@ const BondIcon = bond.bondIconSvg
     </Layout>
   )
 }
-
 
 function BondingContent({ mode }) {
   const dispatch = useDispatch()
@@ -252,7 +256,7 @@ function BondingContent({ mode }) {
         token,
         walletProvider,
         chainId,
-      })  
+      })
     )
   }
 
@@ -314,7 +318,12 @@ function BondingContent({ mode }) {
           />
         </div>
         <div className="px-3">
-          <button onClick={setMax} className="px-4 py-2 font-semibold text-indigo-700 bg-transparent border rounded hover:bg-blue-500 hover:text-white hover:border-transparent">Max amount</button>
+          <button
+            onClick={setMax}
+            className="px-4 py-2 font-semibold text-indigo-700 bg-transparent border rounded hover:bg-blue-500 hover:text-white hover:border-transparent"
+          >
+            Max amount
+          </button>
         </div>
       </CTABox>
     </div>

@@ -12,8 +12,8 @@ function BondSubMenu() {
   return (
     <div className="hidden mt-2 space-y-3 xl:block">
       <div className="grid grid-cols-2">
-      <div className="text-dark-600 text-left">Name</div>
-      <div className="text-dark-600 text-right">ROI</div>
+        <div className="text-dark-600 text-left">Name</div>
+        <div className="text-dark-600 text-right">ROI</div>
       </div>
       {bonds.map((item) => {
         const href = `/bond/${item.name}`

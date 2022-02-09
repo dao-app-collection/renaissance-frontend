@@ -48,8 +48,8 @@ export function parseEthersErrorMessage(error: any) {
     const [, message] = error.data.message.split(
       "Error: VM Exception while processing transaction: reverted with reason string "
     )
-    return message.replace("'", "")
-  }else if(error?.message) {
-    return error.message;
-  }else return 'Encountered an error';
+    return message
+  } else if (error?.message) {
+    return error.message
+  } else return "Encountered an error"
 }

@@ -31,7 +31,7 @@ function ConnectorModal() {
 
         <div className="w-full mt-8 space-y-4">
           <button
-            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg bg-beige-100 py-2.5 hover:bg-opacity-80 transition"
+            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg py-2.5 hover:bg-opacity-80 transition"
             onClick={async () => {
               await activate(injected)
               close()
@@ -49,7 +49,7 @@ function ConnectorModal() {
           </button>
 
           <button
-            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg bg-beige-100 py-2.5 hover:bg-opacity-80 transition"
+            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg py-2.5 hover:bg-opacity-80 transition"
             onClick={async () => {
               await activate(walletconnect)
               close()

@@ -70,6 +70,10 @@ export default ConnectButton
 
 // import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 
+// import { getErrorMessage } from "@helper/getErrorMessage"
+// import { switchChains } from "@helper/walletHelpers"
+// import useModal from "@hooks/useModal"
+
 // import ConnectorModal from "./modals/ConnectorModal"
 
 // interface ownProps {

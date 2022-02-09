@@ -86,5 +86,8 @@
     "postcss": "^8.4.5"
   },
   "main": "index.js",
-  "repository": "https://github.com/Renaissance-DAO/renaissance-frontend.git"
+  "repository": "https://github.com/Renaissance-DAO/renaissance-frontend.git",
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": "eslint --cache --fix"
+  }
 }

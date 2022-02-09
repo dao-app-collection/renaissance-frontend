@@ -1,4 +1,4 @@
-[
+  [
     {
       "inputs": [
         {
@@ -280,20 +280,7 @@
           "type": "address[]"
         }
       ],
-      "name": "addMultipleWhitelistA",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "_addresses",
-          "type": "address[]"
-        }
-      ],
-      "name": "addMultipleWhitelistB",
+      "name": "addMultipleWhitelist",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -324,20 +311,7 @@
           "type": "address"
         }
       ],
-      "name": "addWhitelistA",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        }
-      ],
-      "name": "addWhitelistB",
+      "name": "addWhitelist",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -381,20 +355,7 @@
     },
     {
       "inputs": [],
-      "name": "capA",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "capB",
+      "name": "cap",
       "outputs": [
         {
           "internalType": "uint256",
@@ -577,20 +538,7 @@
           "type": "address"
         }
       ],
-      "name": "removeWhitelistA",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        }
-      ],
-      "name": "removeWhitelistB",
+      "name": "removeWhitelist",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -758,26 +706,7 @@
           "type": "address"
         }
       ],
-      "name": "whitelistedA",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "whitelistedB",
+      "name": "whitelisted",
       "outputs": [
         {
           "internalType": "bool",

@@ -50,6 +50,7 @@ interface IUserAccountDetails {
     dai: string
     art: string
     sart: string
+    frax: string
   }
   staking: {
     artStake: number
@@ -67,6 +68,7 @@ export const loadAccountDetails = createAsyncThunk(
     address,
   }: IBaseAddressAsyncThunk): Promise<IUserAccountDetails> => {
     let artBalance = BigNumber.from(0)
+    let fraxBalance = BigNumber.from(0)
     let sartBalance = BigNumber.from(0)
     let stakeAllowance = BigNumber.from(0)
     let unstakeAllowance = BigNumber.from(0)
@@ -78,7 +80,6 @@ export const loadAccountDetails = createAsyncThunk(
       provider
     )
     const daiBalance = await daiContract.balanceOf(address)
-
     if (addresses[chainId].ART_ADDRESS) {
       const artContract = new ethers.Contract(
         addresses[chainId].ART_ADDRESS as string,
@@ -104,12 +105,22 @@ export const loadAccountDetails = createAsyncThunk(
         addresses[chainId].STAKING_ADDRESS
       )
     }
+    
+    if (addresses[chainId].FRAX_RESERVE_ADDRESS) {
+      const fraxContract = new ethers.Contract(
+        addresses[chainId].FRAX_RESERVE_ADDRESS,
+        ierc20Abi.abi,
+        provider
+      )
+      fraxBalance = await fraxContract.balanceOf(address)
+    }
 
     return {
       balances: {
         dai: ethers.utils.formatEther(daiBalance),
         art: ethers.utils.formatUnits(artBalance, "gwei"),
         sart: ethers.utils.formatUnits(sartBalance, "gwei"),
+        frax: ethers.utils.formatUnits(fraxBalance, "ether"),
       },
       staking: {
         artStake: +stakeAllowance,

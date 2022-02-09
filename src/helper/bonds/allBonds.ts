@@ -4,7 +4,6 @@ import FraxIcon from "@components/customicons/FraxIcon"
 import { currentAddresses } from "@constants"
 import { StableBond, LPBond } from "@helper/bonds/bondConstructor"
 import FraxBondContract from "src/abi/bonds/FraxContract.json"
-import MimBondContract from "src/abi/bonds/MimContract.json"
 
 export const frax = new StableBond({
   name: "frax",
@@ -16,19 +15,6 @@ export const frax = new StableBond({
   networkAddrs: {
     bondAddress: currentAddresses.FRAX_BOND_ADDRESS,
     reserveAddress: currentAddresses.FRAX_RESERVE_ADDRESS,
-  },
-})
-
-export const mim = new StableBond({
-  name: "mim",
-  displayName: "MIM",
-  bondToken: "MIM",
-  isAvailable: true,
-  bondIconSvg: FraxIcon,
-  bondContractABI: MimBondContract.abi,
-  networkAddrs: {
-    bondAddress: currentAddresses.MIM_BOND_ADDRESS,
-    reserveAddress: currentAddresses.MIM_RESERVE_ADDRESS,
   },
 })
 
@@ -51,7 +37,7 @@ export const art_frax = new LPBond({
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
 // Add new bonds to this array!!
-export const allBonds = [frax, mim, art_frax]
+export const allBonds = []//frax, art_frax
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond }
 }, {})

@@ -1,4 +1,3 @@
-
 import { ethers } from "ethers"
 
 import aArtAbi from "@abi/aArtAbi.json"
@@ -91,6 +90,20 @@ async function getAArtBalance(address: string) {
   return ethers.utils.formatUnits(payout, 9)
 }
 
+async function getAArtPrice() {
+  const contract = getContract()
+
+  const payout = await contract.price()
+  return ethers.utils.formatUnits(payout, 18)
+}
+
+async function getUserRemainingAllocation(address: string) {
+  const contract = getContract()
+
+  const remainingAllocation = await contract.getUserRemainingAllocation(address)
+  return ethers.utils.formatUnits(remainingAllocation, 18)
+}
+
 //DEV / TEST FUNCTIONS FROM HERE
 
 //For testing with mock frax
@@ -136,6 +149,8 @@ export {
   mintFrax,
   setPresale,
   getAArtBalance,
+  getAArtPrice,
+  getUserRemainingAllocation,
   approve,
   getAllowance,
   getFraxBalance,

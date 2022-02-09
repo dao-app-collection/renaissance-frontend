@@ -27,7 +27,6 @@ export const loadAppDetails = createAsyncThunk(
     } catch (rejectedValueOrSerializedError) {
       // handle error here
       console.error("Returned a null response from dispatch(loadMarketPrice)")
-      return
     }
 
     if (!provider) {
@@ -63,7 +62,6 @@ export const loadAppDetails = createAsyncThunk(
 
     // Current index
     const currentIndex = await stakingContract.index()
-
     return {
       stakingTVL,
       currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),

@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           navigation_bot={navigation_bot}
         />
         {/* mobile navbar showing hamburger menu that opens mobile menu */}
-        <div className="sticky top-0 z-10 flex items-center justify-between bg-black px-1.5 py-1.5 lg:hidden dark:bg-dark2-800">
+        <div className="sticky top-0 z-10 flex items-center justify-between bg-bg px-1.5 py-1.5 lg:hidden">
           {/* <RenaissanceLogo className="w-auto h-6 text-black dark:text-white" /> */}
 
           <button
@@ -44,21 +44,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <span className="sr-only">Open sidebar</span>
             <MenuIcon className="w-6 h-6" aria-hidden="true" />
           </button>
-          
         </div>
-        
-        <div className="lg:grid 2xl:grid-cols-10 lg:grid-cols-8">       
+
+        <div className="lg:grid 2xl:grid-cols-10 lg:grid-cols-8">
           <div className="hidden col-span-2 lg:block">
             <nav
               aria-label="Sidebar"
               className="sticky top-0 divide-y divide-dark-1000"
             >
-              <LeftAside navigation_top={navigation_top} navigation_bot={navigation_bot}/>
+              <LeftAside
+                navigation_top={navigation_top}
+                navigation_bot={navigation_bot}
+              />
             </nav>
           </div>
 
-          <main className="lg:col-span-6 xl:col-span-6">{children}</main>
-
+          <main className="lg:col-span-6 2xl:col-span-8">{children}</main>
         </div>
       </div>
     </>

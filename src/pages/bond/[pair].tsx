@@ -58,19 +58,19 @@ function Header(){
   const BondIcon = bond.bondIconSvg
 
   return (
-    <div className="grid grid-cols-4 text-white px-10 space-x-16 md:text-md 2xl:text-sm mr-10">
-      <div className="space-y-2 align-middle py-5">
+    <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-16 md:text-md 2xl:text-sm">
+      <div className="py-5 align-middle space-y-2">
           <div className="text-4xl font-bold">Bond (1,1)</div>
           <div className="flex item-stretch">
-            <div className="text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
+            <div className="text-xl font-semibold text-white uppercase">{bond.name.split("_").join(" ")}</div>
                 <BondIcon className="w-8 h-8"/>
               </div>
 
       </div>
-      <div className="bg-bg-header bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
+      <div className="inline-flex flex-wrap items-center px-3 py-2 rounded-lg bg-bg-scheme-500 bg-opacity-50 col-span-3 gap-x-20 gap-y-5">
         <div className="grid grid-rows-2">
             <div className="text-gray-500 row-start-1 text-md">Bonded Value</div>
-            <div className="row-start-2  text-lg">
+            <div className="text-lg row-start-2">
               <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
@@ -82,7 +82,7 @@ function Header(){
           </div>
         <div className="grid grid-rows-2">
           <div className="text-gray-500 row-start-1 text-md">ART Market Price</div>
-          <div className="row-start-2 text-white text-lg">
+          <div className="text-lg text-white row-start-2">
             <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
@@ -94,7 +94,7 @@ function Header(){
       </div>
       <div className="grid grid-rows-2">
           <div className="text-gray-500 row-start-1 text-md">Bond Price</div>
-          <div className="row-start-2 text-white text-lg">
+          <div className="text-lg text-white row-start-2">
             <>
               {isBondLoading ? (
                 <Skeleton height={40} width={100} />
@@ -143,21 +143,21 @@ const BondIcon = bond.bondIconSvg
         className="container relative h-full min-h-screen bg-black"
         data-cy="bond-page"
       >
-        <div className="px-8 bg-black grid grid-cols-12 pt-6 py-8">
-          <div className="md:grid col-start-11 col-span-2 hidden">
+        <div className="px-8 py-8 pt-6 bg-black grid grid-cols-12">
+          <div className="hidden md:grid col-start-11 col-span-2">
                 <ConnectButton/>
           </div>
         </div>
         <Header/>
-        <div className="mt-10 mx-10 py-7 px-10 mb-5 rounded-md bg-bg-header bg-opacity-50 mr-20">
+        <div className="px-10 mx-10 mt-10 mb-5 mr-20 py-7 rounded-md bg-bg-scheme-500 bg-opacity-50">
           <Link href="/bond">
-            <a className="px-10 items-center hidden text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
-              <ArrowLeftIcon className="px-20 w-6.5 h-10 group-hover:-translate-x-1 transition transform"/>
+            <a className="items-center hidden px-10 text-gray-500 sm:inline-flex left-1 sm:absolute gap-2 group">
+              <ArrowLeftIcon className="h-10 px-20 w-6.5 group-hover:-translate-x-1 transition transform"/>
             </a>
           </Link>
 
           <div className="flex justify-center">
-            <div className="px-1 py-1 inline-flex items-center gap-2 border-dark-1000 border-2 rounded-md text-white">
+            <div className="inline-flex items-center px-1 py-1 text-white border-2 gap-2 border-dark-1000 rounded-md">
               <button
                 onClick={set}
                 className={clsx(
@@ -304,7 +304,7 @@ function BondingContent({ mode }) {
 
   return (
     <div className="space-y-6">
-      <CTABox className="flex items-center border-2 border-gray-600 justify-between">
+      <CTABox className="flex items-center justify-between border-2 border-gray-600">
         <div className="">
           <input
             onChange={(e: any) => setQuantity(e.target.value)}
@@ -314,7 +314,7 @@ function BondingContent({ mode }) {
           />
         </div>
         <div className="px-3">
-          <button onClick={setMax} className="bg-transparent hover:bg-blue-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded">Max amount</button>
+          <button onClick={setMax} className="px-4 py-2 font-semibold text-indigo-700 bg-transparent border rounded hover:bg-blue-500 hover:text-white hover:border-transparent">Max amount</button>
         </div>
       </CTABox>
     </div>

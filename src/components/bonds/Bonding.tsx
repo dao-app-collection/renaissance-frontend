@@ -39,10 +39,10 @@ function Content({ bond, quantity }){
     (state: any) => state.bonding.loading ?? true
   )
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 bg-bg-header bg-opacity-50 rounded-lg flex-wrap items-center lg:justify-items-center gap-x-20 py-4 px-3">
-    <div className="grid grid-rows-2 text-left">
+    <div className="flex-wrap items-center px-3 py-4 rounded-lg grid grid-cols-1 lg:grid-cols-3 bg-scheme-500 bg-opacity-50 lg:justify-items-center gap-x-20">
+    <div className="text-left grid grid-rows-2">
         <div className="text-gray-500 row-start-1 text-md">What You Will Get</div>
-        <div className="row-start-2  text-lg">
+        <div className="text-lg row-start-2">
           <>
             {isBondLoading ? (
             <Skeleton height={20} />
@@ -54,18 +54,18 @@ function Content({ bond, quantity }){
           </>
         </div>
       </div>
-    <div className="grid grid-rows-2 text-left">
+    <div className="text-left grid grid-rows-2">
       <div className="text-gray-500 row-start-1 text-md">Vesting Term</div>
-      <div className="row-start-2 text-white text-lg">
+      <div className="text-lg text-white row-start-2">
         <p>
           {isBondLoading ? <Skeleton height={20} /> : vestingPeriod()}
         </p>
     </div>
   </div>
 
-  <div className="grid grid-rows-2 text-left">
+  <div className="text-left grid grid-rows-2">
       <div className="text-gray-500 row-start-1 text-md">ROI</div>
-      <div className="row-start-2 text-white text-lg">
+      <div className="text-lg text-white row-start-2">
         <p>
           {prettify(bond.bondDiscount * 100)}%
         </p>
@@ -260,32 +260,32 @@ function Bonding({ bond, slippage, setSlippage }) {
     const BondIcon = bond.bondIconSvg
 
     return (
-        <div className="mt-8 px-1">
+        <div className="px-1 mt-8">
             <div className="flex item-stretch">
-                    <div className="py-2 px-1.5 text-white text-xl font-semibold">Bond</div>
-                    <div className="py-2 px-1.5 text-white text-xl font-semibold uppercase">{bond.name.split("_").join(" ")}</div>
-                    <BondIcon className="py-2 w-8 h-11"/>
+                    <div className="py-2 text-xl font-semibold text-white px-1.5">Bond</div>
+                    <div className="py-2 text-xl font-semibold text-white uppercase px-1.5">{bond.name.split("_").join(" ")}</div>
+                    <BondIcon className="w-8 py-2 h-11"/>
             </div>
             <div className="space-y-6">
-                <CTABox className="flex items-center border border-gray-700 justify-between ">
+                <CTABox className="flex items-center justify-between border border-gray-700">
                     <div className="">
                         <input
                             onChange={(e: any) => setQuantity(e.target.value)}
-                            className="w-full h-1/4 md:text-md ml-3 text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+                            className="w-full ml-3 text-left bg-transparent outline-none h-1/4 md:text-md text-dark-500 text-[35px] text-dark-input tracking-2%"
                             size={12}
                             placeholder="0.0 ART"
                         />
                     </div>
-                        <button onClick={setMax} className="mx-6 py-2 px-4 text-sm md:text-md bg-transparent hover:bg-blue-500 text-indigo-500 font-bold hover:text-white border border-indigo-500 hover:border-transparent rounded bg-dark-1500">Max amount</button>
+                        <button onClick={setMax} className="px-4 py-2 mx-6 text-sm font-bold text-indigo-500 bg-transparent border border-indigo-500 rounded md:text-md hover:bg-blue-500 hover:text-white hover:border-transparent bg-dark-1500">Max amount</button>
                 </CTABox>
               </div>
-              <div className="text-right text-white text-md py-4"> 
+              <div className="py-4 text-right text-white text-md"> 
                 <span className="">Max You Can Buy: {format(round(bond.maxBondPrice, 4), 3) || "0"} ART </span>
                 <span className="px-0 md:px-5"></span>
                 <span className="">Balance: {prettify(bond.balance)} {displayUnits}</span>
               </div>
               <Content bond={bond} quantity={quantity}/>
-        <div className="py-4 flex item-stretch">
+        <div className="flex py-4 item-stretch">
             {!account ? (
               <ConnectButton/>
             ) : hasAllowance() ? (

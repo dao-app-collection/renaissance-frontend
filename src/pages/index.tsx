@@ -115,7 +115,7 @@ function Nav() {
           showMenu ? "h-auto" : "h-0 overflow-hidden"
         } absolute w-full transition-[height] mobile-menu`}
       >
-        <ul className="bg-landing-dark">
+        <ul className="bg-bg-scheme-400">
           <li className="active">
             <a
               href="#"
@@ -334,8 +334,8 @@ export function TreasuryStats() {
 
 function Partnerships() {
   return (
-    <div className="py-6 bg-bg-partnerships">
-      <div className="flex justify-center text-xl text-landing-dark">
+    <div className="py-6 bg-dark-gray">
+      <div className="flex justify-center text-xl text-bg-scheme-400">
         <p>PARTNERSHIPS</p>
       </div>
       <div className="justify-center px-10 py-2 md:justify-between grid md:grid-cols-3">

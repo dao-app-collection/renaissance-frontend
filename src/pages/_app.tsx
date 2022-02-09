@@ -103,7 +103,7 @@ function Root({ children }: { children: React.ReactNode }) {
     if (active) {
       loadDetails("account")
     }
-  }, [active])
+  }, [active, account])
 
   return <>{children}</>
 }

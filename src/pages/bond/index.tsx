@@ -38,7 +38,7 @@ function Header(){
           <div className="text-4xl font-bold">Bond (1,1)</div>
           <div className="text-dark-600 row-start-2 text-md">Receive ART at a discount</div>     
       </div>
-      <div className="bg-bg-header bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
+      <div className="bg-bg-scheme-500 bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
         <div className="grid grid-rows-2">
             <div className="text-gray-500 row-start-1 text-md">Treasury Balance</div>
             <div className="row-start-2  text-lg">
@@ -101,7 +101,7 @@ function Bond() {
           </div>
         </div>
         <Header/>
-        <div className="mt-10 mx-10 py-7 px-5 mb-5 rounded-md mr-20 bg-bg-header bg-opacity-50">
+        <div className="mt-10 mx-10 py-7 px-5 mb-5 rounded-md mr-20 bg-bg-scheme-500 bg-opacity-50">
           <div className="text-white md:text-xl">
             <span>Your Claimable Rewards: $</span>
             <span className="font-bold">{

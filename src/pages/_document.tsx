@@ -50,7 +50,7 @@ class MyDocument extends Document {
           <meta name="application-name" content="renaissancedao.finance" />
           {/* <meta property="og:image" content="/renaissancedao_background.png" /> */}
         </Head>
-        <body className="bg-dark-1000">
+        <body className="bg-scheme-bg">
           <Main />
           <NextScript />
         </body>

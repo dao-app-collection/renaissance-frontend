@@ -37,15 +37,15 @@ function Header(){
   const trimmedStakingAPY = prettify(stakingAPY * 100)
 
   return (
-    <div className="grid grid-cols-4 text-white px-10 space-x-12 md:text-md 2xl:text-sm mr-10">
-      <div className="space-y-2 align-middle py-5">
+    <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-12 md:text-md 2xl:text-sm">
+      <div className="py-5 align-middle space-y-2">
           <div className="text-4xl font-bold">Stake (3,3)</div>
           <div className="text-dark-600 row-start-2 text-md">HODL, stake, and compound</div>     
       </div>
-      <div className="bg-bg-header bg-opacity-50 rounded-lg col-span-3 inline-flex flex-wrap items-center gap-x-20 gap-y-5 py-2 px-3">
+      <div className="inline-flex flex-wrap items-center px-3 py-2 rounded-lg bg-bg-scheme-500 bg-opacity-50 col-span-3 gap-x-20 gap-y-5">
         <div className="grid grid-rows-2">
             <div className="text-gray-500 row-start-1 text-md">APY</div>
-            <div className="row-start-2  text-lg">
+            <div className="text-lg row-start-2">
             <>
                   {stakingAPY > 0 ? (
                     `${trimmedStakingAPY}%`
@@ -57,7 +57,7 @@ function Header(){
           </div>
         <div className="grid grid-rows-2">
           <div className="text-gray-500 row-start-1 text-md">Total Value Deposited</div>
-          <div className="row-start-2 text-white text-lg">
+          <div className="text-lg text-white row-start-2">
           <>
                   {stakingTVL ? (
                     "$"+ prettify(stakingTVL)
@@ -69,7 +69,7 @@ function Header(){
       </div>
       <div className="grid grid-rows-2">
           <div className="text-gray-500 row-start-1 text-md">Current Index</div>
-          <div className="row-start-2 text-white text-lg">
+          <div className="text-lg text-white row-start-2">
           <>
                   {currentIndex ? (
                     prettify(currentIndex) + " smART"
@@ -102,27 +102,27 @@ function Content(){
     4
   )
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 bg-bg-header bg-opacity-50 rounded-lg flex-wrap items-center lg:justify-items-center gap-x-20 py-4 px-3">
-    <div className="grid grid-rows-2 text-left">
+    <div className="flex-wrap items-center px-3 py-4 rounded-lg grid grid-cols-1 lg:grid-cols-3 bg-bg-scheme-500 bg-opacity-50 lg:justify-items-center gap-x-20">
+    <div className="text-left grid grid-rows-2">
         <div className="text-gray-500 row-start-1 text-md">Newt Reward Amount</div>
-        <div className="row-start-2 text-white  text-lg">
+        <div className="text-lg text-white row-start-2">
                       <>
                         {prettify(Number({nextRewardValue}),4)} ART
                       </>
         </div>
       </div>
-    <div className="grid grid-rows-2 text-left">
+    <div className="text-left grid grid-rows-2">
       <div className="text-gray-500 row-start-1 text-md">Staking Rebase</div>
-      <div className="row-start-2 text-white text-lg">
+      <div className="text-lg text-white row-start-2">
       <>
         {stakingRebasePercentage}%
       </>
     </div>
   </div>
 
-  <div className="grid grid-rows-2 text-left">
+  <div className="text-left grid grid-rows-2">
       <div className="text-gray-500 row-start-1 text-md">ROI (5-Day Rate)</div>
-      <div className="row-start-2 text-white text-lg">
+      <div className="text-lg text-white row-start-2">
         <>
           {prettify(fiveDayRate * 100,3)}%
         </>
@@ -178,16 +178,16 @@ function Stake() {
   return (
     <Layout>
       <div className="container relative h-full min-h-screen bg-black">
-      <div className="px-8 bg-black grid grid-cols-12 pt-6 py-8">
-          <div className="md:grid col-start-11 col-span-2 hidden">
+      <div className="px-8 py-8 pt-6 bg-black grid grid-cols-12">
+          <div className="hidden md:grid col-start-11 col-span-2">
                 <ConnectButton/>
           </div>
         </div>
         <Header/>
-        <div className="mt-10 mx-10 py-7 px-10 mb-5 rounded-md bg-bg-header bg-opacity-50 mr-20">
+        <div className="px-10 mx-10 mt-10 mb-5 mr-20 py-7 rounded-md bg-bg-scheme-500 bg-opacity-50">
 
         <div className="flex justify-center">
-            <div className="px-1 py-1 inline-flex items-center gap-2 border-dark-1000 border-2 rounded-md text-white">
+            <div className="inline-flex items-center px-1 py-1 text-white border-2 gap-2 border-dark-1000 rounded-md">
               <button
                 onClick={set}
                 className={clsx(
@@ -213,7 +213,7 @@ function Stake() {
             </div>
           </div>
           <div className="flex item-stretch">
-            <div className="text-white text-2xl py-3 px-1.5">Stake ART</div>
+            <div className="py-3 text-2xl text-white px-1.5">Stake ART</div>
             <Image
                   src="/images/r_logo.svg"
                   alt="Near"
@@ -334,16 +334,16 @@ function StakeContent({ mode }) {
 
   return (
     <div className="space-y-6">
-      <CTABox className="flex items-center border border-gray-700 justify-between ">
+      <CTABox className="flex items-center justify-between border border-gray-700">
         <div className="">
           <input
             onChange={(e: any) => setQuantity(e.target.value)}
-            className="w-full h-1/4 md:text-md ml-3 text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
+            className="w-full ml-3 text-left bg-transparent outline-none h-1/4 md:text-md text-dark-500 text-[35px] text-dark-input tracking-2%"
             size={12}
             placeholder="0.0 ART"
           />
         </div>
-          <button onClick={setMax} className="mx-6 py-2 px-4 text-sm md:text-md bg-transparent hover:bg-blue-500 text-indigo-500 font-semibold hover:text-white border border-indigo-500 hover:border-transparent rounded bg-dark-1500">Max amount</button>
+          <button onClick={setMax} className="px-4 py-2 mx-6 text-sm font-semibold text-indigo-500 bg-transparent border border-indigo-500 rounded md:text-md hover:bg-blue-500 hover:text-white hover:border-transparent bg-dark-1500">Max amount</button>
       </CTABox>
       <Content/>
       {/*

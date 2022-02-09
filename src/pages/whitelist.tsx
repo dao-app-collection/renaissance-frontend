@@ -76,7 +76,7 @@ export default function Whitelist() {
 
   const isAllowanceSufficient = fraxAllowance >= +amount
   const receivingAmount = (+amount / +aArtPrice).toFixed(4)
-  const buttonDisabled = isWhitelisted || !amount || !isValid
+  const buttonDisabled = !isWhitelisted || !amount || !isValid
 
   async function onSubmit() {
     if (library) {

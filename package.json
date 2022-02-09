@@ -88,6 +88,6 @@
   "main": "index.js",
   "repository": "https://github.com/Renaissance-DAO/renaissance-frontend.git",
   "lint-staged": {
-    "src/**/*.{ts,tsx}": "eslint --cache --fix"
+    "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
   }
 }

@@ -280,7 +280,20 @@
           "type": "address[]"
         }
       ],
-      "name": "addMultipleWhitelist",
+      "name": "addMultipleWhitelistA",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "addMultipleWhitelistB",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -291,11 +304,6 @@
           "internalType": "address",
           "name": "_address",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_numWhitelist",
-          "type": "uint256"
         }
       ],
       "name": "addTeam",
@@ -311,7 +319,20 @@
           "type": "address"
         }
       ],
-      "name": "addWhitelist",
+      "name": "addWhitelistA",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "addWhitelistB",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -355,7 +376,20 @@
     },
     {
       "inputs": [],
-      "name": "cap",
+      "name": "capA",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "capB",
       "outputs": [
         {
           "internalType": "uint256",
@@ -538,7 +572,20 @@
           "type": "address"
         }
       ],
-      "name": "removeWhitelist",
+      "name": "removeWhitelistA",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "removeWhitelistB",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -580,11 +627,6 @@
       ],
       "name": "teamInfo",
       "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "numWhitelist",
-          "type": "uint256"
-        },
         {
           "internalType": "uint256",
           "name": "amount",
@@ -706,7 +748,26 @@
           "type": "address"
         }
       ],
-      "name": "whitelisted",
+      "name": "whitelistedA",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "whitelistedB",
       "outputs": [
         {
           "internalType": "bool",

@@ -36,8 +36,9 @@ async function getTotalRaisedFRAX() {
 
 async function getWhitelistedState(address: string): Promise<boolean> {
   const contract = getContract()
-  const isWhitelisted = await contract.whitelisted(address)
-  return isWhitelisted as boolean
+  const isWhitelistedA = await contract.whitelistedA(address)
+  const isWhitelistedB = await contract.whitelistedB(address)
+  return isWhitelistedA || isWhitelistedB
 }
 
 async function getUser(address: string) {
@@ -133,10 +134,16 @@ async function startSale() {
   await tx.wait()
 }
 
-async function whiteListUser(address: string) {
+async function whiteListUser(address: string, list: "A" | "B") {
   const contract = getContract()
-  const tx = await contract.addWhitelist(address)
-  await tx.wait()
+  const tx =
+    list === "A"
+      ? await contract.addWhitelistA(address)
+      : list === "B"
+      ? await contract.addWhitelistB(address)
+      : null
+
+  await tx?.wait?.()
 }
 
 export {

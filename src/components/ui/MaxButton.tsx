@@ -1,10 +1,15 @@
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
+
 export const MaxButton = ({
   onClick,
   ...props
 }: {
   onClick: VoidFunction
   styles?: string
-} & React.HTMLAttributes<HTMLButtonElement>) => {
+} & DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>) => {
   return (
     <button
       onClick={onClick}

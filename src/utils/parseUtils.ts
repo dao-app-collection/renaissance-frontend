@@ -42,3 +42,14 @@ export function parseSecondsToReadable(seconds: number) {
 
   return { days, hours, minutes }
 }
+
+export function parseEthersErrorMessage(error: any) {
+  if (error?.data?.message) {
+    const [, message] = error.data.message.split(
+      "Error: VM Exception while processing transaction: reverted with reason string "
+    )
+    return message.replace("'", "")
+  }else if(error?.message) {
+    return error.message;
+  }else return 'Encountered an error';
+}

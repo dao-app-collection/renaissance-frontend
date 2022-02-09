@@ -1,13 +1,14 @@
 import React, { useState } from "react"
 
+import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import useSWR, { useSWRConfig } from "swr"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
+import Button from "@components/ui/Button"
 import CTABox from "@components/ui/CTABox"
 import { MaxButton } from "@components/ui/MaxButton"
 import PageHeading from "@components/ui/PageHeading"
@@ -23,6 +24,7 @@ import {
   getWhitelistedState,
 } from "@helper/presale"
 import { error } from "@slices/messagesSlice"
+import { parseEthersErrorMessage } from "@utils/parseUtils"
 
 const MAX_ALLOCATION = 1000
 
@@ -31,7 +33,7 @@ interface Fields {
 }
 
 export default function Whitelist() {
-  const { account } = useWeb3React()
+  const { account, library } = useWeb3React<Web3Provider>()
   const dispatch = useDispatch()
   const { mutate } = useSWRConfig()
   const [amount, setAmount] = useState(0)
@@ -64,10 +66,7 @@ export default function Whitelist() {
   const { data: aArtPrice } = useSWR(["/aArtPrice", account], getAArtPrice)
 
   const {
-    register,
-    handleSubmit,
     reset,
-    setValue,
     watch,
     formState: { isValid, isSubmitting },
   } = useForm<Fields>({
@@ -75,28 +74,33 @@ export default function Whitelist() {
     reValidateMode: "onChange",
   })
 
-  const isAllowanceSufficient = fraxAllowance >= watch("amount")
+  const isAllowanceSufficient = fraxAllowance >= +amount
   const receivingAmount = (+amount / +aArtPrice).toFixed(4)
+  const buttonDisabled = isWhitelisted || !amount || !isValid
 
   async function onSubmit() {
-    try {
-      if (isAllowanceSufficient) {
-        await deposit(amount)
-        mutate(["/user", account])
-        mutate(["/aArtPayout", account])
-        mutate(["/fraxBalance", account])
-        reset({ amount: 0 })
-      } else {
-        await approve(currentAddresses.AART_PRESALE_ADDRESS, MAX_ALLOCATION)
-        mutate(["/fraxAllowance", account])
+    if (library) {
+      try {
+        if (isAllowanceSufficient) {
+          await deposit(library, amount)
+          mutate(["/user", account])
+          mutate(["/aArtPayout", account])
+          mutate(["/fraxBalance", account])
+          mutate(["/userRemainingAllocation", account])
+          reset({ amount: 0 })
+        } else {
+          await approve(
+            library,
+            currentAddresses.AART_PRESALE_ADDRESS,
+            MAX_ALLOCATION
+          )
+          mutate(["/fraxAllowance", account])
+        }
+      } catch (e) {
+        dispatch(error(parseEthersErrorMessage(e)))
       }
-    } catch (e) {
-      console.log(e)
-      dispatch(error("Check your deposit limit!"))
     }
   }
-
-  const router = useRouter()
 
   return (
     <Layout>
@@ -129,16 +133,15 @@ export default function Whitelist() {
               {!isNaN(+receivingAmount) ? receivingAmount : "0.00000"} aART
             </div>
           </div>
-          <div className="flex items-center justify-center py-10">
-            <button
-              className={`px-12 py-3 mx-1 font-bold text-white bg-${
-                !isWhitelisted ? "blue-600" : "gray-600"
-              } text-md rounded-md`}
-              disabled={isWhitelisted}
+          <div className="flex items-center justify-center py-6">
+            <Button
+              className="px-14"
+              disabled={buttonDisabled}
+              loading={isSubmitting}
               onClick={onSubmit}
             >
               Deposit
-            </button>
+            </Button>
           </div>
         </div>
       </div>

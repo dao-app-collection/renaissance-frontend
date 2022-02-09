@@ -1,3 +1,4 @@
+import { Web3Provider } from "@ethersproject/providers"
 import { ethers } from "ethers"
 
 import aArtAbi from "@abi/aArtAbi.json"
@@ -18,8 +19,8 @@ function getContract() {
   return contract
 }
 
-async function deposit(amount: number) {
-  const contract = getContract()
+async function deposit(library: Web3Provider, amount: number) {
+  const contract = getContract().connect(library.getSigner())
   const val = ethers.utils.parseEther(amount.toString())
   const tx = await contract.deposit(val)
   await tx.wait()
@@ -52,13 +53,12 @@ async function getUser(address: string) {
   return formattedUser
 }
 
-async function approve(spender: string, amount: number) {
-  const provider = getProvider()
-
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
-
+async function approve(library: Web3Provider, spender: string, amount: number) {
+  const signer = library.getSigner()
+  const contract = new ethers.Contract(fraxAddress, fraxAbi, signer).connect(
+    signer
+  )
   const val = ethers.utils.parseEther(amount.toString())
-
   const payout = await contract.approve(spender, val)
   await payout.wait()
 }

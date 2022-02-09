@@ -7,7 +7,7 @@ import VanillaTilt from "vanilla-tilt"
 
 import { allBondsMap } from "@helper/bonds/allBonds"
 
-import BustImage from "../../public/images/bust.png"
+import HeadImage from "../../public/images/head.png"
 import Shadows from "../../public/images/shadows.png"
 
 function NFTCard({
@@ -34,7 +34,7 @@ function NFTCard({
           pointerEvents: "none",
         }}
       >
-        <Image alt="art" src={BustImage} />
+        <Image alt="art" src={HeadImage} />
       </div>
     </div>
   )
@@ -45,9 +45,9 @@ function Nav() {
 
   return (
     <nav className="relative pt-6">
-      <div className="mt-4 hidden w-full px-4 md:grid grid-cols-3 justify-evenly">
+      <div className="hidden w-full px-4 mt-4 md:grid grid-cols-3 justify-evenly">
         <Link passHref={true} href="/">
-          <div className="ml-12 items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
+          <div className="items-center ml-12 text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
             <Image
               src={"/images/renaissance-logo.svg"}
               alt="logo"
@@ -188,7 +188,7 @@ function SlashScreen() {
         />
       </div>
       <Nav />
-      <div className="h-[70vh] mt-8 align-middle grid grid-cols-1 md:grid-cols-2 justify-items-center items-center md:mt-0">
+      <div className="items-center mt-8 align-middle h-[70vh] grid grid-cols-1 md:grid-cols-2 justify-items-center md:mt-0">
         <div className="flex items-center select-none">
           <div className="pointer-events-none z-[-1]">
             <div
@@ -240,7 +240,7 @@ function SlashScreen() {
             </div>
           </div>
         </div>
-        <div className="h-full w-full flex items-center">
+        <div className="flex items-center w-full h-full">
           <div className="z-10 flex flex-col px-4 mt-[-2rem] md:mt-0 md:max-w-min">
             <div className="text-5xl font-semibold text-white md:whitespace-nowrap lg:text-6xl">
               The Rebirth of NFTs

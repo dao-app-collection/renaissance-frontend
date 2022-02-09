@@ -5,8 +5,6 @@ import Link from "next/link"
 import { useSelector } from "react-redux"
 import VanillaTilt from "vanilla-tilt"
 
-import Skeleton from "@components/ui/Skeleton"
-import { prettify } from "@helper"
 import { allBondsMap } from "@helper/bonds/allBonds"
 
 import BustImage from "../../public/images/bust.png"
@@ -46,10 +44,10 @@ function Nav() {
   const [showMenu, setShowMenu] = useState(false)
 
   return (
-    <nav className="relative py-6">
-      <div className="hidden w-full px-4 md:grid grid-cols-3 justify-evenly">
-        <Link href="/">
-          <div className="items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
+    <nav className="relative pt-6">
+      <div className="mt-4 hidden w-full px-4 md:grid grid-cols-3 justify-evenly">
+        <Link passHref={true} href="/">
+          <div className="ml-12 items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
             <Image
               src={"/images/renaissance-logo.svg"}
               alt="logo"
@@ -64,29 +62,30 @@ function Nav() {
         <div className="items-center hidden text-lg md:flex flex-nowrap justify-self-center col-span-1">
           <a
             href="#"
-            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-green-500"
+            className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Marketplace
           </a>
           <a
             href="#"
-            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-green-500"
+            className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Bond
           </a>
           <a
             href="#"
-            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-green-500"
+            className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Stake
           </a>
-          <a
-            href="#"
-            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-green-500"
+          <Link passHref={true} href="/whitelist">
+          <div            
+            className="px-8 font-semibold text-white cursor-pointer transition duration-300 hover:text-blue-500"
           >
             {" "}
-            FAQ
-          </a>
+            Whitelist
+          </div>
+          </Link>
         </div>
       </div>
 
@@ -180,7 +179,7 @@ function SlashScreen() {
   return (
     <div className="relative md:h-[80vh]">
       <div
-        className={"absolute h-full md:h-[80vh] w-[100vw] overflow-clip z-[-1]"}
+        className={"absolute h-full md:h-[70vh] w-[100vw] overflow-clip z-[-1]"}
       >
         <Image
           alt="background"
@@ -191,7 +190,7 @@ function SlashScreen() {
         />
       </div>
       <Nav />
-      <div className="h-full mt-8 align-middle grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center md:mt-0">
+      <div className="h-[70vh] mt-8 align-middle grid grid-cols-1 md:grid-cols-2 justify-items-center items-center md:mt-0">
         <div className="flex items-center select-none">
           <div className="pointer-events-none z-[-1]">
             <div
@@ -243,22 +242,25 @@ function SlashScreen() {
             </div>
           </div>
         </div>
-        <div className="z-10 flex flex-col justify-center px-4 mt-[-2rem] md:mt-0 md:max-w-min">
-          <div className="text-5xl font-semibold text-white md:whitespace-nowrap">
+        <div className="h-full w-full flex items-center">
+        <div className="z-10 flex flex-col px-4 mt-[-2rem] md:mt-0 md:max-w-min">
+          <div className="text-5xl font-semibold text-white md:whitespace-nowrap lg:text-6xl">
             The Rebirth of NFTs
           </div>
-          <div className="h-8" />
-          <div className="text-xl font-semibold text-white">
+          <div className="h-4" />
+          <div className="text-xl text-white">
             Renaissance is a community-owned financial tool for the better
             future of NFTs. We believe in decentralization of art.
           </div>
+          <div className="h-8" />
           <div className="flex justify-center pt-4 pb-8 md:justify-start ">
-            <Link href="/whitelist">
-              <button className="px-3 py-2 font-bold text-white bg-blue-600 rounded-md text-md">
+            <Link passHref={true} href="/whitelist">
+              <button className="px-6 py-3 font-bold text-white bg-blue-500 rounded-lg text-md hover:opacity-70 transition">
                 Enter App
               </button>
             </Link>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -290,13 +292,14 @@ export function TreasuryStats() {
         Treasury Balance
         <div className="flex justify-center mt-1 text-3xl font-bold text-center text-white">
           {
-            <>
-              {isBondLoading ? (
-                <Skeleton height={35} width={200} />
-              ) : (
-                "$" + prettify(treasuryBalance)
-              )}
-            </>
+            "Coming soon"
+            // <>
+            //   {isBondLoading ? (
+            //     <Skeleton height={35} width={200} />
+            //   ) : (
+            //     "$" + prettify(treasuryBalance)
+            //   )}
+            // </>
           }
         </div>
       </div>
@@ -304,13 +307,14 @@ export function TreasuryStats() {
         ART Price
         <div className="flex justify-center mt-1 text-3xl font-bold text-white">
           {
-            <>
-              {isBondLoading ? (
-                <Skeleton height={35} width={120} />
-              ) : (
-                "$" + prettify(marketPrice)
-              )}
-            </>
+            "Coming soon"
+            // <>
+            //   {isBondLoading ? (
+            //     <Skeleton height={35} width={120} />
+            //   ) : (
+            //     "$" + prettify(marketPrice)
+            //   )}
+            // </>
           }
         </div>
       </div>
@@ -318,13 +322,14 @@ export function TreasuryStats() {
         NFT Pre-sale Price
         <div className="flex justify-center mt-1 text-3xl font-bold text-white">
           {
-            <>
-              {isBondLoading ? (
-                <Skeleton height={35} width={100} />
-              ) : (
-                "$" + prettify(20) + " DAI"
-              )}
-            </>
+            "Coming soon"
+            // <>
+            //   {isBondLoading ? (
+            //     <Skeleton height={35} width={100} />
+            //   ) : (
+            //     "$" + prettify(20) + " DAI"
+            //   )}
+            // </>
           }
         </div>
       </div>
@@ -409,7 +414,7 @@ export default function Home() {
       <SlashScreen />
       <TreasuryStats />
       <Partnerships />
-      <CTACards />
+      {/* <CTACards /> */}
     </div>
   )
 }

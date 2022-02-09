@@ -337,9 +337,9 @@ export function TreasuryStats() {
 
 function Partnerships() {
   return (
-    <div className="py-6 bg-dark-gray">
+    <div className="py-6 bg-dark-1750">
       <div className="flex justify-center text-xl text-bg-scheme-400">
-        <p>PARTNERSHIPS</p>
+        <p className="text-dark-1250">PARTNERSHIPS</p>
       </div>
       <div className="justify-center px-10 py-2 md:justify-between grid md:grid-cols-3">
         <Image

@@ -53,7 +53,7 @@ module.exports = {
         layoutSM: "230px repeat(10, minmax(0, 1fr)) 230px",
       },
       colors: {
-        "bg-partnerships": "#18191D",
+        "bg-partnerships": "#787E8E",
         accents: {
           blue: "#4880EE",
         },
@@ -79,7 +79,9 @@ module.exports = {
           800: "#4B4B4B",
           900: "#303030",
           1000: "#262626",
+          1250: "#363944",
           1500: "#202020",
+          1550: "#141416",
         },
         scheme: {
           200: "#2C2C34",

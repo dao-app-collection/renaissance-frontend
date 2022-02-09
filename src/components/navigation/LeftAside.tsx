@@ -75,7 +75,7 @@ function LeftAside({
                     data-cy={`sidebar-${item.name}-link`}
                     className={clsx(
                       asPath === item.href
-                        ? "py-1 pl-2 rounded-md bg-dark-1000 text-white font-semibold"
+                        ? "py-1 pl-2 rounded-md bg-dark-1250 text-white font-semibold"
                         : "pl-2 text-dark-50 dark:text-dark2-300 font-medium hover:text-dark-400 dark:hover:text-dark2-200",
                       "text-xg md:text-xg xl:text-1xl block tracking-wider"
                     )}

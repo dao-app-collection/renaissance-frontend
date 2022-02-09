@@ -44,7 +44,7 @@ function ConnectButton(props: ownProps) {
       {error instanceof UnsupportedChainIdError ? (
         <button
           type="button"
-          className="bg-black sm:text-xs font-bold rounded-xl border border-gray-600 button 2xl:button-lg button-sm button-primary button-hover"
+          className="bg-scheme-bg sm:text-xs font-bold rounded-xl border border-gray-600 button 2xl:button-lg button-sm button-primary button-hover"
           onClick={switchChains}
         >
           Switch Chain
@@ -53,7 +53,7 @@ function ConnectButton(props: ownProps) {
         <div className="2xl:px-6">
           <button
             type="button"
-            className="bg-black sm:text-xs font-bold rounded-xl border border-gray-600 button 2xl:button-lg button-sm button-primary button-hover"
+            className="bg-scheme-bg sm:text-s font-bold rounded-xl border border-gray-600 button 2xl:button-lg button-sm button-primary button-hover"
             onClick={() => {
               showModal(<ConnectorModal />)
             }}

@@ -16,7 +16,6 @@ import {
   approve,
   deposit,
   getAllowance,
-  getAArtBalance,
   getFraxBalance,
   getAArtPrice,
   getUserRemainingAllocation,
@@ -25,8 +24,7 @@ import {
 } from "@helper/presale"
 import { error } from "@slices/messagesSlice"
 
-const MAX_ALLOCATION = 1500
-const ART_PRESALE_PRICE = 20
+const MAX_ALLOCATION = 1000
 
 interface Fields {
   amount: number
@@ -36,7 +34,7 @@ export default function Whitelist() {
   const { account } = useWeb3React()
   const dispatch = useDispatch()
   const { mutate } = useSWRConfig()
-  const [quantity, setQuantity] = useState(0)
+  const [amount, setAmount] = useState(0)
 
   const { data: user } = useSWR(["/user", account], (_, account) =>
     getUser(account)
@@ -45,10 +43,6 @@ export default function Whitelist() {
   const { data: isWhitelisted } = useSWR(
     ["/whitelisted", account],
     (_, account) => getWhitelistedState(account)
-  )
-
-  const { data: aArtBalance } = useSWR(["/aArtPayout", account], (_, account) =>
-    getAArtBalance(account)
   )
 
   const { data: fraxBalance } = useSWR(
@@ -82,9 +76,9 @@ export default function Whitelist() {
   })
 
   const isAllowanceSufficient = fraxAllowance >= watch("amount")
-  const remaining = MAX_ALLOCATION - user?.amount
+  const receivingAmount = (+amount / +aArtPrice).toFixed(4)
 
-  async function onSubmit({ amount }: Fields) {
+  async function onSubmit() {
     try {
       if (isAllowanceSufficient) {
         await deposit(amount)
@@ -97,12 +91,12 @@ export default function Whitelist() {
         mutate(["/fraxAllowance", account])
       }
     } catch (e) {
+      console.log(e)
       dispatch(error("Check your deposit limit!"))
     }
   }
 
   const router = useRouter()
-  const receivingAmount = (+quantity / +aArtPrice).toFixed(4)
 
   return (
     <Layout>
@@ -121,7 +115,7 @@ export default function Whitelist() {
         </PageHeading>
         <div className="px-20 py-7 rounded-xl bg-scheme-600">
           <div className="py-3 text-2xl text-white">Deposit FRAX</div>
-          <DepositContent quantity={quantity} setQuantity={setQuantity} />
+          <DepositContent amount={amount} setAmount={setAmount} />
           <div className="flex justify-end flex-grow w-full py-4 text-white text-md">
             <div className="mx-6">Max You Can Buy: {amountClaimable} aART</div>{" "}
             <div>
@@ -136,7 +130,13 @@ export default function Whitelist() {
             </div>
           </div>
           <div className="flex items-center justify-center py-10">
-            <button className="px-12 py-3 mx-1 font-bold text-white bg-blue-600 text-md rounded-md">
+            <button
+              className={`px-12 py-3 mx-1 font-bold text-white bg-${
+                !isWhitelisted ? "blue-600" : "gray-600"
+              } text-md rounded-md`}
+              disabled={isWhitelisted}
+              onClick={onSubmit}
+            >
               Deposit
             </button>
           </div>
@@ -147,11 +147,11 @@ export default function Whitelist() {
 }
 
 function DepositContent({
-  quantity,
-  setQuantity,
+  amount,
+  setAmount,
 }: {
-  quantity: number
-  setQuantity: (quantity: number) => void
+  amount: number
+  setAmount: (quantity: number) => void
 }) {
   const isAppLoading = !!useSelector((state: any) => state.app.loading)
 
@@ -159,16 +159,16 @@ function DepositContent({
     return state.account.balances ? state.account.balances.frax : "0"
   })
 
-  const setMax = () => setQuantity(artBalance)
+  const setMax = () => setAmount(artBalance)
 
   return (
     <div className="space-y-6">
       <CTABox className="flex items-center justify-between bg-transparent border-2 border-gray-600">
         <div className="w-full">
           <input
-            value={quantity}
+            value={amount}
             disabled={isAppLoading}
-            onChange={(e: any) => setQuantity(e.target.value)}
+            onChange={(e: any) => setAmount(e.target.value)}
             className="w-full text-xl text-left bg-transparent outline-none text-scheme-400 text-dark-input tracking-2%"
             size={12}
             placeholder="0.0 FRAX"

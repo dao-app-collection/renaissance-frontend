@@ -16,7 +16,6 @@ interface MobileMenuProps {
   setSidebarOpen: (open: boolean) => void
   navigation_top: NavigationItem[]
   navigation_bot: NavigationItem[]
-
 }
 
 function MobileMenu({
@@ -77,32 +76,35 @@ function MobileMenu({
               </div>
             </Transition.Child>
 
-            <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+            <div className="flex-1 h-0 px-2 pt-10 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
-              <Link href="/">
-          <div className="flex items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
-            <Image
-              src={"/images/renaissance-logo.svg"}
-              alt="logo"
-              width={"32px"}
-              height={"32px"}
-              className="absolute"
-            />
-            <div className="w-4" />
-            Renaissance
-          </div>
-        </Link>
+                <Link passHref={true} href="/">
+                  <div className="flex items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
+                    <Image
+                      src={"/images/renaissance-logo.svg"}
+                      alt="logo"
+                      width={"32px"}
+                      height={"32px"}
+                      className="absolute"
+                    />
+                    <div className="w-4" />
+                    Renaissance
+                  </div>
+                </Link>
               </div>
 
               <nav className="px-4 mt-5 space-y-4">
                 {navigation_top.map((item) => (
-                  <div key={item.name} className="hover:bg-dark-1000 rounded-md">
+                  <div
+                    key={item.name}
+                    className="hover:bg-dark-1000 rounded-md"
+                  >
                     <Link key={item.name} href={item.href}>
                       <a
                         className={clsx(
                           asPath === item.href
-                          ? "text-dark-1000 font-bold"
-                          : "text-white font-medium",
+                            ? "text-dark-1000 font-bold"
+                            : "text-white font-medium",
                           "text-xl block"
                         )}
                       >
@@ -114,12 +116,15 @@ function MobileMenu({
                 ))}
 
                 {navigation_bot.map((item) => (
-                  <div key={item.name} className="hover:bg-dark-1000 rounded-md">
+                  <div
+                    key={item.name}
+                    className="transition p-2 hover:bg-dark-1000 rounded-md"
+                  >
                     <Link key={item.name} href={item.href}>
                       <a
                         className={clsx(
                           asPath === item.href
-                            ? "text-dark-1000 font-bold"
+                            ? "text-white font-bold"
                             : "text-white font-medium",
                           "text-xl block"
                         )}

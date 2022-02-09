@@ -11,8 +11,8 @@ const Skeleton = (props: any) => {
     <ContentLoader
       speed={2}
       viewBox={`0 0 ${width} ${height}`}
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb"
+      backgroundColor="#202020"
+      foregroundColor="#101010"
       width={width}
       height={height}
       {...props}

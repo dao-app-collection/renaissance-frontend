@@ -42,7 +42,7 @@ function ConnectButton(props: ownProps) {
       <div className="2xl:px-6">
         <button
           type="button"
-          className="bg-black sm:text-xs font-bold rounded-xl border border-gray-600 w-full button 2xl:button-lg button-sm button-primary button-hover"
+          className="bg-black sm:text-xs font-bold rounded-xl border border-gray-600 button 2xl:button-lg button-sm button-primary button-hover"
           onClick={() => {
             showModal(<ConnectorModal />)
           }}
@@ -60,9 +60,7 @@ function ConnectButton(props: ownProps) {
               Incorrect Chain! Click to switch
             </button>
           ) : (
-            <p className="text-xs font-medium text-gray-200">
-              {errorMessage}
-            </p>
+            <p className="text-xs font-medium text-gray-200">{errorMessage}</p>
           )}
         </div>
       )}

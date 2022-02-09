@@ -16,7 +16,7 @@ PageHeading.Title = function PageHeadingTitle({
   children: string
 }) {
   return (
-    <p className="items-center text-4xl font-semibold text-white gap-2 sm:text-4xl tracking-2%">
+    <p className="items-center text-5xl font-semibold text-white gap-2 sm:text-5xl tracking-2%">
       {children}
     </p>
   )
@@ -28,7 +28,7 @@ PageHeading.Subtitle = function PageHeadingSubTitle({
   children: React.ReactNode
 }) {
   return (
-    <p className="mt-1 text-sm font-medium text-dark-100 tracking-2%">
+    <p className="mt-3 text-md font-medium text-dark-100 tracking-2%">
       {children}
     </p>
   )

@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux"
 import Web3Manager from "@components/layouts/Web3Manager"
 import Toast from "@components/ui/Toast"
 import { IS_PRODUCTION } from "@constants"
-import { getProvider, shouldTriggerSafetyCheck } from "@helper"
+import { getProvider } from "@helper"
 import getLibrary from "@helper/getLibrary"
 import * as gtag from "@helper/gtag"
 import useBonds from "@hooks/bondData"
@@ -20,7 +20,6 @@ import {
 } from "@slices/accountSlice"
 import { loadAppDetails } from "@slices/appSlice"
 import { calcBondDetails } from "@slices/bondSlice"
-import { info } from "@slices/messagesSlice"
 import store from "@store"
 
 import "../styles/tailwind.scss"
@@ -83,16 +82,6 @@ function Root({ children }: { children: React.ReactNode }) {
     },
     [account, chainId, provider, dispatch, bonds]
   )
-
-  useEffect(() => {
-    if (shouldTriggerSafetyCheck()) {
-      dispatch(
-        info(
-          "Welcome to Renaissance! Make sure you're on renaissancedao.finance!"
-        )
-      )
-    }
-  }, [dispatch])
 
   useEffect(() => {
     loadDetails("app")

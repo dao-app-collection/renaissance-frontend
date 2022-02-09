@@ -2,7 +2,6 @@ import React, { useState } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import useSWR, { useSWRConfig } from "swr"
 
@@ -20,7 +19,6 @@ import {
   getFraxBalance,
   getAArtPrice,
   getUserRemainingAllocation,
-  getUser,
   getWhitelistedState,
 } from "@helper/presale"
 import { error } from "@slices/messagesSlice"
@@ -28,19 +26,13 @@ import { parseEthersErrorMessage } from "@utils/parseUtils"
 
 const MAX_ALLOCATION = 1000
 
-interface Fields {
-  amount: number
-}
-
 export default function Whitelist() {
   const { account, library } = useWeb3React<Web3Provider>()
   const dispatch = useDispatch()
   const { mutate } = useSWRConfig()
-  const [amount, setAmount] = useState(0)
 
-  const { data: user } = useSWR(["/user", account], (_, account) =>
-    getUser(account)
-  )
+  const [txPending, setTxPending] = useState(false)
+  const [amount, setAmount] = useState(0)
 
   const { data: isWhitelisted } = useSWR(
     ["/whitelisted", account],
@@ -65,29 +57,23 @@ export default function Whitelist() {
 
   const { data: aArtPrice } = useSWR(["/aArtPrice", account], getAArtPrice)
 
-  const {
-    reset,
-    watch,
-    formState: { isValid, isSubmitting },
-  } = useForm<Fields>({
-    mode: "all",
-    reValidateMode: "onChange",
-  })
-
   const isAllowanceSufficient = fraxAllowance >= +amount
+  const isValid =
+    !isNaN(+amount) && +amount > 0 && +amount <= MAX_ALLOCATION * +aArtPrice
   const receivingAmount = (+amount / +aArtPrice).toFixed(4)
   const buttonDisabled = !isWhitelisted || !amount || !isValid
 
   async function onSubmit() {
     if (library) {
       try {
+        setTxPending(true)
         if (isAllowanceSufficient) {
           await deposit(library, amount)
           mutate(["/user", account])
           mutate(["/aArtPayout", account])
           mutate(["/fraxBalance", account])
           mutate(["/userRemainingAllocation", account])
-          reset({ amount: 0 })
+          setAmount(0)
         } else {
           await approve(
             library,
@@ -98,6 +84,8 @@ export default function Whitelist() {
         }
       } catch (e) {
         dispatch(error(parseEthersErrorMessage(e)))
+      } finally {
+        setTxPending(false)
       }
     }
   }
@@ -106,11 +94,9 @@ export default function Whitelist() {
     <Layout>
       <ConnectButton customStyle="z-50 absolute right-[5px] top-[50px] w-[200px] lg:right-[40px]" />
       <div className="container relative h-full min-h-screen py-6">
-        {/* <PageHeading> */}
-        {/* </PageHeading> */}
         <PageHeading>
-          <div className="flex-grow mt-[50px] py-10">
-            <PageHeading.Title> Whitelist</PageHeading.Title>
+          <div className="flex-grow py-10 mt-[50px]">
+            <PageHeading.Title>Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
@@ -126,20 +112,20 @@ export default function Whitelist() {
               {!isNaN(+fraxBalance) ? (+fraxBalance).toFixed(2) : "0.00"} FRAX
             </div>
           </div>
-          <div className="py-5 md:py-5 bg-scheme-200 bg-opacity-60 sm:py-4 sm:px-10 px-4 rounded-xl">
+          <div className="px-4 py-5 md:py-5 bg-scheme-200 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl">
             <div className="text-sm text-scheme-400">You will receive</div>
             <div className="text-lg text-white">
-              {!isNaN(+receivingAmount) ? receivingAmount : "0.00000"} aART
+              {!isNaN(+receivingAmount) ? receivingAmount : "0.0000"} aART
             </div>
           </div>
           <div className="flex items-center justify-center py-6">
             <Button
               className="px-14"
               disabled={buttonDisabled}
-              loading={isSubmitting}
+              loading={txPending}
               onClick={onSubmit}
             >
-              Deposit
+              {isAllowanceSufficient ? "Deposit" : "Approve"}
             </Button>
           </div>
         </div>
@@ -157,11 +143,11 @@ function DepositContent({
 }) {
   const isAppLoading = !!useSelector((state: any) => state.app.loading)
 
-  const artBalance = useSelector((state: any) => {
+  const fraxBalance = useSelector((state: any) => {
     return state.account.balances ? state.account.balances.frax : "0"
   })
 
-  const setMax = () => setAmount(artBalance)
+  const setMax = () => setAmount(fraxBalance)
 
   return (
     <div className="space-y-6">

@@ -61,19 +61,19 @@ function Nav() {
         </Link>
         <div className="items-center hidden text-lg md:flex flex-nowrap justify-self-center col-span-1">
           <a
-            href="#"
+            href=""
             className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Marketplace
           </a>
           <a
-            href="#"
+            href=""
             className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Bond
           </a>
           <a
-            href="#"
+            href=""
             className="px-8 font-semibold text-white cursor-default transition duration-300 hover:text-blue-500"
           >
             Stake

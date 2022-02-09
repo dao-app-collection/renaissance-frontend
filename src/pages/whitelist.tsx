@@ -105,16 +105,17 @@ export default function Whitelist() {
   return (
     <Layout>
       <div className="container relative h-full min-h-screen py-6 bg-scheme-bg">
+        {/* <PageHeading> */}
+        <div className="flex w-full justify-items-end ">
+          <ConnectButton customStyle="w-[150px]" />
+        </div>
+        {/* </PageHeading> */}
         <PageHeading>
           <div className="flex-grow py-10">
             <PageHeading.Title> Whitelist</PageHeading.Title>
             <PageHeading.Subtitle>
               For Virtuosos & Maestros.
             </PageHeading.Subtitle>
-          </div>
-
-          <div className="px-2 bg-">
-            <ConnectButton />
           </div>
         </PageHeading>
         <div className="px-20 py-7 rounded-xl bg-scheme-600">

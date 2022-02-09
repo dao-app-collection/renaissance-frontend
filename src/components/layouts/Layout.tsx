@@ -2,22 +2,24 @@ import React, { useState } from "react"
 
 import { MenuIcon } from "@heroicons/react/outline"
 
-// import BondSubMenu from "@components/navigation/BondSubMenu"
 import LeftAside from "@components/navigation/LeftAside"
 import MobileMenu from "@components/navigation/MobileMenu"
 //import RightAside from "@components/navigation/RightAside"
 import { NavigationItem } from "@typings"
 
-
 const navigation_top: NavigationItem[] = [
-
   // { name: "Pre-sale", href: "#" },
   // { name: "Listing", href: "#" },
 ]
 const navigation_bot: NavigationItem[] = [
-  // { name: "Bond", href: "/bond", sub: <BondSubMenu/>, },
-  // { name: "Stake", href: "/stake" },
   { name: "Whitelist", href: "/whitelist" },
+]
+
+const navigation_disabled: NavigationItem[] = [
+  { name: "Bond", href: "" },
+  { name: "Stake", href: "" },
+  { name: "fNFT Sale", href: "" },
+  { name: "NFT Treasury", href: "" },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -38,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <button
             type="button"
-            className="inline-flex items-center justify-center w-16 h-12 text-gray-500 -ml-0.5 -mt-0.5 rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-600"
+            className="inline-flex items-center justify-center w-16 h-12 text-gray-500 -ml-0.5 -mt-0.5 rounded-md hover:text-gray-600 focus:outline-none"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
@@ -55,6 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <LeftAside
                 navigation_top={navigation_top}
                 navigation_bot={navigation_bot}
+                navigation_disabled={navigation_disabled}
               />
             </nav>
           </div>

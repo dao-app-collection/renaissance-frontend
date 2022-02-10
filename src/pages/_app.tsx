@@ -18,7 +18,7 @@ import {
   loadAccountDetails,
   calculateUserBondDetails,
 } from "@slices/accountSlice"
-import { loadAppDetails } from "@slices/appSlice"
+// import { loadAppDetails } from "@slices/appSlice"
 import { calcBondDetails } from "@slices/bondSlice"
 import store from "@store"
 
@@ -45,7 +45,7 @@ function Root({ children }: { children: React.ReactNode }) {
 
   const loadApp = useCallback(
     (loadProvider) => {
-      dispatch(loadAppDetails({ chainId, provider: loadProvider }))
+      // dispatch(loadAppDetails({ chainId, provider: loadProvider }))
       bonds.map((bond: any) => {
         dispatch(
           calcBondDetails({
@@ -83,16 +83,16 @@ function Root({ children }: { children: React.ReactNode }) {
     [account, chainId, provider, dispatch, bonds]
   )
 
-  useEffect(() => {
-    loadDetails("app")
-  }, [])
+  // useEffect(() => {
+  //   loadDetails("app")
+  // }, [])
 
-  useEffect(() => {
-    // don't load ANY details until wallet is Connected
-    if (active) {
-      loadDetails("account")
-    }
-  }, [active, account])
+  // useEffect(() => {
+  //   // don't load ANY details until wallet is Connected
+  //   if (active) {
+  //     loadDetails("account")
+  //   }
+  // }, [active, account])
 
   return <>{children}</>
 }

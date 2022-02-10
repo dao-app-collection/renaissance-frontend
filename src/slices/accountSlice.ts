@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
-import { BigNumber, BigNumberish, ethers } from "ethers"
+import { BigNumber, BigNumberish, Contract, ethers } from "ethers"
 
 import { setAll } from "@helper"
 import { RootState } from "src/store"
@@ -21,12 +21,17 @@ export const getBalances = createAsyncThunk(
       provider
     )
     const artBalance = await artContract.balanceOf(address)
-    const sartContract = new ethers.Contract(
-      currentAddresses.SART_ADDRESS as string,
-      ierc20Abi.abi,
-      provider
-    )
-    const sartBalance = await sartContract.balanceOf(address)
+
+    let sartBalance = BigNumber.from(0)
+    if (currentAddresses.SART_ADDRESS) {
+      const sartContract = new ethers.Contract(
+        currentAddresses.SART_ADDRESS as string,
+        ierc20Abi.abi,
+        provider
+      )
+      await sartContract.balanceOf(address)
+    }
+
     let poolBalance = BigNumber.from(0)
     const poolTokenContract = new ethers.Contract(
       currentAddresses.PT_TOKEN_ADDRESS as string,
@@ -44,6 +49,28 @@ export const getBalances = createAsyncThunk(
     }
   }
 )
+
+const getBalancesSafe = async (
+  contract: Contract,
+  address: string,
+  withAllowance: boolean = false
+): Promise<{ allowance?: BigNumber; balance: BigNumber }> => {
+  try {
+    const [balance, allowance] = await Promise.all([
+      contract.balanceOf(address),
+      ...(withAllowance ? [contract.allowance(address)] : []),
+    ])
+    return {
+      balance,
+      ...(withAllowance ? { allowance } : {}),
+    }
+  } catch {
+    return {
+      balance: BigNumber.from(0),
+      ...(withAllowance ? { allowance: BigNumber.from(0) } : {}),
+    }
+  }
+}
 
 interface IUserAccountDetails {
   balances: {
@@ -86,11 +113,13 @@ export const loadAccountDetails = createAsyncThunk(
         ierc20Abi.abi,
         provider
       )
-      artBalance = await artContract.balanceOf(address)
-      stakeAllowance = await artContract.allowance(
+      const { balance, allowance } = await getBalancesSafe(
+        artContract,
         address,
-        addresses[chainId].STAKING_ADDRESS
+        true
       )
+      artBalance = balance
+      stakeAllowance = allowance
     }
 
     if (addresses[chainId].SART_ADDRESS) {
@@ -99,11 +128,13 @@ export const loadAccountDetails = createAsyncThunk(
         sART.abi,
         provider
       )
-      sartBalance = await sartContract.balanceOf(address)
-      unstakeAllowance = await sartContract.allowance(
+      const { balance, allowance } = await getBalancesSafe(
+        sartContract,
         address,
-        addresses[chainId].STAKING_ADDRESS
+        true
       )
+      sartBalance = balance
+      unstakeAllowance = allowance
     }
 
     if (addresses[chainId].FRAX_RESERVE_ADDRESS) {
@@ -112,7 +143,8 @@ export const loadAccountDetails = createAsyncThunk(
         ierc20Abi.abi,
         provider
       )
-      fraxBalance = await fraxContract.balanceOf(address)
+      const { balance } = await getBalancesSafe(fraxContract, address)
+      fraxBalance = balance
     }
 
     return {
@@ -120,7 +152,7 @@ export const loadAccountDetails = createAsyncThunk(
         dai: ethers.utils.formatEther(daiBalance),
         art: ethers.utils.formatUnits(artBalance, "gwei"),
         sart: ethers.utils.formatUnits(sartBalance, "gwei"),
-        frax: ethers.utils.formatUnits(fraxBalance, "ether"),
+        frax: ethers.utils.formatEther(fraxBalance),
       },
       staking: {
         artStake: +stakeAllowance,

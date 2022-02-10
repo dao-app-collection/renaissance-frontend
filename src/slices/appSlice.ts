@@ -1,5 +1,5 @@
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit"
-import { ethers } from "ethers"
+import { BigNumber, ethers } from "ethers"
 
 import { setAll } from "@helper"
 import { getTokenPrice, getMarketPrice } from "@helper/price"
@@ -41,11 +41,6 @@ export const loadAppDetails = createAsyncThunk(
       ArtStakingABI.abi,
       provider
     )
-    const sartMainContract = new ethers.Contract(
-      addresses[chainId].SART_ADDRESS as string,
-      sArtABI.abi,
-      provider
-    )
 
     // TODO: This is the best value that could found without using subgraph indexer. To be revised
     let stakingTVL = await stakingContract.contractBalance()
@@ -53,7 +48,13 @@ export const loadAppDetails = createAsyncThunk(
     // Calculating staking
     const epoch = await stakingContract.epoch()
     const stakingReward = epoch.distribute
-    const circ = await sartMainContract.circulatingSupply()
+    const circ = addresses[chainId].SART_ADDRESS
+      ? await new ethers.Contract(
+          addresses[chainId].SART_ADDRESS as string,
+          sArtABI.abi,
+          provider
+        ).circulatingSupply()
+      : BigNumber.from(0)
     const stakingRebase = Number(circ.toString())
       ? Number(stakingReward.toString()) / Number(circ.toString())
       : 0

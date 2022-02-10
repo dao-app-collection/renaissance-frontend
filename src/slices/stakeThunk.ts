@@ -66,19 +66,22 @@ export const changeApproval = createAsyncThunk(
       ierc20ABI.abi,
       walletProvider.getSigner()
     )
-
-    const sartContract = new ethers.Contract(
-      currentAddresses.SART_ADDRESS as string,
-      ierc20ABI.abi,
-      walletProvider.getSigner()
-    )
+    let unstakeAllowance = BigNumber.from(0)
+    let sartContract
+    if (currentAddresses.SART_ADDRESS) {
+      sartContract = new ethers.Contract(
+        currentAddresses.SART_ADDRESS as string,
+        ierc20ABI.abi,
+        walletProvider.getSigner()
+      )
+      unstakeAllowance = await sartContract.allowance(
+        address,
+        currentAddresses.STAKING_ADDRESS
+      )
+    }
 
     let approveTx
     let stakeAllowance = await artContract.allowance(
-      address,
-      currentAddresses.STAKING_ADDRESS
-    )
-    let unstakeAllowance = await sartContract.allowance(
       address,
       currentAddresses.STAKING_ADDRESS
     )
@@ -103,7 +106,7 @@ export const changeApproval = createAsyncThunk(
           currentAddresses.STAKING_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString()
         )
-      } else if (token === keys.stoken) {
+      } else if (sartContract && token === keys.stoken) {
         approveTx = await sartContract.approve(
           currentAddresses.STAKING_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString()

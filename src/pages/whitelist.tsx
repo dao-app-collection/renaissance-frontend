@@ -117,7 +117,12 @@ export default function Whitelist() {
           <DepositContent
             maxFraxDeposit={maxFraxDeposit}
             amount={amount}
-            setAmount={setAmount}
+            setAmount={(e) => {
+              let amount = Number(e)
+              if (amount > maxFraxDeposit || amount > 2000 || isNaN(amount))
+                return
+              setAmount(e)
+            }}
           />
           <div className="flex justify-end flex-grow w-full py-4 text-white text-md">
             <div>

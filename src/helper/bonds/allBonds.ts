@@ -1,30 +1,37 @@
-// export const frax = new StableBond({
-//   name: "frax",
-//   displayName: "FRAX",
-//   bondToken: "FRAX",
-//   isAvailable: true,
-//   bondIconSvg: FraxIcon,
-//   bondContractABI: FraxBondContract.abi,
-//   networkAddrs: {
-//     bondAddress: currentAddresses.FRAX_BOND_ADDRESS,
-//     reserveAddress: currentAddresses.FRAX_RESERVE_ADDRESS,
-//   },
-// })
+import ArtFraxBondContract from "@abi/bonds/ArtFraxContract.json"
+import ReserveArtFraxContract from "@abi/reserves/ArtFrax.json"
+import FraxIcon from "@components/customicons/FraxIcon"
+import { currentAddresses } from "@constants"
+import { StableBond, LPBond } from "@helper/bonds/bondConstructor"
+import FraxBondContract from "src/abi/bonds/FraxContract.json"
 
-// export const art_frax = new LPBond({
-//   name: "art_frax_lp",
-//   displayName: "ART-FRAX LP",
-//   bondToken: "FRAX",
-//   isAvailable: true,
-//   bondIconSvg: FraxIcon,
-//   bondContractABI: ArtFraxBondContract.abi,
-//   reserveContract: ReserveArtFraxContract.abi,
-//   networkAddrs: {
-//     bondAddress: currentAddresses.ART_FRAX_BOND_ADDRESS,
-//     reserveAddress: currentAddresses.ART_FRAX_RESERVE_ADDRESS,
-//   },
-//   lpUrl: "",
-// })
+export const frax = new StableBond({
+  name: "frax",
+  displayName: "FRAX",
+  bondToken: "FRAX",
+  isAvailable: true,
+  bondIconSvg: FraxIcon,
+  bondContractABI: FraxBondContract.abi,
+  networkAddrs: {
+    bondAddress: currentAddresses.FRAX_BOND_ADDRESS,
+    reserveAddress: currentAddresses.FRAX_RESERVE_ADDRESS,
+  },
+})
+
+export const art_frax = new LPBond({
+  name: "art_frax_lp",
+  displayName: "ART-FRAX LP",
+  bondToken: "FRAX",
+  isAvailable: true,
+  bondIconSvg: FraxIcon,
+  bondContractABI: ArtFraxBondContract.abi,
+  reserveContract: ReserveArtFraxContract.abi,
+  networkAddrs: {
+    bondAddress: currentAddresses.ART_FRAX_BOND_ADDRESS,
+    reserveAddress: currentAddresses.ART_FRAX_RESERVE_ADDRESS,
+  },
+  lpUrl: "",
+})
 
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`

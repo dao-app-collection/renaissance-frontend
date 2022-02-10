@@ -13,8 +13,6 @@ import { getProvider } from "@helper"
 import getLibrary from "@helper/getLibrary"
 import * as gtag from "@helper/gtag"
 import { ModalProvider } from "@hooks/useModal"
-
-// import { loadAppDetails } from "@slices/appSlice"
 import store from "@store"
 
 import "../styles/tailwind.scss"

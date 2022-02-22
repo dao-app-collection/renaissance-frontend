@@ -1,5 +1,9 @@
 import React from "react"
 
+import CheckIcon from "@components/customicons/CheckIcon"
+
+import Spinner from "./Spinner"
+
 interface PageHeadingProps {
   children: React.ReactNode
 }
@@ -32,6 +36,40 @@ export const Stat = ({
 } & WithTailwind) => (
   <div className={`text-xl font-bold text-white ${className}`}>{children}</div>
 )
+
+export const CheckLabel = ({
+  children,
+  color = "green",
+  isLoading = false,
+  size,
+  ...props
+}: {
+  color?: "red" | "green"
+  isLoading?: boolean
+  size?: number
+  children: React.ReactNode
+} & WithTailwind) => {
+  const { className, ...rest } = props
+  return (
+    <div
+      className={`rounded-xl text-lg border-solid px-4 ${
+        color === "green" ? "border-accents-green" : "border-accents-red"
+      } cursor-pointer uppercase text-white bg-scheme-bg font-bold hover:bg-scheme-600 ${className}`}
+      {...rest}
+    >
+      <div className="flex items-center justify-center h-full space-x-2">
+        <div>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <CheckIcon color={color} size={size?.toString()} />
+          )}
+        </div>
+        <div>{children}</div>
+      </div>
+    </div>
+  )
+}
 
 function PageHeading({ children }: PageHeadingProps) {
   return (

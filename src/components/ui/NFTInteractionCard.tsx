@@ -5,6 +5,7 @@ import Image from "next/image"
 import FraxIcon from "@components/customicons/FraxIcon"
 import SwapIcon from "@components/customicons/SwapIcon"
 import Button, { AuctionButton } from "@components/ui/Buttons"
+import { fNFTOfferingType } from "@pages/nfts"
 
 import Punk1 from "../../../public/images/Punk-1.png"
 import RenaissanceLogo from "../../../public/images/renaissance-logo.svg"
@@ -14,6 +15,7 @@ enum Tab {
   Auction,
   Trade,
   Stake,
+  InitialOffering,
 }
 
 const InputLabel = ({
@@ -60,6 +62,37 @@ const CurrencyInput = ({
   )
 }
 
+const InitialOfferingTab = () => {
+  return (
+    <>
+      <InputLabel>Mint</InputLabel>
+      <CurrencyInput symbol="FRAX" icon={<FraxIcon />} />
+      <div className="flex flex-wrap gap-4">
+        <div className="grow">
+          <Label>Offer Price </Label>
+          <Stat className="text-3xl">$1.50</Stat>
+        </div>
+        <div className="grow">
+          <Label classNames="whitespace-nowrap">Offered Supply</Label>
+          <Stat className="text-3xl">1M</Stat>
+        </div>
+        <div className="grow">
+          <Label classNames="whitespace-nowrap">Max Allocation</Label>
+          <Stat className="text-3xl">2000 Frax</Stat>
+        </div>
+        <div className="grow">
+          <Label classNames="whitespace-nowrap">Sale Ends in</Label>
+          <Stat className="text-3xl">5D 12H 10M</Stat>
+        </div>
+      </div>
+      <div className="h-8" />
+      <Label>Sold</Label>
+      <Stat>600,000 (60%)</Stat>
+      <div className="h-8" />
+      <Button className="w-full font-bold">Deposit and Mint</Button>
+    </>
+  )
+}
 const StakeTab = () => {
   return (
     <>
@@ -226,13 +259,15 @@ const AuctionTab = () => {
   )
 }
 
-const NFTInteractionCard = () => {
-  const [tab, setTab] = React.useState<Tab>(Tab.Auction)
+const NFTInteractionCard = ({ type }: { type: fNFTOfferingType }) => {
+  const [_tab, setTab] = React.useState<Tab>(Tab.Auction)
+  const tab = fNFTOfferingType.InitialOffering ? Tab.InitialOffering : _tab
 
   const tabs: Record<Tab, JSX.Element> = {
     [Tab.Auction]: <AuctionTab />,
     [Tab.Trade]: <TradeTab />,
     [Tab.Stake]: <StakeTab />,
+    [Tab.InitialOffering]: <InitialOfferingTab />,
   }
 
   const TabButton = ({
@@ -240,19 +275,31 @@ const NFTInteractionCard = () => {
     onClick,
     isSelected,
     styleOverrides = "",
+    fullWidth = false,
   }: {
     children: React.ReactNode
     onClick: VoidFunction
     isSelected: boolean
+    fullWidth?: boolean
     styleOverrides?: string
   }) => {
     return (
       <button
         onClick={onClick}
-        className="relative h-20 text-white cursor-pointer bg-accents-pink basis-1/3"
+        className={`relative h-20 text-white cursor-pointer bg-accents-pink ${
+          fullWidth ? "grow" : "basis-1/3"
+        }`}
       >
-        <div className="flex items-center justify-center w-full h-full text-lg font-bold text-white md:text-2xl">
-          <div className="z-10">{children}</div>
+        <div
+          className={`flex items-center w-full h-full text-lg font-bold text-white md:text-2xl`}
+        >
+          <div
+            className={`z-10 w-full ${
+              fullWidth ? "text-left px-12" : "text-center"
+            }`}
+          >
+            {children}
+          </div>
           <div
             className={`absolute w-full h-20 bottom-0 ${
               isSelected ? "h-[4.6rem] bg-scheme-200" : "bg-scheme-150"
@@ -266,28 +313,44 @@ const NFTInteractionCard = () => {
   return (
     <div className="max-w-2xl rounded-3xl bg-scheme-250 overflow-clip h-min">
       <div className="flex w-full">
-        <TabButton
-          isSelected={tab === Tab.Auction}
-          onClick={() => setTab(Tab.Auction)}
-          styleOverrides="rounded-tl-3xl"
-        >
-          Auction
-        </TabButton>
-        <TabButton
-          isSelected={tab === Tab.Trade}
-          onClick={() => setTab(Tab.Trade)}
-        >
-          Trade
-        </TabButton>
-        <TabButton
-          isSelected={tab === Tab.Stake}
-          onClick={() => setTab(Tab.Stake)}
-          styleOverrides="rounded-tr-3xl"
-        >
-          Stake
-        </TabButton>
+        {type === fNFTOfferingType.PublicSale ? (
+          <>
+            <TabButton
+              isSelected={tab === Tab.Auction}
+              onClick={() => setTab(Tab.Auction)}
+              styleOverrides="rounded-tl-3xl"
+            >
+              Auction
+            </TabButton>
+            <TabButton
+              isSelected={tab === Tab.Trade}
+              onClick={() => setTab(Tab.Trade)}
+            >
+              Trade
+            </TabButton>
+            <TabButton
+              isSelected={tab === Tab.Stake}
+              onClick={() => setTab(Tab.Stake)}
+              styleOverrides="rounded-tr-3xl"
+            >
+              Stake
+            </TabButton>
+          </>
+        ) : (
+          <TabButton
+            styleOverrides="rounded-t-3xl"
+            onClick={() => undefined}
+            fullWidth
+            isSelected={true}
+          >
+            <div className="flex items-center gap-2">
+              Initial Offering
+              <div className={`h-3 w-3 rounded-full bg-accents-orange`} />
+            </div>
+          </TabButton>
+        )}
       </div>
-      <div className="px-6 py-8 md:p-12">{tabs[tab]}</div>
+      <div className="px-6 py-4 md:p-12">{tabs[tab]}</div>
     </div>
   )
 }

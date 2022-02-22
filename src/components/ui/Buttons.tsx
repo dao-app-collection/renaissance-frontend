@@ -1,7 +1,6 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
 
-import CheckIcon from "@components/customicons/CheckIcon"
-
+import { CheckLabel } from "./Display"
 import Spinner from "./Spinner"
 
 export default function Button({
@@ -43,23 +42,13 @@ export const AuctionButton = ({
   loading?: boolean
 }) => {
   return (
-    <div
+    <CheckLabel
+      color={type === "accept" ? "green" : "red"}
       onClick={onClick}
-      className={`h-12 rounded-xl border-solid border-[3px] px-4 ${
-        type === "accept" ? "border-accents-green" : "border-accents-red"
-      } cursor-pointer uppercase text-white bg-scheme-bg font-bold hover:bg-scheme-600`}
+      className="h-12 border-[3px]"
     >
-      <div className="flex items-center justify-center h-full text-lg space-x-2">
-        <div>
-          {loading ? (
-            <Spinner />
-          ) : (
-            <CheckIcon type={type === "accept" ? "green" : "red"} />
-          )}
-        </div>
-        <div>{type}</div>
-      </div>
-    </div>
+      {type}
+    </CheckLabel>
   )
 }
 

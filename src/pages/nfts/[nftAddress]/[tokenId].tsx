@@ -2,7 +2,6 @@ import React from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import Image from "next/image"
 import { useRouter } from "next/router"
 
 import ConnectButton from "@components/ConnectButton"
@@ -13,7 +12,7 @@ import Layout from "@components/layouts/Layout"
 import PageHeading, { Divide, Label, Stat } from "@components/ui/Display"
 import NFTInteractionCard from "@components/ui/NFTInteractionCard"
 
-import Punk1 from "../../../../public/images/Punk-1.png"
+import { fakeNFTList } from ".."
 
 const InfoBanner = ({
   children,
@@ -29,17 +28,6 @@ const InfoBanner = ({
         <div>{children}</div>
       </div>
     </div>
-  )
-}
-
-export const NFTPreview = ({ styles = "" }: { styles?: string }) => {
-  return (
-    <Image
-      src={Punk1}
-      layout="responsive"
-      alt="NFT preview"
-      className={styles}
-    />
   )
 }
 
@@ -102,6 +90,12 @@ export default function NFTs() {
   const uniqueOwners = "1,502"
   const totalSupply = 20_000_000
 
+  // these a funged for demo purposes
+  const { nftAddress, tokenId } = router.query
+  const item = fakeNFTList.find((nft) =>
+    nft.title.replace(new RegExp(" ", "g"), "").includes(nftAddress as string)
+  )
+
   return (
     <Layout>
       <ConnectButton customStyle="z-50 absolute right-[5px] top-[50px] w-[200px] lg:right-[40px]" />
@@ -113,14 +107,14 @@ export default function NFTs() {
               <div className="flex items-center">
                 {subtitle}
                 <div className="w-1" />
-                <CheckIcon type="green" />
+                <CheckIcon color="green" />
               </div>
             </PageHeading.Subtitle>
           </div>
         </PageHeading>
         <div className="max-w-8xl grid grid-cols-1 md:grid-cols-2 gap-16">
           <div className="max-w-xl justify-self-center center space-y-4 ">
-            <NFTPreview styles="rounded-3xl" />
+            <div className="rounded-3xl">{item?.image}</div>
             <div>
               <div className="mt-6 mb-4 text-lg font-bold text-dark-200">
                 My Ownership
@@ -145,10 +139,10 @@ export default function NFTs() {
             />
           </div>
           <div>
-            <NFTInteractionCard />
+            <NFTInteractionCard type={item?.type} />
             <div className="h-12" />
             <div className="space-y-5">
-              <InfoBanner icon={<CheckIcon type="green" size="40" />}>
+              <InfoBanner icon={<CheckIcon color="green" size="40" />}>
                 <div className="text-2xl tracking-wide text-white">
                   <span className="text-accents-green">Verified</span>{" "}
                   <span>by</span>{" "}

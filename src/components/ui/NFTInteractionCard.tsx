@@ -261,8 +261,8 @@ const AuctionTab = () => {
 
 const NFTInteractionCard = ({ type }: { type: fNFTOfferingType }) => {
   const [_tab, setTab] = React.useState<Tab>(Tab.Auction)
-  const tab = fNFTOfferingType.InitialOffering ? Tab.InitialOffering : _tab
-
+  const tab =
+    type === fNFTOfferingType.InitialOffering ? Tab.InitialOffering : _tab
   const tabs: Record<Tab, JSX.Element> = {
     [Tab.Auction]: <AuctionTab />,
     [Tab.Trade]: <TradeTab />,

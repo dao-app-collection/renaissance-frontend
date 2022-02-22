@@ -110,7 +110,6 @@ const NFTCard = ({
           </div>
           <div className="relative w-full">
             {image}
-            {/* <div className=""></div> */}
             <div
               className={`absolute flex flex-row items-center justify-center px-4 py-2 rounded-lg shadow-banner text-md bottom-4 left-4 bg-scheme-300 space-x-2 ${style.dropShadowColor}`}
             >

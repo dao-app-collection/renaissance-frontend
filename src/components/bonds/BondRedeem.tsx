@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import { useSelector, useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
-import Button from "@components/ui/Button"
+import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import {

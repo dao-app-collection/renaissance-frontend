@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
-import Button from "@components/ui/Button"
+import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { keys } from "@constants"

@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import ProceedPromptModal from "@components/modals/ProceedPromptModal"
-import Button from "@components/ui/Button"
+import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import {

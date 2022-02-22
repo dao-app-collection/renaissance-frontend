@@ -1,6 +1,37 @@
+import React from "react"
+
 interface PageHeadingProps {
   children: React.ReactNode
 }
+
+export type WithTailwind = React.HTMLAttributes<HTMLDivElement>
+
+export const Divide = ({
+  className,
+}: { className?: string } & WithTailwind) => (
+  <div className={`w-full my-6 mt-5 bg-dark-500 h-[4px] ${className}`} />
+)
+
+export const Label = ({
+  children,
+  classNames = "",
+}: {
+  children: React.ReactNode
+  classNames?: string
+} & WithTailwind) => (
+  <div className={`font-bold text-dark-200 text-lg ${classNames}`}>
+    {children}
+  </div>
+)
+export const Stat = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode
+  className?: string
+} & WithTailwind) => (
+  <div className={`text-xl font-bold text-white ${className}`}>{children}</div>
+)
 
 function PageHeading({ children }: PageHeadingProps) {
   return (
@@ -28,7 +59,7 @@ PageHeading.Subtitle = function PageHeadingSubTitle({
   children: React.ReactNode
 }) {
   return (
-    <p className="mt-3 text-md font-medium text-dark-100 tracking-2%">
+    <p className="mt-3 font-medium text-md text-dark-100 tracking-2%">
       {children}
     </p>
   )

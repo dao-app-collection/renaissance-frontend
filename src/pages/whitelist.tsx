@@ -8,9 +8,9 @@ import useSWR, { useSWRConfig } from "swr"
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import Button from "@components/ui/Buttons"
+import { MaxButton } from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
-import { MaxButton } from "@components/ui/MaxButton"
-import PageHeading from "@components/ui/PageHeading"
+import PageHeading from "@components/ui/Display"
 import { currentAddresses } from "@constants"
 import {
   approve,

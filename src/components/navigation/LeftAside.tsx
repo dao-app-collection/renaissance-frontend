@@ -19,7 +19,7 @@ function LeftAside({
   return (
     <div className="flex flex-col flex-1 h-full min-h-screen px-[40px] py-[55px] bg-scheme-600 bg-opacity-80 dark:bg-none">
       {/* <h1 className="pl-2 text-4xl font-bold text-white">R</h1> */}
-      <div className="flex items-center flex-shrink-0 pl-2 pb-4">
+      <div className="flex items-center flex-shrink-0 pb-4 pl-2">
         <Link passHref={true} href="/">
           <div className="flex items-center text-xl font-semibold text-white cursor-pointer left-4 md:flex justify-self-start col-span-1">
             <Image
@@ -36,27 +36,22 @@ function LeftAside({
         {/* <RenaissanceLogo className="w-auto text-black h-14 dark:text-white" /> */}
 
         <nav className="flex-1 px-0">
-          <div className="pl-2 mt-5 mb-1 text-gray-400">
-            NFT Marketplace (Coming soon)
+          <div className="pl-2 mt-5 mb-2 text-sm text-gray-400">
+            NFT Marketplace
           </div>
           <div className="space-y-5">
             {navigation_top.map((item) => (
-              <div key={item.name}>
+              <div key={item.name} className="m-3">
                 <Link key={item.name} href={item.href}>
                   <a
                     data-cy={`sidebar-${item.name}-link`}
                     className={clsx(
                       asPath === item.href
-                        ? "py-1 pl-2 rounded-md bg-scheme-bg text-white font-semibold"
+                        ? "py-1 pl-2 rounded-md bg-dark-1250 text-white font-semibold"
                         : "pl-2 text-dark-50 dark:text-dark2-300 font-medium hover:text-dark-400 dark:hover:text-dark2-200",
-                      "text-xg md:text-1xl xl:text-1xl block tracking-wider"
+                      "text-xg md:text-xg xl:text-1xl block tracking-wider"
                     )}
                   >
-                    {asPath === item.href && (
-                      <div className="absolute flex items-center justify-center w-5 h-10 rounded-full bg-dark-1000 dark:bg-black dark:!hidden -right-5 transform -translate-y-1">
-                        <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
-                      </div>
-                    )}
                     {item.name}
                   </a>
                 </Link>
@@ -101,7 +96,7 @@ function LeftAside({
                       // "pl-2 text-dark-50 dark:text-dark2-300 font-medium hover:text-dark-400 dark:hover:text-dark2-200",
                       // "text-xg md:text-xg xl:text-1xl block tracking-wider"
                       // }
-                      className="pl-2 text-dark-400 dark:text-dark2-300 font-medium hover:text-dark-400"
+                      className="pl-2 font-medium text-dark-400 dark:text-dark2-300 hover:text-dark-400"
                     >
                       {item.name}
                     </p>

@@ -7,10 +7,10 @@ import useSWR, { useSWRConfig } from "swr"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
-import Button from "@components/ui/Button"
+import Button from "@components/ui/Buttons"
+import { MaxButton } from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
-import { MaxButton } from "@components/ui/MaxButton"
-import PageHeading from "@components/ui/PageHeading"
+import PageHeading from "@components/ui/Display"
 import { currentAddresses } from "@constants"
 import {
   approve,
@@ -142,7 +142,7 @@ export default function Whitelist() {
             </div>
           </div>
           <div className="px-4 py-5 md:py-5 bg-scheme-200 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl">
-            <div className="text-sm text-scheme-400">You will receive</div>
+            <div className="text-sm text-scheme-100">You will receive</div>
             <div className="text-lg text-white">
               {!isNaN(+receivingAmount) ? receivingAmount : "0.0000"} aART
             </div>
@@ -168,7 +168,7 @@ export default function Whitelist() {
   )
 }
 
-function DepositContent({
+export function DepositContent({
   maxFraxDeposit,
   amount,
   setAmount,
@@ -190,7 +190,7 @@ function DepositContent({
             disabled={isAppLoading}
             onChange={(e: any) => setAmount(e.target.value)}
             className={`w-full text-xl text-left bg-transparent outline-none text-${
-              +amount > 0 ? "gray-200" : "scheme-400"
+              +amount > 0 ? "gray-200" : "scheme-100"
             } text-dark-input tracking-2%`}
             size={12}
             placeholder="0.0 FRAX"

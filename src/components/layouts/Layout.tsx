@@ -7,10 +7,7 @@ import MobileMenu from "@components/navigation/MobileMenu"
 //import RightAside from "@components/navigation/RightAside"
 import { NavigationItem } from "@typings"
 
-const navigation_top: NavigationItem[] = [
-  // { name: "Pre-sale", href: "#" },
-  // { name: "Listing", href: "#" },
-]
+const navigation_top: NavigationItem[] = [{ name: "NFTs", href: "/nfts" }]
 const navigation_bot: NavigationItem[] = [
   { name: "Whitelist", href: "/whitelist" },
 ]
@@ -48,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </button>
         </div>
 
-        <div className="lg:grid 2xl:grid-cols-10 lg:grid-cols-8">
+        <div className="lg:grid lg:grid-cols-10">
           <div className="hidden col-span-2 lg:block">
             <nav
               aria-label="Sidebar"
@@ -62,7 +59,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <main className="lg:col-span-6 2xl:col-span-8">
+          <main className="lg:col-span-8">
             <div className="md:px-15 lg:px-20">{children}</div>
           </main>
         </div>

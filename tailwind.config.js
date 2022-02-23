@@ -55,7 +55,11 @@ module.exports = {
       colors: {
         "bg-partnerships": "#787E8E",
         accents: {
+          pink: "#9B3F97",
           blue: "#4880EE",
+          green: "#45B26B",
+          orange: "#F1A22B",
+          red: "#B24545",
         },
         beige: {
           100: "#FAF6F6",
@@ -84,9 +88,11 @@ module.exports = {
           1550: "#141416",
         },
         scheme: {
-          200: "#2C2C34",
+          100: "#787E8E",
+          150: "#3E404A",
+          200: "#2C2E36",
+          250: "#2A2B32",
           300: "#24262E",
-          400: "#787E8E",
           500: "#18181C",
           600: "#19191D",
           bg: "#141416",

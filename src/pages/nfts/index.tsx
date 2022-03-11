@@ -5,8 +5,9 @@ import ConnectButton from "@components/ConnectButton"
 import CheckIcon from "@components/customicons/CheckIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { CheckLabel, Label, Stat } from "@components/ui/Display"
+import { fNFTOfferingType } from "@helper/fNFTOfferingType"
+
 import { fakeNFTListing as fakeNFTList } from "./fakeNFTListing"
-import { fNFTOfferingType } from "./fNFTOfferingType"
 
 const NFTCard = ({
   author,

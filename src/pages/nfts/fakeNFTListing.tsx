@@ -1,12 +1,12 @@
 /**
  * TODO: Remove fake NFT list place holder once we start import actual NFT addresses and metadata.
  */
+import { fNFTOfferingType } from "@helper/fNFTOfferingType"
 
 import BoredApe11 from "../../../public/images/bayc-11.png"
 import Doodles102 from "../../../public/images/doodles-102.png"
 import Punk1 from "../../../public/images/Punk-1.png"
 import Sculpture12 from "../../../public/images/sculpture-12.png"
-import { fNFTOfferingType } from "./fNFTOfferingType"
 
 const fakeNFTListing = [
   {

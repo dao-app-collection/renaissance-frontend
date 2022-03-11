@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import Image from "next/image"
 import { useRouter } from "next/router"
 
 import ConnectButton from "@components/ConnectButton"
@@ -11,8 +12,8 @@ import OpenseaIcon from "@components/customicons/OpenseaIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { Divide, Label, Stat } from "@components/ui/Display"
 import NFTInteractionCard from "@components/ui/NFTInteractionCard"
+
 import { fakeNFTListing as fakeNFTList } from "../fakeNFTListing"
-import Image from "next/image"
 
 const InfoBanner = ({
   children,

@@ -5,7 +5,7 @@ import Image from "next/image"
 import FraxIcon from "@components/customicons/FraxIcon"
 import SwapIcon from "@components/customicons/SwapIcon"
 import Button, { AuctionButton } from "@components/ui/Buttons"
-import { fNFTOfferingType } from "@pages/nfts"
+import { fNFTOfferingType } from "@helper/fNFTOfferingType"
 
 import Punk1 from "../../../public/images/Punk-1.png"
 import RenaissanceLogo from "../../../public/images/renaissance-logo.svg"

@@ -3,12 +3,12 @@
  */
 import { fNFTOfferingType } from "@helper/fNFTOfferingType"
 
-import BoredApe11 from "../../../public/images/bayc-11.png"
-import Doodles102 from "../../../public/images/doodles-102.png"
-import Punk1 from "../../../public/images/Punk-1.png"
-import Sculpture12 from "../../../public/images/sculpture-12.png"
+import BoredApe11 from "../../public/images/bayc-11.png"
+import Doodles102 from "../../public/images/doodles-102.png"
+import Punk1 from "../../public/images/Punk-1.png"
+import Sculpture12 from "../../public/images/sculpture-12.png"
 
-const fakeNFTListing = [
+export const fakeNFTListing = [
   {
     image: Doodles102,
     author: "poopie",
@@ -59,4 +59,4 @@ const fakeNFTListing = [
   },
 ]
 
-export { fakeNFTListing }
+export default { fakeNFTListing }

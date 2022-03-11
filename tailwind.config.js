@@ -1,6 +1,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme")
 
 module.exports = {
+  mode: "jit",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
@@ -25,6 +26,8 @@ module.exports = {
         100: "1",
       },
       screens: {
+        xsm: "350px",
+        // => @media (min-width: 450px) { ... }
         sm: "640px",
         // => @media (min-width: 640px) { ... }
         md: "768px",

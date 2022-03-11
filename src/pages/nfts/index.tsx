@@ -5,67 +5,8 @@ import ConnectButton from "@components/ConnectButton"
 import CheckIcon from "@components/customicons/CheckIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { CheckLabel, Label, Stat } from "@components/ui/Display"
-
-import BoredApe11 from "../../../public/images/bayc-11.png"
-import Doodles102 from "../../../public/images/doodles-102.png"
-import Punk1 from "../../../public/images/Punk-1.png"
-import Sculpture12 from "../../../public/images/sculpture-12.png"
-
-export enum fNFTOfferingType {
-  PublicSale,
-  InitialOffering,
-}
-
-export const fakeNFTList = [
-  {
-    image: <Image src={Doodles102} layout="responsive" alt="NFT preview" />,
-    author: "poopie",
-    title: "Doodles #102",
-    type: fNFTOfferingType.PublicSale,
-    verified: true,
-    stats: [
-      { label: "Price", value: "$1.24" },
-      { label: "Market Cap", value: "$100k" },
-      { label: "Bid", value: "100k" },
-    ],
-  },
-  {
-    image: <Image src={Sculpture12} layout="responsive" alt="NFT preview" />,
-    author: "Renaissance",
-    title: "Sculpture #12",
-    type: fNFTOfferingType.InitialOffering,
-    verified: true,
-    stats: [
-      { label: "Price", value: "$2" },
-      { label: "Ends In", value: "1d 2h 34m" },
-      { label: "Sold", value: "70%" },
-    ],
-  },
-  {
-    image: <Image src={Punk1} layout="responsive" alt="NFT preview" />,
-    author: "LarvaLabs",
-    title: "Punk #1",
-    type: fNFTOfferingType.PublicSale,
-    verified: true,
-    stats: [
-      { label: "Price", value: "$2" },
-      { label: "Market Cap", value: "$1.2m" },
-      { label: "Bid", value: "$110k" },
-    ],
-  },
-  {
-    image: <Image src={BoredApe11} layout="responsive" alt="NFT preview" />,
-    author: "BAYC",
-    title: "Bored Ape #11",
-    type: fNFTOfferingType.PublicSale,
-    verified: true,
-    stats: [
-      { label: "Price", value: "$1.24" },
-      { label: "Market Cap", value: "$300k" },
-      { label: "Bid", value: "$510k" },
-    ],
-  },
-]
+import { fakeNFTListing as fakeNFTList } from "./fakeNFTListing"
+import { fNFTOfferingType } from "./fNFTOfferingType"
 
 const NFTCard = ({
   author,
@@ -97,7 +38,7 @@ const NFTCard = ({
       passHref
     >
       <a href="">
-        <div className="w-80 min-w-80 rounded-3xl bg-scheme-200">
+        <div className="rounded-3xl bg-scheme-200">
           <div className="p-4">
             {verified && (
               <CheckLabel
@@ -108,8 +49,8 @@ const NFTCard = ({
               </CheckLabel>
             )}
           </div>
-          <div className="relative w-full">
-            {image}
+          <div className="relative h-72 w-72">
+            <Image src={image} layout="fill" alt={title} />
             <div
               className={`absolute flex flex-row items-center justify-center px-4 py-2 rounded-lg shadow-banner text-md bottom-4 left-4 bg-scheme-300 space-x-2 ${style.dropShadowColor}`}
             >
@@ -126,7 +67,7 @@ const NFTCard = ({
             </div>
             <div className="text-3xl font-bold text-white">{title}</div>
           </div>
-          <div className="flex p-6 pt-4 ">
+          <div className="flex p-6 pt-4">
             {stats.map(({ label, value }, i) => {
               return (
                 <div key={i} className="grow">
@@ -147,16 +88,16 @@ const NFTMarketplace = () => {
     <Layout>
       <ConnectButton customStyle="z-50 absolute right-[5px] top-[50px] w-[200px] lg:right-[40px]" />
 
-      <div className="relative h-full min-h-screen py-6 pb-52">
+      <div className="relative h-full min-h-screen py-6 pb-52 p-5">
         <PageHeading>
-          <div className="flex-grow py-10 mt-[50px]">
+          <div className="flex-grow py-10 mt-[50px] text-center lg:text-left">
             <PageHeading.Title>Initial fNFT Offerings</PageHeading.Title>
             <PageHeading.Subtitle>
               Get Fractionalized NFT IDOs at a discount
             </PageHeading.Subtitle>
           </div>
         </PageHeading>
-        <div className="flex flex-row flex-wrap gap-12">
+        <div className="flex flex-row flex-wrap gap-12 justify-center lg:justify-start">
           {[...fakeNFTList].map((item, i) => (
             <div key={i} className="flex-none">
               <NFTCard {...item} />

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
@@ -11,8 +11,8 @@ import OpenseaIcon from "@components/customicons/OpenseaIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { Divide, Label, Stat } from "@components/ui/Display"
 import NFTInteractionCard from "@components/ui/NFTInteractionCard"
-
-import { fakeNFTList } from ".."
+import { fakeNFTListing as fakeNFTList } from "../fakeNFTListing"
+import Image from "next/image"
 
 const InfoBanner = ({
   children,
@@ -113,8 +113,16 @@ export default function NFTs() {
           </div>
         </PageHeading>
         <div className="max-w-8xl grid grid-cols-1 md:grid-cols-2 gap-16">
-          <div className="max-w-xl justify-self-center center space-y-4 ">
-            <div className="rounded-3xl">{item?.image}</div>
+          <div className="max-w-xl justify-self-center center space-y-4">
+            <div className="rounded-3xl">
+              {item ? (
+                <Image
+                  src={item?.image}
+                  layout="responsive"
+                  alt={item?.title}
+                />
+              ) : null}
+            </div>
             <div>
               <div className="mt-6 mb-4 text-lg font-bold text-dark-200">
                 My Ownership
@@ -139,7 +147,7 @@ export default function NFTs() {
             />
           </div>
           <div>
-            <NFTInteractionCard type={item?.type} />
+            <NFTInteractionCard type={item ? item.type : null} />
             <div className="h-12" />
             <div className="space-y-5">
               <InfoBanner icon={<CheckIcon color="green" size="40" />}>

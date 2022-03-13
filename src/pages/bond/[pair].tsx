@@ -16,44 +16,25 @@ import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { getProvider, prettify } from "@helper"
 import { allBondsMap } from "@helper/bonds/allBonds"
-import useBonds from "@hooks/bondData"
 import { error } from "@slices/messagesSlice"
 import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function Header() {
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
+  let isBondLoading = false
 
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
+  let marketPrice = 0
 
-  const treasuryBalance = useSelector((state: any) => {
-    if (state.bonding.loading == false) {
-      let tokenBalances = 0
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
-          tokenBalances += state.bonding[bond].purchased
-        }
-      }
-      return tokenBalances
-    }
-  })
-  const { bonds } = useBonds()
-  const router = useRouter()
+  let treasuryBalance = 0
+  let bonds = []
+  let router = useRouter()
   // for the switch, we cannot really use another datatype other than boolean
-
-  const [bond, setBond] = useState<any>({})
-
+  let [bond, setBond] = useState<any>({})
   useEffect(() => {
     if (!router.query.pair) return
     setBond(allBondsMap[router.query.pair.toString()])
   }, [bonds, router])
-
   if (!bond.name) return null
-
-  const BondIcon = bond.bondIconSvg
+  let BondIcon = bond.bondIconSvg
 
   return (
     <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-16 md:text-md 2xl:text-sm">
@@ -111,7 +92,7 @@ function Header() {
 }
 
 function BondPair() {
-  const { bonds } = useBonds()
+  const bonds = []
   const router = useRouter()
   const isBondLoading = useSelector(
     (state: any) => state.bonding.loading ?? true
@@ -124,14 +105,11 @@ function BondPair() {
   const [bond, setBond] = useState<any>({})
   const [slippage, setSlippage] = useState(0.5)
 
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
+  const marketPrice = 0
   useEffect(() => {
     if (!router.query.pair) return
     setBond(allBondsMap[router.query.pair.toString()])
   }, [bonds, router])
-
   if (!bond.name) return null
   const set = () => {
     setMode(!mode)

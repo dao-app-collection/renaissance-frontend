@@ -25,6 +25,8 @@ export const BLOCK_RATE_SECONDS = 13
 
 export const TOKEN_DECIMALS = 9
 
+export const BOND_REFRESH_INTERVAL = 60 * 1000
+
 export const addresses: IAddresses = {
   // 4: {
   //   // Rinkeby
@@ -96,6 +98,24 @@ export const addresses: IAddresses = {
     AART_PRESALE_ADDRESS: "0xBcf649f47d3E2F10bC26CEc444020F907334Aa41",
     AART_ADDRESS: "0x318fE0ED13516934C4ea90d636bBffF615a05B55",
     DAI_ADDRESS: "0xB15638e4B951bf4E5c9330ED94eeC59eF2f6E61f", // placdholer
+    ART_FRAX_RESERVE_ADDRESS: "0x069C2065100b4D3D982383f7Ef3EcD1b95C05894", // placeholder
+  },
+  1285: {
+    // Movr mainnet
+    ART_ADDRESS: "0x4a436073552044D5f2f49B176853ad3Ad473d9d6",
+    SART_ADDRESS: "0x89f52002e544585b42f8c7cf557609ca4c8ce12a", // placeholder
+    STAKING_ADDRESS: "0x6f7D019502e17F1ef24AC67a260c65Dd23b759f1", // placeholder
+    STAKING_HELPER_ADDRESS: "0x37f9A9436F5dB1ac9e346eAAB482f138DA0D8749", //placeholder
+    BONDINGCALC_ADDRESS: "0x3b5bbC9d8243C6661CcadAdE17B68344770c20FD",
+    TREASURY_ADDRESS: "0xfbAD41e4Dd040BC80c89FcC6E90d152A746139aF",
+    REDEEM_HELPER_ADDRESS: "0x697a247544a27bf7F7a172E910c817436DE2b9B1", //placeholder
+    FRAX_BOND_ADDRESS: "0xE2F71c68db7ECC0c9A907AD2E40E2394c5CAc367", // placeholders. need to edit this.
+    ART_FRAX_BOND_ADDRESS: "0x065588602bd7206B15f9630FDB2e81E4Ca51ad8A", //
+    FRAX_RESERVE_ADDRESS: "0x1A93B23281CC1CDE4C4741353F3064709A16197d",
+    DAI_RESERVE_ADDRESS: "0x0caE51e1032e8461f4806e26332c030E34De3aDb", //MIM
+    AART_PRESALE_ADDRESS: "0x093973DCa8F8daB14398b7e472E69F75869Bc824",
+    AART_ADDRESS: "0x3D2D044E8C6dAd46b4F7896418d3d4DFaAD902bE",
+    DAI_ADDRESS: "0x0caE51e1032e8461f4806e26332c030E34De3aDb", // placdholer
     ART_FRAX_RESERVE_ADDRESS: "0x069C2065100b4D3D982383f7Ef3EcD1b95C05894", // placeholder
   },
 }
@@ -171,7 +191,7 @@ export const chains: IChain = {
   1285: {
     chainId: "0x505",
     chainName: "Moonriver",
-    rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
+    rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
     nativeCurrency: {
       name: "MOVR",
       symbol: "MOVR",

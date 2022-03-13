@@ -37,7 +37,7 @@ export const art_frax = new LPBond({
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
 // Add new bonds to this array!!
-export const allBonds = [] //frax, art_frax
+export const allBonds = [frax, art_frax] //frax, art_frax
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond }
 }, {})

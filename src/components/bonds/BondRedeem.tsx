@@ -1,84 +1,24 @@
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { useSelector, useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import {
-  prettify,
-  prettifySeconds,
-  secondsUntilBlock,
-  prettyVestingPeriod,
-  getProvider,
-} from "@helper"
-import { redeemBond } from "@slices/bondSlice"
-import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
+import { prettify } from "@helper"
+import { txnButtonText } from "@slices/pendingTxnsSlice"
 
 function BondRedeem({ bond }) {
-  const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React<Web3Provider>()
-  const rpcProvider = getProvider()
-  const walletProvider = library
 
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
-
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
-
-  const currentBlock = useSelector((state: any) => {
-    return state.app.currentBlock
-  })
-  const pendingTransactions = useSelector((state: any) => {
-    return state.pendingTransactions
-  })
-  const bondingState = useSelector((state: any) => {
-    return state.bonding && state.bonding[bond.name]
-  })
-
-  async function onRedeem({ autostake }) {
-    await dispatch(
-      redeemBond({
-        address: account,
-        bond,
-        chainId,
-        rpcProvider,
-        walletProvider,
-        autostake,
-      })
-    )
-  }
-
-  const vestingTime = () => {
-    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock)
-  }
-
-  const vestingPeriod = () => {
-    const vestingBlock =
-      parseInt(currentBlock) + parseInt(bondingState?.vestingTerm)
-    const seconds = secondsUntilBlock(currentBlock, vestingBlock)
-    return prettifySeconds(seconds, "day")
-  }
-
-  const isRedeemLoading = isPendingTxn(
-    pendingTransactions,
-    "redeem_bond_" + bond.name
-  )
-
-  const isRedeemAutostakeLoading = isPendingTxn(
-    pendingTransactions,
-    "redeem_bond_" + bond.name + "_autostake"
-  )
-
-  const bondNamePretty = bond.name
-    .split("_")
-    .join("-")
-    .toUpperCase()
-    .replace("-LP", " LP")
+  let isBondLoading = false
+  let bondNamePretty = "name"
+  let marketPrice = 0
+  const vestingPeriod = () => ""
+  const pendingTransactions = []
+  const isRedeemAutostakeLoading = false
+  const isRedeemLoading = false
+  const onRedeem = ({ autostake }) => {}
 
   return (
     <div>
@@ -146,7 +86,7 @@ function BondRedeem({ bond }) {
                   {isBondLoading ? (
                     <Skeleton height={20} />
                   ) : (
-                    <p className="text-right">{vestingTime()}</p>
+                    <p className="text-right">{vestingPeriod()}</p>
                   )}
                 </p>
               </div>

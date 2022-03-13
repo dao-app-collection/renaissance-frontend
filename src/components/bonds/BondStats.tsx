@@ -1,29 +1,10 @@
-import { useSelector } from "react-redux"
-
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
-import { allBondsMap } from "@helper/bonds/allBonds"
 
 function BondStats() {
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
-
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
-
-  const treasuryBalance = useSelector((state: any) => {
-    if (state.bonding.loading == false) {
-      let tokenBalances = 0
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
-          tokenBalances += state.bonding[bond].purchased
-        }
-      }
-      return tokenBalances
-    }
-  })
+  const isBondLoading = false
+  const marketPrice = 0
+  const treasuryBalance = 0
 
   return (
     <div className="sm:flex sm:gap-12 space-y-8 sm:space-y-0">

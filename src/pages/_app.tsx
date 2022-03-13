@@ -7,7 +7,6 @@ import { Provider } from "react-redux"
 import { useDispatch } from "react-redux"
 
 import Web3Manager from "@components/layouts/Web3Manager"
-import Toast from "@components/ui/Toast"
 import { IS_PRODUCTION } from "@constants"
 import { getProvider } from "@helper"
 import getLibrary from "@helper/getLibrary"
@@ -19,73 +18,9 @@ import "../styles/tailwind.scss"
 
 function Root({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch()
-  // const { bonds } = useBonds()
   const provider = getProvider()
   const { account, active } = useWeb3React()
   const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
-
-  // async function loadDetails(whichDetails: string) {
-  //   let loadProvider = provider
-  //   if (whichDetails === "app") {
-  //     loadApp(loadProvider)
-  //   }
-
-  //   // don't run unless provider is a Wallet...
-  //   if (whichDetails === "account" && account && active) {
-  //     loadAccount(loadProvider)
-  //   }
-  // }
-
-  // const loadApp = useCallback(
-  //   (loadProvider) => {
-  //     // dispatch(loadAppDetails({ chainId, provider: loadProvider }))
-  //     bonds.map((bond: any) => {
-  //       dispatch(
-  //         calcBondDetails({
-  //           bond,
-  //           value: null,
-  //           provider: loadProvider,
-  //           chainId,
-  //         })
-  //       )
-  //     })
-  //   },
-  //   [chainId, bonds, dispatch]
-  // )
-
-  // const loadAccount = useCallback(
-  //   (loadProvider) => {
-  //     dispatch(
-  //       loadAccountDetails({
-  //         chainId,
-  //         address: account,
-  //         provider: loadProvider,
-  //       })
-  //     )
-  //     bonds.map((bond: any) => {
-  //       dispatch(
-  //         calculateUserBondDetails({
-  //           address: account,
-  //           bond,
-  //           provider,
-  //           chainId,
-  //         })
-  //       )
-  //     })
-  //   },
-  //   [account, chainId, provider, dispatch, bonds]
-  // )
-
-  // useEffect(() => {
-  //   loadDetails("app")
-  // }, [])
-
-  // useEffect(() => {
-  //   // don't load ANY details until wallet is Connected
-  //   if (active) {
-  //     loadDetails("account")
-  //   }
-  // }, [active, account])
 
   return <>{children}</>
 }
@@ -112,8 +47,6 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
               <Component {...pageProps} />
             </Root>
           </ModalProvider>
-
-          <Toast />
         </Provider>
       </Web3Manager>
     </Web3ReactProvider>

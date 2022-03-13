@@ -3,35 +3,20 @@ import { useState } from "react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import Image from "next/image"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import {
-  prettify,
-  prettifySeconds,
-  secondsUntilBlock,
-  prettyVestingPeriod,
-  getProvider,
-  format,
-  round,
-} from "@helper"
-import { redeemBond } from "@slices/bondSlice"
-import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
+import { prettify, format, round } from "@helper"
+import { txnButtonText } from "@slices/pendingTxnsSlice"
 
 function Content({ bond, quantity }) {
-  const currentBlock = useSelector((state: any) => {
-    return state.app.currentBlock
-  })
+  const currentBlock = 0
+  const isBondLoading = false
+  const vestingTime = () => 0
 
-  const vestingTime = () => {
-    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock)
-  }
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
   return (
     <div className="flex-wrap items-center px-3 py-4 rounded-lg grid grid-cols-1 lg:grid-cols-3 bg-scheme-500 bg-opacity-50 lg:justify-items-center gap-x-20">
       <div className="text-left grid grid-rows-2">
@@ -78,84 +63,16 @@ function Content({ bond, quantity }) {
 function Redeem({ bond }) {
   const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React<Web3Provider>()
-  const rpcProvider = getProvider()
-  const walletProvider = library
   const [quantity, setQuantity] = useState(0)
 
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
+  let pendingTransactions = []
+  let onRedeem = ({ autostake }) => {}
+  const isRedeemAutostakeLoading = false
+  const isRedeemLoading = false
 
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
+  const bondNamePretty = ""
 
-  const currentBlock = useSelector((state: any) => {
-    return state.app.currentBlock
-  })
-  const pendingTransactions = useSelector((state: any) => {
-    return state.pendingTransactions
-  })
-  const bondingState = useSelector((state: any) => {
-    return state.bonding && state.bonding[bond.name]
-  })
-
-  async function onRedeem({ autostake }) {
-    await dispatch(
-      redeemBond({
-        address: account,
-        bond,
-        chainId,
-        rpcProvider,
-        walletProvider,
-        autostake,
-      })
-    )
-  }
-
-  const vestingTime = () => {
-    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock)
-  }
-
-  const vestingPeriod = () => {
-    const vestingBlock =
-      parseInt(currentBlock) + parseInt(bondingState?.vestingTerm)
-    const seconds = secondsUntilBlock(currentBlock, vestingBlock)
-    return prettifySeconds(seconds, "day")
-  }
-
-  const isRedeemLoading = isPendingTxn(
-    pendingTransactions,
-    "redeem_bond_" + bond.name
-  )
-
-  const isRedeemAutostakeLoading = isPendingTxn(
-    pendingTransactions,
-    "redeem_bond_" + bond.name + "_autostake"
-  )
-
-  const bondNamePretty = bond.name
-    .split("_")
-    .join("-")
-    .toUpperCase()
-    .replace("-LP", " LP")
-
-  const getMax = () => {
-    let maxQ
-    if (bond.maxBondPrice * bond.bondPrice < Number(bond.balance)) {
-      // there is precision loss here on Number(bond.balance)
-      maxQ = bond.maxBondPrice * bond.bondPrice.toString()
-    } else {
-      maxQ = bond.balance
-    }
-    return maxQ
-  }
-
-  const setMax = () => {
-    let maxQ = getMax()
-    setQuantity(maxQ)
-  }
-  const BondIcon = bond.bondIconSvg
+  const setMax = () => {}
 
   return (
     <div className="px-1 mt-8">

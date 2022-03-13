@@ -2,7 +2,6 @@ import React from "react"
 
 import {
   StaticJsonRpcProvider,
-  JsonRpcSigner,
   ExternalProvider,
 } from "@ethersproject/providers"
 import { ethers } from "ethers"
@@ -10,11 +9,6 @@ import { ethers } from "ethers"
 import { contractForBondCalculator } from "@helper/contracts"
 import ierc20Abi from "src/abi/IERC20.json"
 import { currentAddresses } from "src/constants"
-
-export enum chainId {
-  Mainnet = 1,
-  Testnet = 4,
-}
 
 export enum BondType {
   StableAsset,
@@ -25,15 +19,15 @@ export interface BondAddresses {
   reserveAddress: string
   bondAddress: string
 }
-
 interface BondOpts {
   name: string // Internal name used for references
   displayName: string // Displayname on UI
-  isAvailable: Boolean // set false to hide
-  bondIconSvg: React.ReactNode //  SVG path for icons
+  isAvailable: boolean // set false to hide
+  bondIconSvg: (props: React.SVGProps<SVGSVGElement>) => JSX.Element //  SVG path for icons
   bondContractABI: ethers.ContractInterface // ABI for contract
   networkAddrs: BondAddresses // Mapping of network --> Addresses
   bondToken: string // Unused, but native token to buy the bond.
+  soldOut?: boolean
 }
 
 // Technically only exporting for the interface
@@ -42,20 +36,20 @@ export abstract class Bond {
   readonly name: string
   readonly displayName: string
   readonly type: BondType
-  readonly isAvailable: Boolean
-  readonly bondIconSvg: React.ReactNode
+  readonly isAvailable: boolean
+  readonly bondIconSvg: (props: React.SVGProps<SVGSVGElement>) => JSX.Element
   readonly bondContractABI: ethers.ContractInterface // Bond ABI
   readonly networkAddrs: BondAddresses
   readonly bondToken: string
+  readonly soldOut: boolean
 
   // The following two fields will differ on how they are set depending on bond type
-  abstract isLP: Boolean
+  abstract isLP: boolean
   abstract reserveContract: ethers.ContractInterface // Token ABI
   abstract displayUnits: string
 
   // Async method that returns a Promise
   abstract getTreasuryBalance(
-    chainId: number,
     provider: StaticJsonRpcProvider | ExternalProvider
   ): Promise<number>
 
@@ -68,12 +62,13 @@ export abstract class Bond {
     this.bondContractABI = bondOpts.bondContractABI
     this.networkAddrs = bondOpts.networkAddrs
     this.bondToken = bondOpts.bondToken
+    this.soldOut = bondOpts?.soldOut ?? false
   }
 
   getAddressForBond() {
     return this.networkAddrs.bondAddress
   }
-  getContractForBond(provider: StaticJsonRpcProvider | JsonRpcSigner) {
+  getContractForBond(provider: StaticJsonRpcProvider) {
     const bondAddress = this.getAddressForBond()
     return new ethers.Contract(bondAddress, this.bondContractABI, provider)
   }
@@ -96,12 +91,22 @@ export abstract class Bond {
     return new ethers.Contract(bondAddress, this.reserveContract, provider)
   }
 
-  async getBondReservePrice(provider: StaticJsonRpcProvider | JsonRpcSigner) {
+  async getBondPriceInUSD(provider: StaticJsonRpcProvider) {
+    const bondContract = this.getContractForBond(provider)
+    return await bondContract.bondPriceInUSD()
+  }
+
+  async getBondReservePrice(provider: StaticJsonRpcProvider) {
     const pairContract = this.getContractForReserve(provider)
     const reserves = await pairContract.getReserves()
     const marketPrice =
       Number(reserves[1].toString()) / Number(reserves[0].toString()) / 10 ** 9
     return marketPrice
+  }
+
+  async getStandardizedDebtRatio(provider: StaticJsonRpcProvider) {
+    const bondContract = this.getContractForBond(provider)
+    return await bondContract.standardizedDebtRatio()
   }
 }
 
@@ -110,7 +115,6 @@ export interface LPBondOpts extends BondOpts {
   reserveContract: ethers.ContractInterface
   lpUrl: string
 }
-
 export class LPBond extends Bond {
   readonly isLP = true
   readonly lpUrl: string
@@ -124,10 +128,10 @@ export class LPBond extends Bond {
     this.reserveContract = lpBondOpts.reserveContract
     this.displayUnits = "LP"
   }
-  async getTreasuryBalance(chainId: number, provider: StaticJsonRpcProvider) {
+  async getTreasuryBalance(provider: StaticJsonRpcProvider) {
     const token = this.getContractForReserve(provider)
     const tokenAddress = this.getAddressForReserve()
-    const bondCalculator = contractForBondCalculator(chainId, provider)
+    const bondCalculator = contractForBondCalculator(provider)
     const tokenAmount = await token.balanceOf(currentAddresses.TREASURY_ADDRESS)
     const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount)
     const markdown = await bondCalculator.markdown(tokenAddress)
@@ -153,7 +157,7 @@ export class StableBond extends Bond {
     this.reserveContract = ierc20Abi.abi // The Standard ierc20Abi since they're normal tokens
   }
 
-  async getTreasuryBalance(chainId: number, provider: StaticJsonRpcProvider) {
+  async getTreasuryBalance(provider: StaticJsonRpcProvider) {
     let token = this.getContractForReserve(provider)
     let tokenAmount = await token.balanceOf(currentAddresses.TREASURY_ADDRESS)
     return Number(tokenAmount.toString()) / Math.pow(10, 18)
@@ -167,12 +171,19 @@ export interface CustomBondOpts extends BondOpts {
   lpUrl: string
   customTreasuryBalanceFunc: (
     this: CustomBond,
-    chainId: number,
+    provider: StaticJsonRpcProvider
+  ) => Promise<number>
+  customGetBondPriceInUSDFunc?: (
+    this: CustomBond,
+    provider: StaticJsonRpcProvider
+  ) => Promise<number>
+  customGetStandardizedDebtRatio?: (
+    this: CustomBond,
     provider: StaticJsonRpcProvider
   ) => Promise<number>
 }
 export class CustomBond extends Bond {
-  readonly isLP: Boolean
+  readonly isLP: boolean
   getTreasuryBalance(): Promise<number> {
     throw new Error("Method not implemented.")
   }
@@ -192,7 +203,18 @@ export class CustomBond extends Bond {
     // For stable bonds the display units are the same as the actual token
     this.displayUnits = customBondOpts.displayName
     this.reserveContract = customBondOpts.reserveContract
+
     this.getTreasuryBalance =
       customBondOpts.customTreasuryBalanceFunc.bind(this)
+
+    if (customBondOpts.customGetBondPriceInUSDFunc) {
+      this.getBondPriceInUSD =
+        customBondOpts.customGetBondPriceInUSDFunc.bind(this)
+    }
+
+    if (customBondOpts.customGetStandardizedDebtRatio) {
+      this.getStandardizedDebtRatio =
+        customBondOpts.customGetStandardizedDebtRatio.bind(this)
+    }
   }
 }

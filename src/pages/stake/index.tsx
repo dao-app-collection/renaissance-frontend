@@ -2,36 +2,23 @@ import { useState } from "react"
 
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
-import { ethers } from "ethers"
 import Image from "next/image"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import { keys } from "@constants"
 import { getProvider, prettify } from "@helper"
-import { error } from "@slices/messagesSlice"
 import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
-import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function Header() {
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
+  const isBondLoading = false
+  const stakingAPY = 0
+  const stakingTVL = 0
 
-  const stakingAPY = useSelector((state: any) => {
-    return state.app.stakingAPY
-  })
-  const stakingTVL = useSelector((state: any) => {
-    return state.app.stakingTVL
-  })
-
-  const currentIndex = useSelector((state: any) => {
-    return state.app.currentIndex
-  })
+  const currentIndex = 1
   const trimmedStakingAPY = prettify(stakingAPY * 100)
 
   return (
@@ -87,16 +74,10 @@ function Header() {
 }
 
 function Content() {
-  const sartBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.sart
-  })
-  const stakingRebase = useSelector((state: any) => {
-    return state.app.stakingRebase
-  })
+  const sartBalance = 0
+  const stakingRebase = 0
   const trimmedBalance = sartBalance
-  const fiveDayRate = useSelector((state: any) => {
-    return state.app.fiveDayRate
-  })
+  const fiveDayRate = 1
   const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
   const nextRewardValue = prettify(
     (stakingRebasePercentage / 100) * trimmedBalance,
@@ -137,36 +118,20 @@ function Stake() {
   const set = () => {
     setMode(!mode)
   }
-  const stakingRebase = useSelector((state: any) => {
-    return state.app.stakingRebase
-  })
-  const sartBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.sart
-  })
+  const stakingRebase = 0
+  const sartBalance = 0
   const trimmedBalance = sartBalance
-  const fiveDayRate = useSelector((state: any) => {
-    return state.app.fiveDayRate
-  })
+  const fiveDayRate = 1
   const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
   const nextRewardValue = prettify(
     (stakingRebasePercentage / 100) * trimmedBalance,
     4
   )
 
-  const artBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.art
-  })
-  const currentIndex = useSelector((state: any) => {
-    return state.app.currentIndex
-  })
-
-  const stakingAPY = useSelector((state: any) => {
-    return state.app.stakingAPY
-  })
-  const stakingTVL = useSelector((state: any) => {
-    return state.app.stakingTVL
-  })
-
+  const artBalance = 0
+  const currentIndex = 0
+  const stakingAPY = 0
+  const stakingTVL = 0
   const trimmedStakingAPY = prettify(stakingAPY * 100)
 
   if (process.env.IS_PRESALE == "true") return null
@@ -229,29 +194,15 @@ function StakeContent({ mode }) {
   const isUnstaking = mode
   const [quantity, setQuantity] = useState(0)
 
-  const isAppLoading = useSelector((state: any) => state.app.loading)
+  const isAppLoading = false
 
-  const fiveDayRate = useSelector((state: any) => {
-    return state.app.fiveDayRate
-  })
-  const artBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.art
-  })
-  const sartBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.sart
-  })
-  const stakeAllowance = useSelector((state: any) => {
-    return state.account.staking && state.account.staking.artStake
-  })
-  const unstakeAllowance = useSelector((state: any) => {
-    return state.account.staking && state.account.staking.artUnstake
-  })
-  const stakingRebase = useSelector((state: any) => {
-    return state.app.stakingRebase
-  })
-  const pendingTransactions = useSelector((state: any) => {
-    return state.pendingTransactions
-  })
+  const fiveDayRate = 0
+  const artBalance = 0
+  const sartBalance = 0
+  const stakeAllowance = 0
+  const unstakeAllowance = 0
+  const stakingRebase = 0
+  const pendingTransactions = []
 
   const setMax = () => {
     if (isStaking) {
@@ -261,62 +212,15 @@ function StakeContent({ mode }) {
     }
   }
 
-  const onSeekApproval = async (token) => {
-    await dispatch(
-      changeApproval({
-        address: account,
-        token,
-        walletProvider,
-        chainId,
-      })
-    )
-  }
+  const onSeekApproval = () => {}
 
-  const onChangeStake = async (action: string) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (isNaN(quantity) || quantity === 0) {
-      // eslint-disable-next-line no-alert
-      return dispatch(error("Please enter a value!"))
-    }
+  const onChangeStake = (action: string) => {}
 
-    // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "gwei")
-    if (
-      action === "stake" &&
-      gweiValue.gt(ethers.utils.parseUnits(artBalance, "gwei"))
-    ) {
-      return dispatch(error("You cannot stake more than your ART balance."))
-    }
+  const isAllowanceDataLoading = false
 
-    if (
-      action === "unstake" &&
-      gweiValue.gt(ethers.utils.parseUnits(sartBalance, "gwei"))
-    ) {
-      return dispatch(error("You cannot unstake more than your sART balance."))
-    }
-
-    await dispatch(
-      changeStake({
-        address: account,
-        action,
-        value: quantity.toString(),
-        walletProvider,
-        rpcProvider,
-        chainId,
-      })
-    )
-  }
-
-  const isAllowanceDataLoading =
-    (stakeAllowance == null && isStaking) ||
-    (unstakeAllowance == null && isUnstaking)
-
-  const trimmedBalance = sartBalance
-  const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
-  const nextRewardValue = prettify(
-    (stakingRebasePercentage / 100) * trimmedBalance,
-    4
-  )
+  const trimmedBalance = 0
+  const stakingRebasePercentage = 0
+  const nextRewardValue = 0
 
   return (
     <div className="space-y-6">
@@ -384,9 +288,7 @@ function StakeContent({ mode }) {
           ) : (
             <Button
               loading={isPendingTxn(pendingTransactions, "approve_staking")}
-              onClick={() => {
-                onSeekApproval(keys.token)
-              }}
+              onClick={() => {}}
             >
               {txnButtonText(
                 pendingTransactions,
@@ -411,9 +313,7 @@ function StakeContent({ mode }) {
         ) : (
           <Button
             loading={isPendingTxn(pendingTransactions, "approve_unstaking")}
-            onClick={() => {
-              onSeekApproval(keys.stoken)
-            }}
+            onClick={() => {}}
           >
             {txnButtonText(
               pendingTransactions,

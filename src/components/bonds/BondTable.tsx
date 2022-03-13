@@ -2,10 +2,9 @@ import Link from "next/link"
 
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
-import useBonds from "@hooks/bondData"
 
 export default function BondTable() {
-  const { bonds } = useBonds()
+  const bonds = []
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -86,15 +85,15 @@ export default function BondTable() {
                         key={bond.name}
                         className="transition duration-300 ease-in-out hover:bg-gray-600"
                       >
-                        <td className="py-4 font-medium text-white uppercase whitespace-nowrap flex items-stretch">
+                        <td className="flex items-stretch py-4 font-medium text-white uppercase whitespace-nowrap">
                           <BondIcon className="w-20 h-8" />
                           {bond.name.split("_").join(" ")}
                         </td>
-                        <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
+                        <td className="px-6 py-4 font-medium text-center text-white whitespace-nowrap">
                           ${prettify(bond.bondPrice)}
                         </td>
 
-                        <td className="px-6 py-4 font-medium text-white whitespace-nowrap text-center">
+                        <td className="px-6 py-4 font-medium text-center text-white whitespace-nowrap">
                           {prettify(bond.bondDiscount * 100)}%
                         </td>
 

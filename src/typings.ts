@@ -22,7 +22,6 @@ export interface ISingleBond {
   isAvailable: boolean
   marketPrice: number
   payoutTokenName: string
-  pro: boolean
 }
 
 export interface IBonder {

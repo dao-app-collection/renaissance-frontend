@@ -15,7 +15,7 @@ function ConnectorModal() {
 
   return (
     <BaseModal>
-      <div className="inline-block w-full px-12 py-10 my-8 overflow-hidden align-middle bg-scheme-600 shadow-xl sm:w-[450px] transition-all transform rounded-2xl">
+      <div className="inline-block w-full px-12 py-10 my-8 overflow-hidden align-middle shadow-xl bg-scheme-600 sm:w-[450px] transition-all transform rounded-2xl">
         <div className="flex justify-between">
           <Dialog.Title
             as="h3"
@@ -31,7 +31,7 @@ function ConnectorModal() {
 
         <div className="w-full mt-8 space-y-4">
           <button
-            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg py-2.5 hover:bg-opacity-80 transition"
+            className="flex items-center justify-between w-full px-4 font-medium rounded-lg bg-dark-900 py-2.5 hover:bg-opacity-80 transition"
             onClick={async () => {
               await activate(injected)
               close()
@@ -49,7 +49,7 @@ function ConnectorModal() {
           </button>
 
           <button
-            className="bg-dark-900 flex items-center justify-between w-full px-4 font-medium rounded-lg py-2.5 hover:bg-opacity-80 transition"
+            className="flex items-center justify-between w-full px-4 font-medium rounded-lg bg-dark-900 py-2.5 hover:bg-opacity-80 transition"
             onClick={async () => {
               await activate(walletconnect)
               close()

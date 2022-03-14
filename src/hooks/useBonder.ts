@@ -16,7 +16,7 @@ function useBonder(singleBond: ISingleBond): IBonder {
 
   const { account, library: walletProvider } = useWeb3React()
 
-  const { bond, mutateBond, pro } = singleBond
+  const { bond, mutateBond } = singleBond
 
   const bondAddress = bond.getAddressForBond()
   const bondContract = walletProvider
@@ -33,8 +33,7 @@ function useBonder(singleBond: ISingleBond): IBonder {
 
   const { data: bondPriceRaw, mutate: mutateBondPriceRaw } = useSWR(
     `/bond/price/${bondContract?.address}`,
-    async () =>
-      pro ? await bondContract.trueBondPrice() : await bondContract.bondPrice(),
+    async () => await bondContract.bondPrice(),
     { refreshInterval: BOND_REFRESH_INTERVAL }
   )
 
@@ -57,13 +56,10 @@ function useBonder(singleBond: ISingleBond): IBonder {
 
   const bondMaturationBlock = +_bondDetails?.vesting + +_bondDetails?.lastBlock
 
-  const interestDue =
-    Number(_bondDetails?.payout?.toString()) / Math.pow(10, pro ? 18 : 9)
+  const interestDue = Number(_bondDetails?.payout?.toString()) / Math.pow(10, 9)
 
   const pendingPayout = _pendingPayout
-    ? pro
-      ? ethers.utils.formatUnits(_pendingPayout, "ether")
-      : ethers.utils.formatUnits(_pendingPayout, "gwei")
+    ? ethers.utils.formatUnits(_pendingPayout, "gwei")
     : "0"
 
   const mutateBonder = () => {

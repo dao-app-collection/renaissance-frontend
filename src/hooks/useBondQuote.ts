@@ -12,7 +12,7 @@ export default function useBondQuote(
 ) {
   const { library: walletProvider } = useWeb3React()
 
-  const { bond, isLP, pro } = singleBond
+  const { bond, isLP } = singleBond
 
   const contract = walletProvider
     ? bond.getContractForBondFromWallet(walletProvider.getSigner())
@@ -39,7 +39,7 @@ export default function useBondQuote(
   const { data: bondQuote } = useSWR(
     enabled ? `/bond/bondQuote/${contract?.address}/${value}` : undefined,
     async () => {
-      if (isLP && !pro) {
+      if (isLP) {
         const _bondQuote = await contract.payoutFor(valuation)
         return Number(_bondQuote.toString()) / Math.pow(10, 9)
       } else {

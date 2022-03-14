@@ -7,7 +7,7 @@ import allBonds from "@helper/bonds/allBonds"
 import { CustomBond, LPBond, StableBond } from "@helper/bonds/bondConstructor"
 import { ISingleBond } from "@typings"
 
-import { useArtMarketPrice } from "../useMarketPrice"
+import { useArtMarketPrice } from "./useMarketPrice"
 
 function useBonds() {
   const availableBonds = allBonds
@@ -113,7 +113,6 @@ function useSingleBond(bond: StableBond | LPBond | CustomBond): ISingleBond {
     isAvailable,
     marketPrice,
     payoutTokenName: "ART",
-    pro: false,
   }
 }
 

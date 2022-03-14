@@ -120,8 +120,6 @@ export const addresses: IAddresses = {
   },
 }
 
-export const GA_TRACKING_ID = "G-65Y9MD58D3"
-
 export const IS_PRODUCTION = process.env.NODE_ENV === "production"
 
 interface IKeys {

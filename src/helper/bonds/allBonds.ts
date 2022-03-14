@@ -1,9 +1,9 @@
-import ArtFraxBondContract from "@abi/bonds/ArtFraxContract.json"
-import ReserveArtFraxContract from "@abi/reserves/ArtFrax.json"
+import ArtFraxBondAbi from "@abi/bonds/ArtFraxBondAbi.json"
+import ArtFraxAbi from "@abi/reserves/ArtFraxAbi.json"
 import FraxIcon from "@components/customicons/FraxIcon"
 import { currentAddresses } from "@constants"
 import { StableBond, LPBond } from "@helper/bonds/bondConstructor"
-import FraxBondContract from "src/abi/bonds/FraxContract.json"
+import FraxBondAbi from "src/abi/bonds/FraxBondAbi.json"
 
 export const frax = new StableBond({
   name: "frax",
@@ -11,7 +11,7 @@ export const frax = new StableBond({
   bondToken: "FRAX",
   isAvailable: true,
   bondIconSvg: FraxIcon,
-  bondContractABI: FraxBondContract.abi,
+  bondContractABI: FraxBondAbi.abi,
   networkAddrs: {
     bondAddress: currentAddresses.FRAX_BOND_ADDRESS,
     reserveAddress: currentAddresses.FRAX_RESERVE_ADDRESS,
@@ -24,8 +24,8 @@ export const art_frax = new LPBond({
   bondToken: "FRAX",
   isAvailable: true,
   bondIconSvg: FraxIcon,
-  bondContractABI: ArtFraxBondContract.abi,
-  reserveContract: ReserveArtFraxContract.abi,
+  bondContractABI: ArtFraxBondAbi.abi,
+  reserveContract: ArtFraxAbi.abi,
   networkAddrs: {
     bondAddress: currentAddresses.ART_FRAX_BOND_ADDRESS,
     reserveAddress: currentAddresses.ART_FRAX_RESERVE_ADDRESS,

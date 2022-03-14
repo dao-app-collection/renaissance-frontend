@@ -7,17 +7,17 @@ import { keys } from "@constants"
 import { getProvider } from "@helper"
 import { art_frax } from "@helper/bonds/allBonds"
 
-import PairContractABI from "../abi/PairContract.json"
+import LPTokenAbi from "../abi/LPTokenAbi.json"
 
 export async function getMarketPrice({ provider }) {
   const art_frax_address = art_frax.getAddressForReserve()
 
-  const pairContract = new ethers.Contract(
+  const lpToken = new ethers.Contract(
     art_frax_address,
-    PairContractABI.abi,
+    LPTokenAbi.abi,
     provider
   )
-  const reserves = await pairContract.getReserves()
+  const reserves = await lpToken.getReserves()
 
   const marketPrice =
     Number(reserves[0].toString()) / Number(reserves[1].toString())

@@ -6,8 +6,8 @@ import {
 } from "@ethersproject/providers"
 import { ethers } from "ethers"
 
-import BondCalcContractABI from "src/abi/BondCalcContract.json"
-import ierc20Abi from "src/abi/IERC20.json"
+import BondingCalculatorAbi from "src/abi/BondingCalculatorAbi.json"
+import erc20Abi from "src/abi/ERC20Abi.json"
 import { currentAddresses } from "src/constants"
 
 export enum BondType {
@@ -81,14 +81,15 @@ export abstract class Bond {
   getContractForBondingCalculator(provider: StaticJsonRpcProvider) {
     return new ethers.Contract(
       currentAddresses.BONDINGCALC_ADDRESS,
-      BondCalcContractABI.abi,
+      BondingCalculatorAbi.abi,
       provider
     )
   }
+
   getContractForBondingCalculatorFromWallet(provider: ethers.Signer) {
     return new ethers.Contract(
       currentAddresses.BONDINGCALC_ADDRESS,
-      BondCalcContractABI.abi,
+      BondingCalculatorAbi.abi,
       provider
     )
   }
@@ -112,8 +113,8 @@ export abstract class Bond {
   }
 
   async getBondReservePrice(provider: StaticJsonRpcProvider) {
-    const pairContract = this.getContractForReserve(provider)
-    const reserves = await pairContract.getReserves()
+    const lpToken = this.getContractForReserve(provider)
+    const reserves = await lpToken.getReserves()
     const marketPrice =
       Number(reserves[1].toString()) / Number(reserves[0].toString()) / 10 ** 9
     return marketPrice
@@ -169,7 +170,7 @@ export class StableBond extends Bond {
     super(BondType.StableAsset, stableBondOpts)
     // For stable bonds the display units are the same as the actual token
     this.displayUnits = stableBondOpts.displayName
-    this.reserveContract = ierc20Abi.abi // The Standard ierc20Abi since they're normal tokens
+    this.reserveContract = erc20Abi.abi // The Standard erc20Abi since they're normal tokens
   }
 
   async getTreasuryBalance(provider: StaticJsonRpcProvider) {

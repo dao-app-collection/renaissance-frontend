@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 
 import aArtAbi from "@abi/aArtAbi.json"
 import presaleAbi from "@abi/aArtPresaleAbi.json"
-import fraxAbi from "@abi/FraxAbi.json"
+import ERC20Abi from "@abi/ERC20Abi.json"
 import { currentAddresses } from "@constants"
 import { getProvider } from "@helper"
 
@@ -56,9 +56,11 @@ async function getUser(address: string) {
 
 async function approve(library: Web3Provider, spender: string, amount: number) {
   const signer = library.getSigner()
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, signer).connect(
+  const contract = new ethers.Contract(
+    fraxAddress,
+    ERC20Abi.abi,
     signer
-  )
+  ).connect(signer)
   const val = ethers.utils.parseEther(amount.toString())
   const payout = await contract.approve(spender, val)
   await payout.wait()
@@ -67,7 +69,7 @@ async function approve(library: Web3Provider, spender: string, amount: number) {
 async function getAllowance(owner: string) {
   const provider = getProvider()
 
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
+  const contract = new ethers.Contract(fraxAddress, ERC20Abi.abi, provider)
 
   const allowance = await contract.allowance(owner, presaleAddress)
   return parseFloat(ethers.utils.formatEther(allowance))
@@ -76,7 +78,7 @@ async function getAllowance(owner: string) {
 async function getFraxBalance(address: string) {
   const provider = getProvider()
 
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
+  const contract = new ethers.Contract(fraxAddress, ERC20Abi.abi, provider)
 
   const payout = await contract.balanceOf(address)
   return ethers.utils.formatEther(payout)
@@ -111,7 +113,7 @@ async function getUserRemainingAllocation(address: string) {
 async function mintFrax(address: string) {
   const provider = getProvider()
 
-  const contract = new ethers.Contract(fraxAddress, fraxAbi, provider)
+  const contract = new ethers.Contract(fraxAddress, ERC20Abi.abi, provider)
 
   const val = ethers.utils.parseEther("1500")
 

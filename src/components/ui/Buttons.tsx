@@ -25,9 +25,8 @@ export default function Button({
       className={`flex items-center justify-center text-center button gap-3 button-primary button-hover disabled:opacity-75 bg-blue-500 px-4 py-3 my-1 text-white font-semibold text-md rounded-md ${className}`}
       {...props}
     >
-      {loading && <Spinner />}
-
       <span>{children}</span>
+      {loading && <Spinner />}
     </button>
   )
 }

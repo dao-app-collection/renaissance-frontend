@@ -9,7 +9,9 @@ import { art_frax } from "@helper/bonds/allBonds"
 
 import LPTokenAbi from "../abi/LPTokenAbi.json"
 
-export async function getMarketPrice({ provider }) {
+export async function getMarketPrice() {
+  const provider = getProvider()
+
   const art_frax_address = art_frax.getAddressForReserve()
 
   const lpToken = new ethers.Contract(
@@ -37,13 +39,13 @@ export function useArtMarketPrice() {
 
   const { data: marketPrice } = useSWR(
     `/app/marketPrice`,
-    async () => await getMarketPrice({ provider }),
+    async () => await getMarketPrice(),
     { refreshInterval: BOND_REFRESH_INTERVAL }
   )
 
   const { data: tokenPrice } = useSWR(
     `/app/tokenPrice`,
-    async () => await getTokenPrice("rome"),
+    async () => await getTokenPrice("art"),
     { refreshInterval: BOND_REFRESH_INTERVAL }
   )
 

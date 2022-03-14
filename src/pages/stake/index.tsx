@@ -2,22 +2,28 @@ import { useState } from "react"
 
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
+import { ethers } from "ethers"
+import { parseUnits } from "ethers/lib/utils"
 import Image from "next/image"
+import { useForm } from "react-hook-form"
 
 import ConnectButton from "@components/ConnectButton"
+import ArtIcon from "@components/customicons/FraxIcon"
 import Layout from "@components/layouts/Layout"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import { getProvider, prettify } from "@helper"
+import { errorToast, successToast } from "@components/ui/Toast"
+import { prettify } from "@helper"
+import { parseToFixed } from "@helper/parseUtils"
+import { useStaking, useStakingData, useStakingHelper } from "@hooks/useStaking"
 
 function Header() {
-  const isBondLoading = false
-  const stakingAPY = 0
-  const stakingTVL = 0
+  const staking = useStaking()
 
-  const currentIndex = 1
-  const trimmedStakingAPY = prettify(stakingAPY * 100)
+  const { stakingAPY, stakingTVL, currentIndex } = useStakingData(staking)
+  const trimmedStakingAPY =
+    stakingAPY > 500000 ? ">500,000" : prettify(stakingAPY)
 
   return (
     <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-12 md:text-md 2xl:text-sm">
@@ -59,7 +65,7 @@ function Header() {
           <div className="text-lg text-white row-start-2">
             <>
               {currentIndex ? (
-                prettify(currentIndex) + " smART"
+                prettify(currentIndex) + " sART"
               ) : (
                 <Skeleton height={40} width={100} />
               )}
@@ -72,23 +78,24 @@ function Header() {
 }
 
 function Content() {
-  const sartBalance = 0
-  const stakingRebase = 0
-  const trimmedBalance = sartBalance
-  const fiveDayRate = 1
+  const staking = useStaking()
+
+  const { sArtBalance, stakingRebase, fiveDayRate } = useStakingData(staking)
+
   const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
   const nextRewardValue = prettify(
-    (stakingRebasePercentage / 100) * trimmedBalance,
+    (stakingRebasePercentage / 100) * Number(sArtBalance),
     4
   )
+
   return (
     <div className="flex-wrap items-center px-3 py-4 rounded-lg grid grid-cols-1 lg:grid-cols-3 bg-bg-scheme-500 bg-opacity-50 lg:justify-items-center gap-x-20">
       <div className="text-left grid grid-rows-2">
         <div className="text-gray-500 row-start-1 text-md">
-          Newt Reward Amount
+          Next Reward Amount
         </div>
         <div className="text-lg text-white row-start-2">
-          <>{prettify(Number({ nextRewardValue }), 4)} ART</>
+          <>{prettify(Number(nextRewardValue), 4)} ART</>
         </div>
       </div>
       <div className="text-left grid grid-rows-2">
@@ -134,6 +141,9 @@ function Stake() {
 
   if (process.env.IS_PRESALE == "true") return null
 
+  const isStaking = !mode
+  const isUnstaking = mode
+
   return (
     <Layout>
       <div className="container relative h-full min-h-screen bg-black">
@@ -174,7 +184,7 @@ function Stake() {
             <div className="py-3 text-2xl text-white px-1.5">Stake ART</div>
             <Image src="/images/r_logo.svg" alt="Near" width={25} height={25} />
           </div>
-          <StakeContent mode={mode} />
+          {isStaking ? <StakeContent mode /> : <UnstakeContent />}
         </div>
       </div>
     </Layout>
@@ -182,132 +192,119 @@ function Stake() {
 }
 
 function StakeContent({ mode }) {
-  const { chainId, account, library } = useWeb3React()
-  const rpcProvider = getProvider()
-  const walletProvider = library
+  const staking = useStaking()
+  const stakingHelper = useStakingHelper()
 
-  // therefore this is to simplify reading code
-  const isStaking = !mode
-  const isUnstaking = mode
-  const [quantity, setQuantity] = useState(0)
+  const { art, artBalance, sArtBalance, stakeAllowance } =
+    useStakingData(staking)
 
-  const isAppLoading = false
+  const { active, account } = useWeb3React()
 
-  const fiveDayRate = 0
-  const artBalance = 0
-  const sartBalance = 0
-  const stakeAllowance = 0
-  const unstakeAllowance = 0
-  const stakingRebase = 0
-  const pendingTransactions = []
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { isValid, isSubmitting },
+  } = useForm<{ amount: number }>({
+    mode: "all",
+    reValidateMode: "onChange",
+  })
 
-  const setMax = () => {
-    if (isStaking) {
-      setQuantity(artBalance)
+  const isAllowanceSufficient = stakeAllowance.allowance >= watch("amount")
+
+  const onSubmit = async ({ amount }: { amount: number }) => {
+    const amountInArt = parseUnits(amount.toString(), 9)
+
+    if (isAllowanceSufficient) {
+      try {
+        await stakingHelper.stake(amountInArt, account)
+        artBalance.mutate()
+        sArtBalance.mutate()
+        reset({ amount: 0 })
+        successToast(`Staked ${amount} ART successfully`)
+      } catch (error) {
+        errorToast("Something went wrong")
+      }
     } else {
-      setQuantity(sartBalance)
+      await art.approve(stakingHelper.address, ethers.constants.MaxUint256)
+      stakeAllowance.mutate()
     }
   }
 
-  const onSeekApproval = () => {}
-
-  const onChangeStake = (action: string) => {}
-
-  const isAllowanceDataLoading = false
-
-  const trimmedBalance = 0
-  const stakingRebasePercentage = 0
-  const nextRewardValue = 0
-  const isPendingTxn = false
+  const maxArtTrimmed = parseToFixed(artBalance.balance, 9)
 
   return (
-    <div className="space-y-6">
-      <CTABox className="flex items-center justify-between border border-gray-700">
-        <div className="">
-          <input
-            onChange={(e: any) => setQuantity(e.target.value)}
-            className="w-full ml-3 text-left bg-transparent outline-none h-1/4 md:text-md text-dark-500 text-[35px] text-dark-input tracking-2%"
-            size={12}
-            placeholder="0.0 ART"
-          />
-        </div>
-        <button
-          onClick={setMax}
-          className="px-4 py-2 mx-6 text-sm font-semibold text-indigo-500 bg-transparent border border-indigo-500 rounded md:text-md hover:bg-blue-500 hover:text-white hover:border-transparent bg-dark-1500"
-        >
-          Max amount
-        </button>
-      </CTABox>
-      <Content />
-      {/*
-        <div className="text-right text-white text-md py-4"> 
-                  <span className="">Staked Balance: {trimmedBalance} sART </span>
-                  <span className="px-0 md:px-5"></span>
-                  <span className="">Balance: {prettify(artBalance, 4)} ART</span>
-        </div>
-            <div className="py-5 md:py-5 bg-dark-1000 bg-opacity-60 sm:py-4 sm:px-10 rounded-xl ">
-              <div className="text-sm  grid grid-cols-2">
-                  <div className="px-4 py-1.5 text-left text-white">Next Reward Amount</div>
-                  <div className="px-4 py-1.5 text-right text-white">
-                      <>
-                          {nextRewardValue} ART
-                      </>
-                  </div>
-                  <div className="px-4 py-1.5 text-left text-white">Staking Rebase</div>
-                  <div className="px-4 py-1.5 text-right text-green-500">
-                      <>
-                          {stakingRebasePercentage}%
-                      </>
-                  </div>
-                  <div className="px-4 py-1.5 text-left text-white">ROI (5-Day Rate)</div>
-                  <div className="px-4 py-1.5 text-right text-green-500">
-                      <>
-                          {prettify(fiveDayRate * 100,3)}%
-                      </>
-                  </div>
-              </div>
+    <form onSubmit={handleSubmit(onSubmit)} data-cy="stake-content">
+      <div className="space-y-6">
+        <CTABox className="flex items-center justify-between border border-gray-700">
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <ArtIcon className="w-8 h-8" />
+              <p className="text-2xl font-medium 2xl:text-[32px] text-dark-1000 tracking-2%">
+                ART
+              </p>
+            </div>
+
+            <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
+              Balance{" "}
+              {artBalance.balance >= 0 ? (
+                <>{maxArtTrimmed} ART</>
+              ) : (
+                <Skeleton className="inline-block" height={15} width={80} />
+              )}{" "}
+              (
+              <button
+                className="font-medium text-wine-600"
+                type="button"
+                onClick={() => {
+                  setValue("amount", artBalance.balance, {
+                    shouldValidate: true,
+                  })
+                }}
+              >
+                Max
+              </button>
+              )
+            </p>
           </div>
-      */}
-      <div className="flex item-stretch">
-        {isStaking ? (
-          !account ? (
-            <ConnectButton />
-          ) : isAllowanceDataLoading ? (
-            <Button loading={true}>Loading...</Button>
-          ) : account && stakeAllowance > 0 ? (
-            <Button
-              loading={isPendingTxn}
-              onClick={() => {
-                onChangeStake("stake")
-              }}
-            >
-              Stake ART
-            </Button>
-          ) : (
-            <Button loading={isPendingTxn} onClick={() => {}}>
-              Approve to Continue
-            </Button>
-          )
-        ) : !account ? (
-          <ConnectButton />
-        ) : isAllowanceDataLoading ? (
-          <Button loading={true}>Loading...</Button>
-        ) : account && unstakeAllowance > 0 ? (
+
+          <input
+            className="w-full text-3xl font-semibold text-right bg-transparent border-transparent outline-none reset-number-spinner text-dark-400 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
+            type="number"
+            placeholder="0.0"
+            step="0.000000001"
+            {...register("amount", {
+              required: true,
+              max: artBalance.balance,
+              min: 0,
+            })}
+          />
+        </CTABox>
+      </div>
+      <Content />
+      <div className="flex mt-5 item-stretch">
+        {active && (
           <Button
-            loading={isPendingTxn}
-            onClick={() => {
-              onChangeStake("unstake")
-            }}
+            disabled={!isValid || isSubmitting}
+            loading={isSubmitting}
+            type="submit"
+            className="flex items-center gap-3 button button-primary button-hover disabled:opacity-75"
           >
-            Unstake ART
-          </Button>
-        ) : (
-          <Button loading={isPendingTxn} onClick={() => {}}>
-            Approve to Continue
+            <span>
+              {isAllowanceSufficient || !watch("amount") ? "Stake" : "Approve"}
+            </span>
           </Button>
         )}
+
+        {!active && (
+          <div className="flex justify-center">
+            <ConnectButton />
+          </div>
+        )}
       </div>
-      <div className="text-xs text-gray-600">
+      <div className="mt-5 text-xs text-gray-600">
         {account ? (
           <div>
             The "Approve" transaction is only needed when bonding for the first
@@ -317,7 +314,138 @@ function StakeContent({ mode }) {
           <div></div>
         )}
       </div>
-    </div>
+    </form>
+  )
+}
+
+function UnstakeContent() {
+  const { account } = useWeb3React()
+
+  const staking = useStaking()
+
+  const { sArt, unstakeAllowance, sArtBalance, artBalance } =
+    useStakingData(staking)
+
+  const { active } = useWeb3React()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { isValid, isSubmitting },
+  } = useForm<{ amount: number }>({
+    mode: "all",
+    reValidateMode: "onChange",
+  })
+
+  const isAllowanceSufficient = unstakeAllowance.allowance >= watch("amount")
+
+  const onSubmit = async ({ amount }: { amount: number }) => {
+    const amountInArt = parseUnits(amount.toString(), 9)
+
+    if (isAllowanceSufficient) {
+      try {
+        await staking.unstake(amountInArt)
+        artBalance.mutate()
+        sArtBalance.mutate()
+        reset({ amount: 0 })
+        successToast(`Unstaked ${amount} sART successfully`)
+      } catch (error) {
+        errorToast("Something went wrong")
+        console.error(error)
+      }
+    } else {
+      await sArt.approve(staking.address, ethers.constants.MaxUint256)
+      unstakeAllowance.mutate()
+    }
+  }
+
+  const maxsArtTrimmed = parseToFixed(sArtBalance.balance, 9)
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} data-cy="unstake-content">
+      <div className="space-y-6">
+        <CTABox className="flex items-center justify-between border border-gray-700">
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <ArtIcon className="w-8 h-8" />
+              <p className="text-2xl font-medium 2xl:text-[32px] text-dark-1000 tracking-2%">
+                sART
+              </p>
+            </div>
+
+            <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
+              Balance{" "}
+              {sArtBalance.balance >= 0 ? (
+                <>{maxsArtTrimmed} sART</>
+              ) : (
+                <Skeleton className="inline-block" height={15} width={80} />
+              )}{" "}
+              (
+              <button
+                className="font-medium text-wine-600"
+                type="button"
+                onClick={() => {
+                  setValue("amount", sArtBalance.balance, {
+                    shouldValidate: true,
+                  })
+                }}
+              >
+                Max
+              </button>
+              )
+            </p>
+          </div>
+
+          <input
+            className="w-full text-3xl font-semibold text-right bg-transparent border-transparent outline-none reset-number-spinner text-dark-400 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
+            type="number"
+            placeholder="0.0"
+            step="0.000000001"
+            {...register("amount", {
+              required: true,
+              max: sArtBalance.balance,
+              min: 0,
+            })}
+          />
+        </CTABox>
+      </div>
+      <Content />
+      <div className="flex mt-5 item-stretch">
+        {active && (
+          <Button
+            disabled={!isValid || isSubmitting}
+            loading={isSubmitting}
+            type="submit"
+            className="flex items-center gap-3 button button-primary button-hover disabled:opacity-75"
+          >
+            <span>
+              {isAllowanceSufficient || !watch("amount")
+                ? "Unstake"
+                : "Approve"}
+            </span>
+          </Button>
+        )}
+
+        {!active && (
+          <div className="flex justify-center">
+            <ConnectButton />
+          </div>
+        )}
+      </div>
+      <div className="mt-5 text-xs text-gray-600">
+        {account ? (
+          <div>
+            The "Approve" transaction is only needed when bonding for the first
+            time
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    </form>
   )
 }
 

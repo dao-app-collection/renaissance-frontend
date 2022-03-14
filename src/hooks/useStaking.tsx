@@ -10,10 +10,10 @@ import Staking from "@contracts/Staking"
 import StakingHelper from "@contracts/StakingHelper"
 import { secondsUntilBlock } from "@helper"
 import getLibrary from "@helper/getLibrary"
-import { getMarketPrice } from "@helper/price"
 
 import useArtToken from "./useArtToken"
 import { useContract } from "./useContract"
+import { getMarketPrice } from "./useMarketPrice"
 import { useTokenAllowance } from "./useTokenAllowance"
 import { useTokenBalance } from "./useTokenBalance"
 
@@ -72,7 +72,7 @@ export function useStakingData(staking: Staking) {
 
   const { data: marketPrice } = useSWR(
     `/marketprice/${staking?.address}`,
-    async () => await getMarketPrice(library.provider)
+    async () => await getMarketPrice()
   )
 
   const { data: currentIndex } = useSWR(
@@ -82,7 +82,7 @@ export function useStakingData(staking: Staking) {
 
   // const stakingTVL = contractBalance * 1000
   // change back
-  const stakingTVL = contractBalance * marketPrice
+  const stakingTVL = (contractBalance * marketPrice) / 10 ** 9
 
   // hours daily divided by rebase rate
   const REBASE_PER_DAY = 24 / 7.75

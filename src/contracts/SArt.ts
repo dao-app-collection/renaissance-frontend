@@ -13,7 +13,7 @@ class SArt extends ERC20 {
   ) {
     super(address, abi, provider)
     super.setDecimals(9)
-    super.setSymbol("AROME")
+    super.setSymbol("AART")
   }
 
   async circulatingSupply() {

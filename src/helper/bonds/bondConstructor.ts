@@ -6,7 +6,7 @@ import {
 } from "@ethersproject/providers"
 import { ethers } from "ethers"
 
-import { contractForBondCalculator } from "@helper/contracts"
+import BondCalcContractABI from "src/abi/BondCalcContract.json"
 import ierc20Abi from "src/abi/IERC20.json"
 import { currentAddresses } from "src/constants"
 
@@ -78,6 +78,21 @@ export abstract class Bond {
     return new ethers.Contract(bondAddress, this.bondContractABI, provider)
   }
 
+  getContractForBondingCalculator(provider: StaticJsonRpcProvider) {
+    return new ethers.Contract(
+      currentAddresses.BONDINGCALC_ADDRESS,
+      BondCalcContractABI.abi,
+      provider
+    )
+  }
+  getContractForBondingCalculatorFromWallet(provider: ethers.Signer) {
+    return new ethers.Contract(
+      currentAddresses.BONDINGCALC_ADDRESS,
+      BondCalcContractABI.abi,
+      provider
+    )
+  }
+
   getAddressForReserve() {
     return this.networkAddrs.reserveAddress
   }
@@ -131,7 +146,7 @@ export class LPBond extends Bond {
   async getTreasuryBalance(provider: StaticJsonRpcProvider) {
     const token = this.getContractForReserve(provider)
     const tokenAddress = this.getAddressForReserve()
-    const bondCalculator = contractForBondCalculator(provider)
+    const bondCalculator = this.getContractForBondingCalculator(provider)
     const tokenAmount = await token.balanceOf(currentAddresses.TREASURY_ADDRESS)
     const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount)
     const markdown = await bondCalculator.markdown(tokenAddress)

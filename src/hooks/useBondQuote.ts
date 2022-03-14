@@ -3,7 +3,6 @@ import { ethers } from "ethers"
 import useSWR from "swr"
 
 import { BOND_REFRESH_INTERVAL } from "@constants"
-import { contractForBondCalculator } from "@helper/contracts"
 import { ISingleBond } from "@typings"
 
 export default function useBondQuote(
@@ -26,7 +25,7 @@ export default function useBondQuote(
   const enabled = Number(value) > 0
 
   const bondCalcContract = walletProvider
-    ? contractForBondCalculator(walletProvider)
+    ? bond.getContractForBondingCalculatorFromWallet(walletProvider.getSigner())
     : undefined
 
   const { data: valuation } = useSWR(

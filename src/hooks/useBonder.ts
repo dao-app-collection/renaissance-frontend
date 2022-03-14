@@ -6,7 +6,7 @@ import useSWR from "swr"
 
 import { errorToast } from "@components/ui/Toast"
 import { BOND_REFRESH_INTERVAL } from "@constants"
-import { IBonder, IJsonRPCError, ISingleBond } from "@typings"
+import { IBonder, IJsonRPCError, ISingleBond } from "@interfaces"
 
 function useBonder(singleBond: ISingleBond): IBonder {
   const [approvePending, setApprovePending] = useState(false)

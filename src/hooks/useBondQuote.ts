@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import useSWR from "swr"
 
 import { BOND_REFRESH_INTERVAL } from "@constants"
-import { ISingleBond } from "@typings"
+import { ISingleBond } from "@interfaces"
 
 export default function useBondQuote(
   singleBond: ISingleBond,

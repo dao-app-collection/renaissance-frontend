@@ -6,7 +6,7 @@ import { ethers } from "ethers"
 
 import GenericContract from "@contracts/GenericContract"
 import { getProvider } from "@helper"
-import { getContract } from "@utils/getContract"
+import { getContract } from "@helper/getContract"
 
 type IGenericContractConstructor<T> = new (
   address: string,

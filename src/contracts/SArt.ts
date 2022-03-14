@@ -1,7 +1,7 @@
 import { ethers } from "ethers"
 
 import { ERC20 } from "@contracts/ERC20"
-import { parseBigNumberToFloat } from "@utils/parseUtils"
+import { parseBigNumberToFloat } from "@helper/parseUtils"
 
 // SArt is it's own class because it extends the ERC20 with circulatingSupply, if we wanted to use it as an ERC20, we could do that with useToken but then we wouldn't have access to ciculatingSupply
 // if we really want to use circulatingSupply, we need to create this contract with a custom useContract call

@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import { isAddress } from "ethers/lib/utils"
 
 import GenericContract from "@contracts/GenericContract"
-import { IGenericContractConstructor } from "@typings"
+import { IGenericContractConstructor } from "@interfaces"
 
 // https://www.typescriptlang.org/docs/handbook/2/generics.html#using-class-types-in-generics look here to understand the use of class types
 

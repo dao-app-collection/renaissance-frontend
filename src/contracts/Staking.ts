@@ -2,7 +2,7 @@ import { ContractTransaction } from "@ethersproject/contracts"
 import { ethers } from "ethers"
 
 import GenericContract from "@contracts/GenericContract"
-import { parseBigNumberToFloat } from "@utils/parseUtils"
+import { parseBigNumberToFloat } from "@helper/parseUtils"
 
 interface WarmupInfo {
   deposit: number

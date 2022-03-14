@@ -5,7 +5,7 @@ import { BOND_REFRESH_INTERVAL } from "@constants"
 import { getProvider } from "@helper"
 import allBonds from "@helper/bonds/allBonds"
 import { CustomBond, LPBond, StableBond } from "@helper/bonds/bondConstructor"
-import { ISingleBond } from "@typings"
+import { ISingleBond } from "@interfaces"
 
 import { useArtMarketPrice } from "./useMarketPrice"
 

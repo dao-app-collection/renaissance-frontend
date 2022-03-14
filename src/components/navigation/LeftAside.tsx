@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
-import { NavigationItem } from "@typings"
+import { NavigationItem } from "@interfaces"
 
 function LeftAside({
   navigation_top,

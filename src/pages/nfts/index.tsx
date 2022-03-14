@@ -5,8 +5,8 @@ import ConnectButton from "@components/ConnectButton"
 import CheckIcon from "@components/customicons/CheckIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { CheckLabel, Label, Stat } from "@components/ui/Display"
+import { fakeNFTListing as fakeNFTList } from "@helper/fakeNFTListing"
 import { fNFTOfferingType } from "@helper/fNFTOfferingType"
-import { fakeNFTListing as fakeNFTList } from "@utils/fakeNFTListing"
 
 const NFTCard = ({
   author,
@@ -88,16 +88,16 @@ const NFTMarketplace = () => {
     <Layout>
       <ConnectButton customStyle="z-50 absolute right-[5px] top-[50px] w-[200px] lg:right-[40px]" />
 
-      <div className="relative h-full min-h-screen py-6 pb-52 p-5">
+      <div className="relative h-full min-h-screen p-5 py-6 pb-52">
         <PageHeading>
-          <div className="flex-grow py-10 mt-[50px] text-center lg:text-left">
+          <div className="flex-grow py-10 text-center mt-[50px] lg:text-left">
             <PageHeading.Title>Initial fNFT Offerings</PageHeading.Title>
             <PageHeading.Subtitle>
               Get Fractionalized NFT IDOs at a discount
             </PageHeading.Subtitle>
           </div>
         </PageHeading>
-        <div className="flex flex-row flex-wrap gap-12 justify-center lg:justify-start">
+        <div className="flex flex-row flex-wrap justify-center gap-12 lg:justify-start">
           {[...fakeNFTList].map((item, i) => (
             <div key={i} className="flex-none">
               <NFTCard {...item} />

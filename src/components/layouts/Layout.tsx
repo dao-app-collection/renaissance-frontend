@@ -5,7 +5,7 @@ import { MenuIcon } from "@heroicons/react/outline"
 import LeftAside from "@components/navigation/LeftAside"
 import MobileMenu from "@components/navigation/MobileMenu"
 //import RightAside from "@components/navigation/RightAside"
-import { NavigationItem } from "@typings"
+import { NavigationItem } from "@interfaces"
 
 const navigation_top: NavigationItem[] = [{ name: "NFTs", href: "/nfts" }]
 const navigation_bot: NavigationItem[] = [

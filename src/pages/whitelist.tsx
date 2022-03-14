@@ -12,6 +12,7 @@ import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/Display"
 import { errorToast } from "@components/ui/Toast"
 import { currentAddresses } from "@constants"
+import { parseEthersErrorMessage } from "@helper/parseUtils"
 import {
   approve,
   deposit,
@@ -22,7 +23,6 @@ import {
   getUserRemainingAllocation,
   getWhitelistedState,
 } from "@helper/presale"
-import { parseEthersErrorMessage } from "@utils/parseUtils"
 
 export default function Whitelist() {
   const { account, library } = useWeb3React<Web3Provider>()

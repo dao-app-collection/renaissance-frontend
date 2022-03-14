@@ -1,7 +1,7 @@
 import { utils } from "ethers"
 
 import GenericContract from "@contracts/GenericContract"
-import { parseBigNumberToFloat } from "@utils/parseUtils"
+import { parseBigNumberToFloat } from "@helper/parseUtils"
 
 class Presale extends GenericContract {
   async deposit(amount: number) {

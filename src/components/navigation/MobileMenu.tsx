@@ -9,7 +9,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 
 import ConnectButton from "@components/ConnectButton"
-import { NavigationItem } from "@typings"
+import { NavigationItem } from "@interfaces"
 
 interface MobileMenuProps {
   sidebarOpen: boolean
@@ -118,7 +118,7 @@ function MobileMenu({
                 {navigation_bot.map((item) => (
                   <div
                     key={item.name}
-                    className="transition p-2 hover:bg-dark-1000 rounded-md"
+                    className="p-2 transition hover:bg-dark-1000 rounded-md"
                   >
                     <Link key={item.name} href={item.href}>
                       <a

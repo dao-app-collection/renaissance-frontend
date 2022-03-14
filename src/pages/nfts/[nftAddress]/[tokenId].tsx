@@ -12,7 +12,7 @@ import OpenseaIcon from "@components/customicons/OpenseaIcon"
 import Layout from "@components/layouts/Layout"
 import PageHeading, { Divide, Label, Stat } from "@components/ui/Display"
 import NFTInteractionCard from "@components/ui/NFTInteractionCard"
-import { fakeNFTListing as fakeNFTList } from "@utils/fakeNFTListing"
+import { fakeNFTListing as fakeNFTList } from "@helper/fakeNFTListing"
 
 const InfoBanner = ({
   children,

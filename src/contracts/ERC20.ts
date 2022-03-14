@@ -1,6 +1,6 @@
 import { ethers, ContractTransaction } from "ethers"
 
-import { parseBigNumberToFloat } from "@utils/parseUtils"
+import { parseBigNumberToFloat } from "@helper/parseUtils"
 
 import GenericContract from "./GenericContract"
 

@@ -2,7 +2,6 @@ import React, { useState } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { useDispatch, useSelector } from "react-redux"
 import useSWR, { useSWRConfig } from "swr"
 
 import ConnectButton from "@components/ConnectButton"
@@ -27,7 +26,6 @@ import { parseEthersErrorMessage } from "@utils/parseUtils"
 
 export default function Whitelist() {
   const { account, library } = useWeb3React<Web3Provider>()
-  const dispatch = useDispatch()
   const { mutate } = useSWRConfig()
 
   const [txPending, setTxPending] = useState(false)
@@ -177,7 +175,7 @@ export function DepositContent({
   amount: string
   setAmount: (quantity: string) => void
 }) {
-  const isAppLoading = !!useSelector((state: any) => state.app.loading)
+  const isAppLoading = false
   const maxButtonDisabled = maxFraxDeposit === 0
   const setMax = () => setAmount(maxFraxDeposit.toString())
 

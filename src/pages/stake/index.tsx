@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
 import Image from "next/image"
-import { useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
@@ -183,7 +182,6 @@ function Stake() {
 }
 
 function StakeContent({ mode }) {
-  const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React()
   const rpcProvider = getProvider()
   const walletProvider = library

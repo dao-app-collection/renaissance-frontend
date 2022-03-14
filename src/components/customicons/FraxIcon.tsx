@@ -8,10 +8,10 @@ export default function FraxIcon({ ...props }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="31" height="31" fill="url(#pattern0)" />
+      <rect width="31" height="31" fill="url(#fraxIcon)" />
       <defs>
         <pattern
-          id="pattern0"
+          id="fraxIcon"
           patternContentUnits="objectBoundingBox"
           width="1"
           height="1"

@@ -3,7 +3,6 @@ import { useState } from "react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import Image from "next/image"
-import { useDispatch } from "react-redux"
 
 import ConnectButton from "@components/ConnectButton"
 import Button from "@components/ui/Buttons"
@@ -60,7 +59,6 @@ function Content({ bond, quantity }) {
 }
 
 function Redeem({ bond }) {
-  const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React<Web3Provider>()
   const [quantity, setQuantity] = useState(0)
 

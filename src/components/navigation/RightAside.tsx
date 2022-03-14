@@ -37,16 +37,6 @@ function RightAside() {
                   >
                     Disconnect
                   </button>
-
-                  {/* <button
-                    data-cy="report-bug"
-                    className={clsx(
-                      "font-medium block tracking-2% text-orange-600 md:text-sm 2xl:text-base transition hover:opacity-80"
-                    )}
-                    onClick={() => showModal(<ReportBugModal />)}
-                  >
-                    Report Bug
-                  </button> */}
                 </div>
               </Disclosure.Panel>
             </div>

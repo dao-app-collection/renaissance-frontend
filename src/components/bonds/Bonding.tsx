@@ -8,7 +8,6 @@ import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify, round, format } from "@helper"
-import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
 
 function Content({ bond, quantity }) {
   const vestingPeriod = () => 0
@@ -62,6 +61,7 @@ function Bonding({ bond, slippage, setSlippage }) {
   const BondIcon = bond.bondIconSvg
   const onBond = () => {}
   const onSeekApproval = () => {}
+  const isPendingTxn = false
 
   return (
     <div className="px-1 mt-8">
@@ -106,16 +106,13 @@ function Bonding({ bond, slippage, setSlippage }) {
         ) : hasAllowance() ? (
           <Button
             disabled={!bond.isAvailable}
-            loading={isPendingTxn(pendingTransactions, "bond_" + bond.name)}
+            loading={isPendingTxn}
             onClick={onBond}
           >
-            {txnButtonText(pendingTransactions, "bond_" + bond.name, "Bond")}
+            Button Text
           </Button>
         ) : (
-          <Button
-            loading={isPendingTxn(pendingTransactions, "approve_" + bond.name)}
-            onClick={onSeekApproval}
-          >
+          <Button loading={isPendingTxn} onClick={onSeekApproval}>
             {txnButtonText(
               pendingTransactions,
               "approve_" + bond.name,

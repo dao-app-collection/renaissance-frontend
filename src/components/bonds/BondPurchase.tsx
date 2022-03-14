@@ -8,7 +8,6 @@ import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify, round, format } from "@helper"
-import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
 
 function BondPurchase({ bond, slippage, setSlippage }) {
   const { account, chainId, library } = useWeb3React<Web3Provider>()
@@ -27,6 +26,7 @@ function BondPurchase({ bond, slippage, setSlippage }) {
   const pendingTransactions = []
   const onBond = () => {}
   const onSeekApproval = () => {}
+  const isPendingTxn = false
 
   return (
     <div>
@@ -212,21 +212,14 @@ function BondPurchase({ bond, slippage, setSlippage }) {
         ) : hasAllowance() ? (
           <Button
             disabled={!bond.isAvailable}
-            loading={isPendingTxn(pendingTransactions, "bond_" + bond.name)}
+            loading={isPendingTxn}
             onClick={onBond}
           >
-            {txnButtonText(pendingTransactions, "bond_" + bond.name, "Bond")}
+            Bond
           </Button>
         ) : (
-          <Button
-            loading={isPendingTxn(pendingTransactions, "approve_" + bond.name)}
-            onClick={onSeekApproval}
-          >
-            {txnButtonText(
-              pendingTransactions,
-              "approve_" + bond.name,
-              "Approve"
-            )}
+          <Button loading={isPendingTxn} onClick={onSeekApproval}>
+            Approve
           </Button>
         )}
       </div>

@@ -11,6 +11,7 @@ import Button from "@components/ui/Buttons"
 import { MaxButton } from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import PageHeading from "@components/ui/Display"
+import { errorToast } from "@components/ui/Toast"
 import { currentAddresses } from "@constants"
 import {
   approve,
@@ -22,7 +23,6 @@ import {
   getUserRemainingAllocation,
   getWhitelistedState,
 } from "@helper/presale"
-import { error } from "@slices/messagesSlice"
 import { parseEthersErrorMessage } from "@utils/parseUtils"
 
 export default function Whitelist() {
@@ -93,7 +93,7 @@ export default function Whitelist() {
           mutate(["/fraxAllowance", account])
         }
       } catch (e) {
-        dispatch(error(parseEthersErrorMessage(e)))
+        errorToast(parseEthersErrorMessage(e))
       } finally {
         setTxPending(false)
       }

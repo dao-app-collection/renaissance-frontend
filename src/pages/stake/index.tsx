@@ -11,7 +11,6 @@ import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { getProvider, prettify } from "@helper"
-import { isPendingTxn, txnButtonText } from "@slices/pendingTxnsSlice"
 
 function Header() {
   const isBondLoading = false
@@ -221,6 +220,7 @@ function StakeContent({ mode }) {
   const trimmedBalance = 0
   const stakingRebasePercentage = 0
   const nextRewardValue = 0
+  const isPendingTxn = false
 
   return (
     <div className="space-y-6">
@@ -278,23 +278,16 @@ function StakeContent({ mode }) {
             <Button loading={true}>Loading...</Button>
           ) : account && stakeAllowance > 0 ? (
             <Button
-              loading={isPendingTxn(pendingTransactions, "staking")}
+              loading={isPendingTxn}
               onClick={() => {
                 onChangeStake("stake")
               }}
             >
-              {txnButtonText(pendingTransactions, "staking", "Stake ART")}
+              Stake ART
             </Button>
           ) : (
-            <Button
-              loading={isPendingTxn(pendingTransactions, "approve_staking")}
-              onClick={() => {}}
-            >
-              {txnButtonText(
-                pendingTransactions,
-                "approve_staking",
-                "Approve to Continue"
-              )}
+            <Button loading={isPendingTxn} onClick={() => {}}>
+              Approve to Continue
             </Button>
           )
         ) : !account ? (
@@ -303,23 +296,16 @@ function StakeContent({ mode }) {
           <Button loading={true}>Loading...</Button>
         ) : account && unstakeAllowance > 0 ? (
           <Button
-            loading={isPendingTxn(pendingTransactions, "unstaking")}
+            loading={isPendingTxn}
             onClick={() => {
               onChangeStake("unstake")
             }}
           >
-            {txnButtonText(pendingTransactions, "unstaking", "Unstake ART")}
+            Unstake ART
           </Button>
         ) : (
-          <Button
-            loading={isPendingTxn(pendingTransactions, "approve_unstaking")}
-            onClick={() => {}}
-          >
-            {txnButtonText(
-              pendingTransactions,
-              "approve_unstaking",
-              "Approve to Continue"
-            )}
+          <Button loading={isPendingTxn} onClick={() => {}}>
+            Approve to Continue
           </Button>
         )}
       </div>

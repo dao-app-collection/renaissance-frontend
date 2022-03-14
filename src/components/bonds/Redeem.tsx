@@ -10,7 +10,6 @@ import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify, format, round } from "@helper"
-import { txnButtonText } from "@slices/pendingTxnsSlice"
 
 function Content({ bond, quantity }) {
   const currentBlock = 0
@@ -124,11 +123,7 @@ function Redeem({ bond }) {
               }
               onClick={() => onRedeem({ autostake: true })}
             >
-              {txnButtonText(
-                pendingTransactions,
-                "redeem_bond_" + bond.name + "_autostake",
-                "Claim and Autostake"
-              )}
+              Claim and Autostake
             </Button>
             <div className="px-3"></div>
             <Button
@@ -140,11 +135,7 @@ function Redeem({ bond }) {
               }
               onClick={() => onRedeem({ autostake: false })}
             >
-              {txnButtonText(
-                pendingTransactions,
-                "redeem_bond_" + bond.name,
-                "Claim Only"
-              )}
+              Claim only
             </Button>
           </>
         )}

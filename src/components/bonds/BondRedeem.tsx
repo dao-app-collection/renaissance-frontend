@@ -6,7 +6,6 @@ import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
-import { txnButtonText } from "@slices/pendingTxnsSlice"
 
 function BondRedeem({ bond }) {
   const { chainId, account, library } = useWeb3React<Web3Provider>()
@@ -141,11 +140,7 @@ function BondRedeem({ bond }) {
                 }
                 onClick={() => onRedeem({ autostake: false })}
               >
-                {txnButtonText(
-                  pendingTransactions,
-                  "redeem_bond_" + bond.name,
-                  "Claim"
-                )}
+                Claim
               </Button>
 
               <Button
@@ -157,11 +152,7 @@ function BondRedeem({ bond }) {
                 }
                 onClick={() => onRedeem({ autostake: true })}
               >
-                {txnButtonText(
-                  pendingTransactions,
-                  "redeem_bond_" + bond.name + "_autostake",
-                  "Claim and Autostake"
-                )}
+                Claim and Autostake
               </Button>
             </>
           )}

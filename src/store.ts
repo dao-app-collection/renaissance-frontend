@@ -3,7 +3,6 @@ import { configureStore } from "@reduxjs/toolkit"
 import accountReducer from "./slices/accountSlice"
 import appReducer from "./slices/appSlice"
 import messagesReducer from "./slices/messagesSlice"
-import pendingTransactionsReducer from "./slices/pendingTxnsSlice"
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -14,7 +13,6 @@ const store = configureStore({
     // reducer imported from the slice file
     account: accountReducer,
     app: appReducer,
-    pendingTransactions: pendingTransactionsReducer,
     messages: messagesReducer,
   },
   middleware: (getDefaultMiddleware) =>

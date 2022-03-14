@@ -3,10 +3,9 @@ import { useEffect, useState } from "react"
 import { ArrowLeftIcon } from "@heroicons/react/outline"
 import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
-import { ethers } from "ethers"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 import Bonding from "@components/bonds/Bonding"
 import Redeem from "@components/bonds/Redeem"
@@ -14,10 +13,8 @@ import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import { getProvider, prettify } from "@helper"
+import { prettify } from "@helper"
 import { allBondsMap } from "@helper/bonds/allBonds"
-import { error } from "@slices/messagesSlice"
-import { changeApproval, changeStake } from "@slices/stakeThunk"
 
 function Header() {
   let isBondLoading = false
@@ -185,39 +182,14 @@ function BondPair() {
 }
 
 function BondingContent({ mode }) {
-  const dispatch = useDispatch()
   const { chainId, account, library } = useWeb3React()
-  const rpcProvider = getProvider()
-  const walletProvider = library
 
   // therefore this is to simplify reading code
   const isStaking = !mode
-  const isUnstaking = mode
   const [quantity, setQuantity] = useState(0)
 
-  const isAppLoading = useSelector((state: any) => state.app.loading)
-
-  const fiveDayRate = useSelector((state: any) => {
-    return state.app.fiveDayRate
-  })
-  const artBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.art
-  })
-  const sartBalance = useSelector((state: any) => {
-    return state.account.balances && state.account.balances.sart
-  })
-  const stakeAllowance = useSelector((state: any) => {
-    return state.account.staking && state.account.staking.artStake
-  })
-  const unstakeAllowance = useSelector((state: any) => {
-    return state.account.staking && state.account.staking.artUnstake
-  })
-  const stakingRebase = useSelector((state: any) => {
-    return state.app.stakingRebase
-  })
-  const pendingTransactions = useSelector((state: any) => {
-    return state.pendingTransactions
-  })
+  const artBalance = 0
+  const sartBalance = 0
 
   const setMax = () => {
     if (isStaking) {
@@ -226,63 +198,6 @@ function BondingContent({ mode }) {
       setQuantity(sartBalance)
     }
   }
-
-  const onSeekApproval = async (token) => {
-    await dispatch(
-      changeApproval({
-        address: account,
-        token,
-        walletProvider,
-        chainId,
-      })
-    )
-  }
-
-  const onChangeStake = async (action: string) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (isNaN(quantity) || quantity === 0) {
-      // eslint-disable-next-line no-alert
-      return dispatch(error("Please enter a value!"))
-    }
-
-    // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "gwei")
-    if (
-      action === "stake" &&
-      gweiValue.gt(ethers.utils.parseUnits(artBalance, "gwei"))
-    ) {
-      return dispatch(error("You cannot stake more than your ART balance."))
-    }
-
-    if (
-      action === "unstake" &&
-      gweiValue.gt(ethers.utils.parseUnits(sartBalance, "gwei"))
-    ) {
-      return dispatch(error("You cannot unstake more than your sART balance."))
-    }
-
-    await dispatch(
-      changeStake({
-        address: account,
-        action,
-        value: quantity.toString(),
-        walletProvider,
-        rpcProvider,
-        chainId,
-      })
-    )
-  }
-
-  const isAllowanceDataLoading =
-    (stakeAllowance == null && isStaking) ||
-    (unstakeAllowance == null && isUnstaking)
-
-  const trimmedBalance = sartBalance
-  const stakingRebasePercentage = Number(prettify(stakingRebase * 100))
-  const nextRewardValue = prettify(
-    (stakingRebasePercentage / 100) * trimmedBalance,
-    4
-  )
 
   return (
     <div className="space-y-6">

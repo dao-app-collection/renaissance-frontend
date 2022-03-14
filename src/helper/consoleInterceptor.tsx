@@ -1,5 +1,4 @@
-import { error } from "@slices/messagesSlice"
-import store from "@store"
+import { errorToast } from "@components/ui/Toast"
 
 // List of error messages we wish to intercept
 const interceptedConsoleMessages = ["Wrong network, please switch to mainnet"]
@@ -11,7 +10,7 @@ interface IConsoleInterceptor {
 let consoleInterceptor: IConsoleInterceptor = Object.assign(
   (message: string) => {
     if (interceptedConsoleMessages.includes(message)) {
-      store.dispatch(error(message))
+      errorToast(message)
     }
     console.log(message)
   },

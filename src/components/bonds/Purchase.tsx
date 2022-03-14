@@ -47,7 +47,7 @@ function Content({ bond, quantity }) {
   )
 }
 
-function Bonding({ bond, slippage, setSlippage }) {
+function BondPurchase({ bond, slippage, setSlippage }) {
   const [quantity, setQuantity] = useState(0)
   const { account, chainId, library } = useWeb3React<Web3Provider>()
 
@@ -113,11 +113,7 @@ function Bonding({ bond, slippage, setSlippage }) {
           </Button>
         ) : (
           <Button loading={isPendingTxn} onClick={onSeekApproval}>
-            {txnButtonText(
-              pendingTransactions,
-              "approve_" + bond.name,
-              "Approve to continue"
-            )}
+            "Approve to continue"
           </Button>
         )}
       </div>
@@ -134,4 +130,4 @@ function Bonding({ bond, slippage, setSlippage }) {
     </div>
   )
 }
-export default Bonding
+export default BondPurchase

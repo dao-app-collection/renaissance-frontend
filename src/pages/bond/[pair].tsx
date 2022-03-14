@@ -7,7 +7,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useSelector } from "react-redux"
 
-import Bonding from "@components/bonds/Bonding"
+import Bonding from "@components/bonds/Purchase"
 import Redeem from "@components/bonds/Redeem"
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"

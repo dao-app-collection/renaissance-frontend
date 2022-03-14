@@ -58,7 +58,7 @@ function Content({ bond, quantity }) {
   )
 }
 
-function Redeem({ bond }) {
+function BondRedeem({ bond }) {
   const { chainId, account, library } = useWeb3React<Web3Provider>()
   const [quantity, setQuantity] = useState(0)
 
@@ -142,4 +142,4 @@ function Redeem({ bond }) {
   )
 }
 
-export default Redeem
+export default BondRedeem

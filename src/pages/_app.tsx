@@ -3,7 +3,6 @@ import React, { useEffect } from "react"
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core"
 import { AppProps } from "next/app"
 import { useRouter } from "next/router"
-import { Provider } from "react-redux"
 import { useDispatch } from "react-redux"
 
 import Web3Manager from "@components/layouts/Web3Manager"
@@ -12,7 +11,6 @@ import { getProvider } from "@helper"
 import getLibrary from "@helper/getLibrary"
 import * as gtag from "@helper/gtag"
 import { ModalProvider } from "@hooks/useModal"
-import store from "@store"
 
 import "../styles/tailwind.scss"
 
@@ -41,13 +39,11 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3Manager>
-        <Provider store={store}>
-          <ModalProvider>
-            <Root>
-              <Component {...pageProps} />
-            </Root>
-          </ModalProvider>
-        </Provider>
+        <ModalProvider>
+          <Root>
+            <Component {...pageProps} />
+          </Root>
+        </ModalProvider>
       </Web3Manager>
     </Web3ReactProvider>
   )

@@ -5,11 +5,13 @@ import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
+import { useTreasuryBalance } from "@hooks/useBalance"
+import { useArtMarketPrice } from "@hooks/useMarketPrice"
 
 function Header() {
-  const isBondLoading = false
-  const marketPrice = 0
-  const treasuryBalance = 0
+  const marketPrice = useArtMarketPrice()
+  const { loading, treasuryBalance } = useTreasuryBalance()
+
   return (
     <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-16 md:text-md 2xl:text-sm">
       <div className="py-5 align-middle space-y-2">
@@ -25,7 +27,7 @@ function Header() {
           </div>
           <div className="text-lg row-start-2">
             <>
-              {isBondLoading ? (
+              {loading ? (
                 <Skeleton height={40} width={150} />
               ) : (
                 "$" + prettify(treasuryBalance)
@@ -39,7 +41,7 @@ function Header() {
           </div>
           <div className="text-lg text-white row-start-2">
             <>
-              {isBondLoading ? (
+              {loading ? (
                 <Skeleton height={40} width={100} />
               ) : (
                 "$" + prettify(marketPrice)
@@ -53,8 +55,8 @@ function Header() {
 }
 
 function Bond() {
-  const isBondLoading = false
-  const treasuryBalance = 0
+  const loading = false
+  const claimableRewards = 0
 
   return (
     <Layout>
@@ -74,10 +76,10 @@ function Bond() {
             <span className="font-bold">
               {
                 <>
-                  {isBondLoading ? (
+                  {loading ? (
                     <Skeleton height={40} width={200} />
                   ) : (
-                    prettify(treasuryBalance)
+                    prettify(claimableRewards)
                   )}
                 </>
               }

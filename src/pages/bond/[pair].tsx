@@ -1,37 +1,30 @@
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 
 import { ArrowLeftIcon } from "@heroicons/react/outline"
-import { useWeb3React } from "@web3-react/core"
 import clsx from "clsx"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useSelector } from "react-redux"
 
 import Bonding from "@components/bonds/Purchase"
 import Redeem from "@components/bonds/Redeem"
 import ConnectButton from "@components/ConnectButton"
 import Layout from "@components/layouts/Layout"
-import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
-import { allBondsMap } from "@helper/bonds/allBonds"
+import { useBonds } from "@hooks/useBonds"
+import { useArtMarketPrice } from "@hooks/useMarketPrice"
 
 function Header() {
-  let isBondLoading = false
-
-  let marketPrice = 0
-
-  let treasuryBalance = 0
-  let bonds = []
+  let marketPrice = useArtMarketPrice()
+  let bonds = useBonds()
   let router = useRouter()
-  // for the switch, we cannot really use another datatype other than boolean
-  let [bond, setBond] = useState<any>({})
-  useEffect(() => {
-    if (!router.query.pair) return
-    setBond(allBondsMap[router.query.pair.toString()])
-  }, [bonds, router])
+  const bond = useMemo(
+    () => bonds.find(({ name }) => name === router.query.pair?.toString()),
+    [bonds, router.query]
+  )
   if (!bond.name) return null
   let BondIcon = bond.bondIconSvg
+  let loading = !bond.bondPrice
 
   return (
     <div className="px-10 mr-10 text-white grid grid-cols-4 space-x-16 md:text-md 2xl:text-sm">
@@ -49,10 +42,10 @@ function Header() {
           <div className="text-gray-500 row-start-1 text-md">Bonded Value</div>
           <div className="text-lg row-start-2">
             <>
-              {isBondLoading ? (
+              {loading ? (
                 <Skeleton height={40} width={100} />
               ) : (
-                "$" + prettify(treasuryBalance)
+                "$" + prettify(bond.purchased)
               )}
             </>
           </div>
@@ -63,7 +56,7 @@ function Header() {
           </div>
           <div className="text-lg text-white row-start-2">
             <>
-              {isBondLoading ? (
+              {loading ? (
                 <Skeleton height={40} width={100} />
               ) : (
                 "$" + prettify(marketPrice)
@@ -75,7 +68,7 @@ function Header() {
           <div className="text-gray-500 row-start-1 text-md">Bond Price</div>
           <div className="text-lg text-white row-start-2">
             <>
-              {isBondLoading ? (
+              {loading ? (
                 <Skeleton height={40} width={100} />
               ) : (
                 "$" + prettify(marketPrice)
@@ -89,29 +82,24 @@ function Header() {
 }
 
 function BondPair() {
-  const bonds = []
-  const router = useRouter()
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
   // for the switch, we cannot really use another datatype other than boolean
   const [mode, setMode] = useState(false)
-  const isBonding = !mode
-  const isRedeeming = mode
-
-  const [bond, setBond] = useState<any>({})
-  const [slippage, setSlippage] = useState(0.5)
-
-  const marketPrice = 0
-  useEffect(() => {
-    if (!router.query.pair) return
-    setBond(allBondsMap[router.query.pair.toString()])
-  }, [bonds, router])
-  if (!bond.name) return null
   const set = () => {
     setMode(!mode)
   }
-  const BondIcon = bond.bondIconSvg
+
+  const isBonding = !mode
+  const isRedeeming = mode
+
+  const [slippage, setSlippage] = useState(0.5)
+
+  let bonds = useBonds()
+  let router = useRouter()
+  const bond = useMemo(
+    () => bonds.find(({ name }) => name === router.query.pair?.toString()),
+    [bonds, router.query]
+  )
+  if (!bond.name) return null
 
   return (
     <Layout>
@@ -181,45 +169,4 @@ function BondPair() {
   )
 }
 
-function BondingContent({ mode }) {
-  const { chainId, account, library } = useWeb3React()
-
-  // therefore this is to simplify reading code
-  const isStaking = !mode
-  const [quantity, setQuantity] = useState(0)
-
-  const artBalance = 0
-  const sartBalance = 0
-
-  const setMax = () => {
-    if (isStaking) {
-      setQuantity(artBalance)
-    } else {
-      setQuantity(sartBalance)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      <CTABox className="flex items-center justify-between border-2 border-gray-600">
-        <div className="">
-          <input
-            onChange={(e: any) => setQuantity(e.target.value)}
-            className="w-full text-lg font-semibold text-left bg-transparent outline-none text-dark-500 text-[35px] text-dark-input tracking-2%"
-            size={12}
-            placeholder="   0.0 ART"
-          />
-        </div>
-        <div className="px-3">
-          <button
-            onClick={setMax}
-            className="px-4 py-2 font-semibold text-indigo-700 bg-transparent border rounded hover:bg-blue-500 hover:text-white hover:border-transparent"
-          >
-            Max amount
-          </button>
-        </div>
-      </CTABox>
-    </div>
-  )
-}
 export default BondPair

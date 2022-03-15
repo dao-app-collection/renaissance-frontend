@@ -2,9 +2,10 @@ import Link from "next/link"
 
 import Skeleton from "@components/ui/Skeleton"
 import { prettify } from "@helper"
+import { useBonds } from "@hooks/useBonds"
 
 export default function BondTable() {
-  const bonds = []
+  const bonds = useBonds()
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

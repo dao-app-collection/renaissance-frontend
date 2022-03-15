@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
-import { useSelector } from "react-redux"
 import VanillaTilt from "vanilla-tilt"
 
-import { allBondsMap } from "@helper/bonds/allBonds"
+import { useTreasuryBalance } from "@hooks/useBalance"
+import { useArtMarketPrice } from "@hooks/useMarketPrice"
 
 import HeadImage from "../../public/images/head.png"
 import Shadows from "../../public/images/shadows.png"
@@ -266,24 +266,8 @@ function SlashScreen() {
 }
 
 export function TreasuryStats() {
-  const isBondLoading = useSelector(
-    (state: any) => state.bonding.loading ?? true
-  )
-  const marketPrice = useSelector((state: any) => {
-    return state.app.marketPrice
-  })
-
-  const treasuryBalance = useSelector((state: any) => {
-    if (state.bonding.loading == false) {
-      let tokenBalances = 0
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
-          tokenBalances += state.bonding[bond].purchased
-        }
-      }
-      return tokenBalances
-    }
-  })
+  const marketPrice = useArtMarketPrice()
+  const { loading, treasuryBalance } = useTreasuryBalance()
   return (
     <div className="justify-center text-sm font-medium text-center bg-black grid md:grid-cols-3 rounded-md py-7 text-dark-100">
       <div className="py-4 md:px-20">
@@ -307,7 +291,7 @@ export function TreasuryStats() {
           {
             "Coming soon"
             // <>
-            //   {isBondLoading ? (
+            //   {loading ? (
             //     <Skeleton height={35} width={120} />
             //   ) : (
             //     "$" + prettify(marketPrice)
@@ -322,7 +306,7 @@ export function TreasuryStats() {
           {
             "Coming soon"
             // <>
-            //   {isBondLoading ? (
+            //   {loading ? (
             //     <Skeleton height={35} width={100} />
             //   ) : (
             //     "$" + prettify(20) + " DAI"
@@ -365,54 +349,12 @@ function Partnerships() {
   )
 }
 
-function CTACards() {
-  return (
-    <div className="px-8 py-16 text-white grid md:grid-cols-2 gap-4">
-      <div className="px-4 py-4 text-2xl font-medium border border-gray-600 rounded-md">
-        Finance
-        <div className="text-sm py-7">
-          <h5>
-            Renaissance is a community-owned financial tool for the better
-            future of NFTs. We Believe in decentralization of art.
-          </h5>
-        </div>
-        <div className="flex items-stretch space-x-6">
-          <div className="items-center px-4 py-2 mt-2 text-xs font-bold text-center text-black bg-green-500 rounded-md">
-            <button>Bond Now</button>
-          </div>
-        </div>
-      </div>
-      <div className="px-4 py-4 text-2xl font-medium border border-gray-600 rounded-md">
-        NFT
-        <div className="text-sm py-7">
-          <h5>
-            Reserve currency protocol for community ownership of NFTs. We enable
-            exchange of fractionalized NTFs.
-          </h5>
-        </div>
-        <div className="flex items-stretch space-x-3">
-          <div className="flex items-center px-3 py-2 mt-2 text-xs font-bold text-center text-black bg-green-500 rounded-md whitespace-nowrap">
-            <button>Pre-sale</button>
-          </div>
-          <div className="px-4 py-2 mt-2 text-xs font-black text-center text-black bg-white rounded-md">
-            <button>
-              Marketplace
-              <span className="text-gray-600"> comming soon</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function Home() {
   return (
     <div className="overflow-x-hidden max-w-screen">
       <SlashScreen />
       <TreasuryStats />
       <Partnerships />
-      {/* <CTACards /> */}
     </div>
   )
 }

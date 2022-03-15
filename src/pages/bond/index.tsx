@@ -55,9 +55,6 @@ function Header() {
 }
 
 function Bond() {
-  const loading = false
-  const claimableRewards = 0
-
   return (
     <Layout>
       <div
@@ -70,22 +67,6 @@ function Bond() {
           </div>
         </div>
         <Header />
-        <div className="px-5 mx-10 mt-10 mb-5 mr-20 py-7 rounded-md bg-bg-scheme-500 bg-opacity-50">
-          <div className="text-white md:text-xl">
-            <span>Your Claimable Rewards: $</span>
-            <span className="font-bold">
-              {
-                <>
-                  {loading ? (
-                    <Skeleton height={40} width={200} />
-                  ) : (
-                    prettify(claimableRewards)
-                  )}
-                </>
-              }
-            </span>
-          </div>
-        </div>
         <div className="mx-10 mr-20">
           <div className="items-center text-2xl font-bold text-white gap-2 sm:text-2xl tracking-2%">
             Choose a bond

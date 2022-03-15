@@ -2,9 +2,9 @@ import { useState } from "react"
 
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import Image from "next/image"
 
 import ConnectButton from "@components/ConnectButton"
+import ArtIcon from "@components/customicons/FraxIcon"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
@@ -90,25 +90,47 @@ function BondRedeem({ bond }) {
         <div className="py-2 text-xl font-semibold text-white px-1.5">
           Redeem ART
         </div>
-        <Image src="/images/r_logo.svg" alt="Near" width={25} height={25} />
       </div>
       <div className="space-y-6">
         <CTABox className="flex items-center justify-between border border-gray-700">
-          <div className="">
-            <input
-              value={quantity}
-              onChange={(e: any) => setQuantity(e.target.value)}
-              className="w-full ml-3 text-left bg-transparent outline-none h-1/4 md:text-md text-dark-500 text-[35px] text-dark-input tracking-2%"
-              size={12}
-              placeholder="0.0 ART"
-            />
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <ArtIcon className="w-8 h-8" />
+              <p className="text-2xl font-medium text-white 2xl:text-[32px] tracking-2%">
+                ART
+              </p>
+            </div>
+
+            <p className="mt-2 text-sm font-medium 2xl:text-base tracking-2% text-dark-300">
+              Balance{" "}
+              {pendingPayout ? (
+                <>{prettify(Number(pendingPayout))} ART</>
+              ) : (
+                <Skeleton className="inline-block" height={15} width={80} />
+              )}{" "}
+              (
+              <button
+                className="font-medium text-wine-600"
+                type="button"
+                onClick={setMax}
+              >
+                Max
+              </button>
+              )
+            </p>
           </div>
-          <button
-            onClick={setMax}
-            className="px-4 py-2 mx-6 text-sm font-bold text-indigo-500 bg-transparent border border-indigo-500 rounded md:text-md hover:bg-blue-500 hover:text-white hover:border-transparent bg-dark-1500"
-          >
-            Max amount
-          </button>
+          <input
+            value={quantity}
+            type="number"
+            onChange={(e: any) => {
+              const q = e.target.value
+              if (isNaN(q) || q < 0) return
+              setQuantity(q)
+            }}
+            className="w-full text-3xl font-semibold text-right bg-transparent border-transparent outline-none reset-number-spinner text-dark-400 2xl:text-[35px] 2xl:leading-normal tracking-2% focus-visible:border-transparent focus-visible:ring-0 placeholder-dark-75"
+            size={12}
+            placeholder="0.0 ART"
+          />
         </CTABox>
       </div>
       <div className="py-4 text-right text-white text-md">

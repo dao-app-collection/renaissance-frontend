@@ -1,7 +1,7 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 
 import { switchChains } from "@helper/walletHelpers"
-import useModal from "@hooks/useModal"
+import { useModal } from "@hooks/useModal"
 
 import ConnectorModal from "./modals/ConnectorModal"
 
@@ -14,7 +14,7 @@ function ConnectButton(props: ownProps) {
 
   const { account, active, error } = useWeb3React()
 
-  const { showModal } = useModal()
+  const showModal = useModal((state: any) => state.showModal)
   const accountFormatted = account?.substring(0, 6) + "..."
 
   if (active) {

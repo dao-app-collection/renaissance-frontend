@@ -22,7 +22,7 @@ function Header() {
     () => bonds.find(({ name }) => name === router.query.pair?.toString()),
     [bonds, router.query]
   )
-  if (!bond.name) return null
+  if (!bond || !bond.name) return null
   const bondNamePretty = bond.name
     .split("_")
     .join("-")
@@ -104,7 +104,7 @@ function BondPair() {
     () => bonds.find(({ name }) => name === router.query.pair?.toString()),
     [bonds, router.query]
   )
-  if (!bond.name) return null
+  if (!bond || !bond.name) return null
 
   return (
     <Layout>

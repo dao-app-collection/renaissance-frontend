@@ -19,7 +19,7 @@ export default function useBondQuote(
 
   const reserveAddress = bond.getAddressForReserve()
 
-  const amountInWei = ethers.utils.parseEther(value)
+  const amountInWei = ethers.utils.parseEther(value == "" ? "0" : value)
 
   // disable requests when value is 0
   const enabled = Number(value) > 0

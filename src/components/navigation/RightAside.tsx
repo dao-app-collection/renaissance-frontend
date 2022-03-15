@@ -4,11 +4,9 @@ import clsx from "clsx"
 
 import ConnectButton from "@components/ConnectButton"
 import DisclosureButton from "@components/ui/DisclosureButton"
-import useModal from "@hooks/useModal"
 
 function RightAside() {
   const { active, deactivate } = useWeb3React()
-  const { showModal } = useModal()
 
   return (
     <>

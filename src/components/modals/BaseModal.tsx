@@ -2,7 +2,7 @@ import { Fragment } from "react"
 
 import { Dialog, Transition } from "@headlessui/react"
 
-import useModal from "@hooks/useModal"
+import { useModal } from "@hooks/useModal"
 
 interface BaseModalProps {
   children: React.ReactNode
@@ -14,7 +14,7 @@ const baseOverlay = (
 )
 
 function BaseModal({ children, overlay = baseOverlay }: BaseModalProps) {
-  const { isOpen, close } = useModal()
+  const [isOpen, close] = useModal((state) => [state.isOpen, state.close])
 
   return (
     <>

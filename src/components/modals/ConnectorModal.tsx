@@ -4,12 +4,12 @@ import { useWeb3React } from "@web3-react/core"
 import Image from "next/image"
 
 import { injected, walletconnect } from "@connectors/connectors"
-import useModal from "@hooks/useModal"
+import { useModal } from "@hooks/useModal"
 
 import BaseModal from "./BaseModal"
 
 function ConnectorModal() {
-  const { close } = useModal()
+  const close = useModal((state) => state.close)
 
   const { activate, active } = useWeb3React()
 

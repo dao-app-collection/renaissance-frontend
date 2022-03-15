@@ -1,49 +1,30 @@
 import React from "react"
-import { useState } from "react"
 
-interface ModalContext {
+import create from "zustand"
+
+interface ModalStore {
   isOpen: boolean
-  close: () => void
   open: () => void
+  close: () => void
   showModal: (modal: React.ReactNode) => void
+  modal: React.ReactNode
 }
 
-export const ModalContext = React.createContext<ModalContext>({
+export const useModal = create<ModalStore>((set, get) => ({
   isOpen: false,
-  open: () => null,
-  close: () => null,
-  showModal: () => null,
-})
+  open: () => set({ isOpen: true }),
+  close: () => set({ isOpen: false }),
+  showModal: (modal) => set({ modal, isOpen: true }),
+  modal: <></>,
+}))
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [modal, setModal] = useState<React.ReactNode>(<></>)
-
-  const close = () => {
-    setIsOpen(false)
-  }
-
-  const open = () => {
-    setIsOpen(true)
-  }
-
-  const showModal = (modal: React.ReactNode) => {
-    setModal(modal)
-    setIsOpen(true)
-  }
+  const modal = useModal((state) => state.modal)
 
   return (
-    <ModalContext.Provider value={{ isOpen, close, open, showModal }}>
-      <>
-        {children}
-        {modal}
-      </>
-    </ModalContext.Provider>
+    <>
+      {children}
+      {modal}
+    </>
   )
 }
-
-function useModal() {
-  return React.useContext(ModalContext)
-}
-
-export default useModal

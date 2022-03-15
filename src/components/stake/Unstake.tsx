@@ -67,7 +67,7 @@ export default function UnstakeContent() {
           <div className="flex-shrink-0">
             <div className="flex items-center gap-2">
               <ArtIcon className="w-8 h-8" />
-              <p className="text-2xl font-medium 2xl:text-[32px] text-dark-1000 tracking-2%">
+              <p className="text-2xl font-medium text-white 2xl:text-[32px] tracking-2%">
                 sART
               </p>
             </div>

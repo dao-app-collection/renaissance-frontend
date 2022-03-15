@@ -23,6 +23,11 @@ function Header() {
     [bonds, router.query]
   )
   if (!bond.name) return null
+  const bondNamePretty = bond.name
+    .split("_")
+    .join("-")
+    .toUpperCase()
+    .replace("-LP", " LP")
   let BondIcon = bond.bondIconSvg
   let loading = !bond.bondPrice
 
@@ -32,7 +37,7 @@ function Header() {
         <div className="text-4xl font-bold">Bond (1,1)</div>
         <div className="flex item-stretch">
           <div className="text-xl font-semibold text-white uppercase">
-            {bond.name.split("_").join(" ")}
+            {bondNamePretty}
           </div>
           <BondIcon className="w-8 h-8" />
         </div>

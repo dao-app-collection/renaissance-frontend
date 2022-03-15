@@ -8,12 +8,22 @@ import ConnectButton from "@components/ConnectButton"
 import Button from "@components/ui/Buttons"
 import CTABox from "@components/ui/CTABox"
 import Skeleton from "@components/ui/Skeleton"
-import { prettify, format, round } from "@helper"
+import { prettify, format, round, prettyVestingPeriod } from "@helper"
+import useBonder from "@hooks/useBonder"
+import { useCurrentBlock } from "@hooks/useCurrentBlock"
 
-function Content({ bond, quantity }) {
-  const currentBlock = 0
-  const isBondLoading = false
-  const vestingTime = () => 0
+function Content({ bond }) {
+  let loading = !bond.bondPrice
+
+  const { bondMaturationBlock } = useBonder(bond)
+
+  const currentBlock = useCurrentBlock()
+
+  if (!bond.name) return null
+
+  const vestingTime = () => {
+    return prettyVestingPeriod(currentBlock, bondMaturationBlock)
+  }
 
   return (
     <div className="flex-wrap items-center px-3 py-4 rounded-lg grid grid-cols-1 lg:grid-cols-3 bg-scheme-500 bg-opacity-50 lg:justify-items-center gap-x-20">
@@ -23,7 +33,7 @@ function Content({ bond, quantity }) {
         </div>
         <div className="text-lg row-start-2">
           <>
-            {isBondLoading ? (
+            {loading ? (
               <Skeleton height={20} />
             ) : (
               <p className="text-white">
@@ -39,7 +49,7 @@ function Content({ bond, quantity }) {
         </div>
         <div className="text-lg text-white row-start-2">
           <p>
-            {isBondLoading ? (
+            {loading ? (
               <Skeleton height={20} />
             ) : (
               <p className="text-right">{vestingTime()}</p>
@@ -59,17 +69,20 @@ function Content({ bond, quantity }) {
 }
 
 function BondRedeem({ bond }) {
-  const { chainId, account, library } = useWeb3React<Web3Provider>()
   const [quantity, setQuantity] = useState(0)
 
-  let pendingTransactions = []
-  let onRedeem = ({ autostake }) => {}
-  const isRedeemAutostakeLoading = false
-  const isRedeemLoading = false
+  const { account } = useWeb3React<Web3Provider>()
+  const {
+    interestDue,
+    pendingPayout,
+    redeemBond,
+    redeemBondPending,
+    redeemBondAutoPending,
+  } = useBonder(bond)
 
-  const bondNamePretty = ""
-
-  const setMax = () => {}
+  const setMax = () => {
+    setQuantity(Number(pendingPayout))
+  }
 
   return (
     <div className="px-1 mt-8">
@@ -83,6 +96,7 @@ function BondRedeem({ bond }) {
         <CTABox className="flex items-center justify-between border border-gray-700">
           <div className="">
             <input
+              value={quantity}
               onChange={(e: any) => setQuantity(e.target.value)}
               className="w-full ml-3 text-left bg-transparent outline-none h-1/4 md:text-md text-dark-500 text-[35px] text-dark-input tracking-2%"
               size={12}
@@ -98,40 +112,38 @@ function BondRedeem({ bond }) {
         </CTABox>
       </div>
       <div className="py-4 text-right text-white text-md">
-        <span className="">
-          Pending Rewards: {prettify(bond.interestDue)} ART{" "}
-        </span>
+        <span className="">Pending Rewards: {prettify(interestDue)} ART </span>
         <span className="px-0 md:px-5"></span>
         <span className="">
-          Claimable Rewards: {prettify(bond.pendingPayout)} ART
+          Claimable Rewards: {prettify(Number(pendingPayout))} ART
         </span>
       </div>
-      <Content bond={bond} quantity={quantity} />
+      <Content bond={bond} />
       <div className="flex py-4 item-stretch">
         {!account ? (
           <ConnectButton />
         ) : (
           <>
             <Button
-              loading={isRedeemAutostakeLoading}
+              loading={redeemBondAutoPending}
               disabled={
                 bond.pendingPayout == 0.0 ||
-                isRedeemLoading ||
-                isRedeemAutostakeLoading
+                redeemBondPending ||
+                redeemBondAutoPending
               }
-              onClick={() => onRedeem({ autostake: true })}
+              onClick={() => redeemBond({ autostake: true })}
             >
               Claim and Autostake
             </Button>
             <div className="px-3"></div>
             <Button
-              loading={isRedeemLoading}
+              loading={redeemBondPending}
               disabled={
                 bond.pendingPayout == 0.0 ||
-                isRedeemLoading ||
-                isRedeemAutostakeLoading
+                redeemBondPending ||
+                redeemBondAutoPending
               }
-              onClick={() => onRedeem({ autostake: false })}
+              onClick={() => redeemBond({ autostake: false })}
             >
               Claim only
             </Button>

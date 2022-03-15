@@ -36,7 +36,6 @@ export interface IBonder {
   purchaseBond: Function
   purchaseBondPending: boolean
   redeemBond: Function
-  redeemProBond: Function
   redeemBondPending: boolean
   redeemBondAutoPending: boolean
 }

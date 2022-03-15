@@ -62,7 +62,7 @@ export function prettyVestingPeriod(
   vestingBlock: number
 ) {
   if (vestingBlock === 0) {
-    return ""
+    return "0"
   }
 
   const seconds = secondsUntilBlock(currentBlock, vestingBlock)

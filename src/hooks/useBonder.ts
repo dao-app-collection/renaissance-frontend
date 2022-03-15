@@ -134,19 +134,6 @@ function useBonder(singleBond: ISingleBond): IBonder {
     }
   }
 
-  const redeemProBond = async () => {
-    try {
-      setRedeemPendingState(false, true)
-      const tx = await bondContract.redeem(account)
-      await tx.wait()
-      mutateBonder()
-    } catch (e: unknown) {
-      errorToast((e as IJsonRPCError).message)
-    } finally {
-      setRedeemPendingState(false, false)
-    }
-  }
-
   return {
     allowance,
     approveSpend,
@@ -159,7 +146,6 @@ function useBonder(singleBond: ISingleBond): IBonder {
     purchaseBond,
     purchaseBondPending,
     redeemBond,
-    redeemProBond,
     redeemBondPending,
     redeemBondAutoPending,
   }
